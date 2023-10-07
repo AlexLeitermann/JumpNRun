@@ -11,6 +11,7 @@ class Chicken extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.x = 200 + Math.floor(Math.random() * 500);
         this.y = 420;
+        this.speed = initSpeed();
         this.width = 50;
         this.height = 50;
         this.yBaseline = this.height;
@@ -22,10 +23,7 @@ class Chicken extends MovableObject {
 
     animation() {
         setInterval( () => {
-            this.x -= 0.9;
-            if(this.x < (0 - this.width)) {
-                this.x = 720;
-            }
+            this.x < (0 ) ? this.x += (720 * 6) : this.x -= this.speed;
         }, 25);
     }
     
@@ -34,8 +32,13 @@ class Chicken extends MovableObject {
             let path = this.IMAGES_WALKING[this.currentImage];
             this.img.src = this.imageCache[path];
             this.currentImage == (this.IMAGES_WALKING.length - 1) ? this.currentImage = 0 : this.currentImage++;
-        }, 120);
+        }, 1000/6);
     }
 
-
 }
+    
+function initSpeed() {
+    return  ((Math.random() * .5) + 0.65);
+}
+    
+    

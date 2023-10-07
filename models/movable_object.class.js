@@ -1,11 +1,17 @@
 class MovableObject {
     x;
     y;
+    speed;
     width;
     height;
     yBaseline;
+    flipH = false;
     imageCache = {};
     currentImage = 0;
+    imageCache_Walk = {};
+    currentImage_Walk = 0;
+    imageCache_Idle = {};
+    currentImage_Idle = 0;
     img = new Image();
 
     loadImage(path) {
