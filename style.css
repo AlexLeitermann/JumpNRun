@@ -1,0 +1,149 @@
+:root {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    --grad-border: ;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 0;
+    position: relative;
+    font-size: 16px;
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    position: relative;
+    z-index: 0;
+    padding: 12px;
+    background-color: #000;
+    border-radius: 2.5rem;
+    border: 8px transparent;
+    box-shadow: 0 4px 8px 2px #00000075,
+                8px 8px 8px 0 #ffffff75 inset,
+                -8px 8px 8px 0 #ffffff75 inset,
+                8px -8px 8px 0 #ffffff75 inset,
+                -8px -8px 8px 0 #ffffff75 inset;
+}
+
+.rahmen {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 720px;
+    height: 480px;
+    background-color: #f00;
+    border: 4px solid green;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+.fullpage {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 350px;
+    background-color: #fff;
+}
+
+
+/* ################################################################################ */
+/* ################################################################################ */
+/* ################################################################################ */
+#loadpage {
+    z-index: 2;
+    opacity: 1;
+    background-color: #f5f6f7;
+    /* display: none; */
+}
+
+#loadpage.hide {
+    opacity: 0;
+    left: 101%;
+    transition: left 5ms linear 1300ms,
+                opacity 1300ms linear 0ms;
+}
+
+#loadpage:not(.hide) {
+    transition: left 5ms linear 0ms,
+                opacity 1300ms linear 5ms;
+}
+
+.gamelist {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: auto;
+    border: 1px solid #e4e4e4;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 #d8d8d8a8;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.card span {
+    color: #000;
+    font-weight: bold;
+}
+
+.card img {
+    width: 300px;
+    height: auto;
+    border-radius: 0.6rem;
+}
+
+/* ################################################################################ */
+/* ################################################################################ */
+/* ################################################################################ */
+#gamepage {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#gamepage div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.back {
+    position: relative;
+    cursor: pointer;
+    /* top: 0px; */
+}
+
+.back span {
+    color: cornflowerblue;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+/* ################################################################################ */
+/* ################################################################################ */
+/* ################################################################################ */
+.d-none {
+    display: none;
+}
