@@ -23,7 +23,7 @@ class Chicken extends MovableObject {
 
     animation() {
         setInterval( () => {
-            this.x < (0 ) ? this.x += (720 * 6) : this.x -= this.speed;
+            this.x < ( -200 ) ? this.x += (720 * 7.2) : this.x -= this.speed;
         }, 25);
     }
     
@@ -38,7 +38,7 @@ class Chicken extends MovableObject {
 }
     
 function initSpeed() {
-    return  ((Math.random() * .5) + 0.65);
+    return  ((Math.random() * .75) + 0.50);
 }
     
     

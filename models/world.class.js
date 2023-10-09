@@ -49,7 +49,7 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-        this.addToMap(this.character, this.character.flipH);
+        this.addToMap(this.character, this.character.flipH,true);
         this.addObjectsToMap(this.level.enemies);
         this.addFpsToMap('0', 10, 452);
         this.addFpsToMap('1', 10 + 720, 452);
@@ -80,12 +80,20 @@ class World {
         });
     }
 
-    addToMap(mo, flip = false) {
+    addToMap(mo, flip = false, box = false) {
         if(flip) {
             this.ctx.save();
             this.ctx.scale(flip ? -1 : 1, 1);
         }
         this.ctx.drawImage(mo.img, flip ? (mo.x + mo.width) * -1 : mo.x, mo.y - mo.yBaseline, mo.width, mo.height);
+        if(box) {
+            this.ctx.strokeStyle = "#ff0000";
+            this.ctx.beginPath();
+            this.ctx.rect(flip ? (mo.x + mo.width) * -1 : mo.x, mo.y - mo.yBaseline, mo.width, mo.height);
+            this.ctx.stroke();
+            this.ctx.strokeStyle = "#000000";
+        }
+
         if(flip) {
             this.ctx.restore();
         }
