@@ -26,9 +26,12 @@ class Character extends MovableObject {
         '../img/set1/2_character_pepe/3_jump/J-34.png',
         '../img/set1/2_character_pepe/3_jump/J-34.png',
         '../img/set1/2_character_pepe/3_jump/J-34.png',
+        '../img/set1/2_character_pepe/3_jump/J-34.png',
         '../img/set1/2_character_pepe/3_jump/J-35.png',
         '../img/set1/2_character_pepe/3_jump/J-35.png',
         '../img/set1/2_character_pepe/3_jump/J-35.png',
+        '../img/set1/2_character_pepe/3_jump/J-35.png',
+        '../img/set1/2_character_pepe/3_jump/J-36.png',
         '../img/set1/2_character_pepe/3_jump/J-36.png',
         '../img/set1/2_character_pepe/3_jump/J-36.png',
         '../img/set1/2_character_pepe/3_jump/J-36.png',
@@ -79,12 +82,12 @@ class Character extends MovableObject {
 
         setInterval( () => {
             if(this.isJump == true) {
+                console.log(this.currentImage_Jump);
                 let path = this.IMAGES_JUMP[this.currentImage_Jump];
                 this.img.src = this.imageCache_Jump[path];
                 this.currentImage_Jump == (this.IMAGES_JUMP.length - 1) ? this.currentImage_Jump = 0 : this.currentImage_Jump++;
-                console.log(this.currentImage_Jump);
             }
-        }, 1000 / 16);
+        }, 1000 / 19);
     }
 
 
