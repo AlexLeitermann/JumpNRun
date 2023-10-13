@@ -3,6 +3,8 @@ class World {
     level_end_x = this.level.level_end_x
 
     character = this.level.character;
+    collidingStatus = false;
+
     camera_x = 0;
     fpsStart = 0;
     fpsValue = 0;
@@ -16,6 +18,7 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.setWorld();
+        this.checkColliding();
         // this.level = [new Level];
         this.draw();
     }
@@ -26,6 +29,20 @@ class World {
         // this.character.cworld = this;
         this.level.character.cworld = this;
     }
+
+
+    checkColliding() {
+        setInterval( () => {
+            this.collidingStatus = false;
+            this.enemies.forEach( e => {
+                if(e.isColliding(this.character)) {
+                    this.collidingStatus = true;
+                }
+            });
+        }, 1000 / 20);
+
+    }
+
     
     draw() {
         if(this.fpsStart == 0) {
@@ -49,8 +66,8 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-        this.addToMap(this.character, this.character.flipH,true);
-        this.addObjectsToMap(this.level.enemies);
+        this.addToMap(this.character, this.character.flipH ,true);
+        this.addObjectsToMap(this.level.enemies, true);
         this.addFpsToMap('0', 10, 452);
         this.addFpsToMap('1', 10 + 720, 452);
         this.addFpsToMap('2', 10 + 720 * 2, 452);
@@ -62,6 +79,7 @@ class World {
         this.ctx.translate(-this.camera_x - 50, 0);
 
         this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
+        this.addFpsToMap(this.collidingStatus ? '1' : '0', 300, 32);
 
 
         this.fpsValue++
@@ -74,9 +92,9 @@ class World {
         );
     }
 
-    addObjectsToMap(obj){
+    addObjectsToMap(obj, box = false){
         obj.forEach(o => {
-            this.addToMap(o, false);
+            this.addToMap(o, false, box);
         });
     }
 
@@ -97,6 +115,7 @@ class World {
         if(flip) {
             this.ctx.restore();
         }
+        this.addDataToMap(Math.floor(mo.x) + ' ' + Math.floor(mo.y), mo.x, mo.y + 10);
     }
 
     addFpsToMap(text, x, y) {
@@ -104,4 +123,11 @@ class World {
         this.ctx.color = '#000000';
         this.ctx.fillText(text, x, y);
     }
+
+    addDataToMap(text, x, y) {
+        this.ctx.font = '16px sans-serif';
+        this.ctx.color = '#000000';
+        this.ctx.fillText(text, x, y);
+    }
+
 }
