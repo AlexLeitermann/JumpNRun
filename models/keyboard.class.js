@@ -5,6 +5,7 @@ class Keyboard {
     Up = false;
     Space = false;
     D = false;
+    Key1 = false;
 
     constructor() {
 

@@ -11,7 +11,7 @@ class World {
     fpsText = 0;
     ctx;
     canvas;
-    keyboard;
+    // keyboard;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -34,16 +34,22 @@ class World {
     checkColliding() {
         setInterval( () => {
             this.collidingStatus = false;
-            this.enemies.forEach( e => {
-                if(e.isColliding(this.character)) {
+            this.level.enemies.forEach( en => {
+                if(en.isColliding(this.character)) {
                     this.collidingStatus = true;
                 }
             });
+            
         }, 1000 / 20);
 
+        setInterval(() => {
+            if(keyboard.Key1 == true) {
+                this.level.enemies[0].x = 720;
+            }
+        }, 100);
     }
 
-    
+
     draw() {
         if(this.fpsStart == 0) {
             this.fpsStart = performance.now();
@@ -57,7 +63,6 @@ class World {
         }
 
 
-
         // Canvas leeren
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // ################################################################################
@@ -66,8 +71,9 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+        this.addBoxToMap(false, 350, 300, 370, 4, 0, "#000000");
         this.addToMap(this.character, this.character.flipH ,true);
-        this.addObjectsToMap(this.level.enemies, true);
+        this.addObjectsToMap(this.level.enemies, true, "#0000ff");
         this.addFpsToMap('0', 10, 452);
         this.addFpsToMap('1', 10 + 720, 452);
         this.addFpsToMap('2', 10 + 720 * 2, 452);
@@ -79,7 +85,9 @@ class World {
         this.ctx.translate(-this.camera_x - 50, 0);
 
         this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
-        this.addFpsToMap(this.collidingStatus ? '1' : '0', 300, 32);
+        this.addFpsToMap('Collision: ' + (this.collidingStatus ? '1' : '0'), 300, 32);
+        this.addDataToMap(this.character.speedY, 500, 32);
+        this.addDataToMap(this.character.isJump, 500, 48);
 
 
         this.fpsValue++
@@ -92,24 +100,20 @@ class World {
         );
     }
 
-    addObjectsToMap(obj, box = false){
+    addObjectsToMap(obj, box = false, color){
         obj.forEach(o => {
-            this.addToMap(o, false, box);
+            this.addToMap(o, false, box, color);
         });
     }
 
-    addToMap(mo, flip = false, box = false) {
+    addToMap(mo, flip = false, box = false, color) {
         if(flip) {
             this.ctx.save();
             this.ctx.scale(flip ? -1 : 1, 1);
         }
         this.ctx.drawImage(mo.img, flip ? (mo.x + mo.width) * -1 : mo.x, mo.y - mo.yBaseline, mo.width, mo.height);
         if(box) {
-            this.ctx.strokeStyle = "#ff0000";
-            this.ctx.beginPath();
-            this.ctx.rect(flip ? (mo.x + mo.width) * -1 : mo.x, mo.y - mo.yBaseline, mo.width, mo.height);
-            this.ctx.stroke();
-            this.ctx.strokeStyle = "#000000";
+            this.addBoxToMap(flip, mo.x, mo.y, mo.width, mo.height, mo.yBaseline, color);
         }
 
         if(flip) {
@@ -128,6 +132,14 @@ class World {
         this.ctx.font = '16px sans-serif';
         this.ctx.color = '#000000';
         this.ctx.fillText(text, x, y);
+    }
+
+    addBoxToMap(flip, x, y, w, h, yb, color = "#ff0000") {
+        this.ctx.strokeStyle = color;
+        this.ctx.beginPath();
+        this.ctx.rect(flip ? (x + w) * -1 : x, y - yb, w, h);
+        this.ctx.stroke();
+        this.ctx.strokeStyle = "#000000";
     }
 
 }

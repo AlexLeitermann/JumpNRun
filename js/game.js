@@ -21,7 +21,7 @@ function openGame() {
 
 
 function Taste(event) {
-    console.clear();
+    // console.clear();
     // resetKeyboard();
     switch (event.keyCode) {
         case 38: // up
@@ -38,6 +38,9 @@ function Taste(event) {
         break;
         case 32: // space
             keyboard.Space = true;
+        break;
+        case 49: // 1
+            keyboard.Key1 = true;
         break;
     }
 
@@ -62,6 +65,9 @@ function TasteLoslassen(event) {
         case 32: // space
             keyboard.Space = false;
         break;
+        case 49: // 1
+            keyboard.Key1 = false;
+        break;
     }
 
 }
@@ -73,4 +79,5 @@ function resetKeyboard() {
     keyboard.Space = false;
     keyboard.Up = false;
     keyboard.D = false;
+    keyboard.Key1 = false;
 }
