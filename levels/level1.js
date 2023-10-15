@@ -67,6 +67,13 @@ const level1 = new Level(
         new BackgroundObject('../img/set1/box_small.png', 1550, 335, 100, 77, 0),
         new BackgroundObject('../img/set1/box_small.png', 1550, 279, 100, 77, 0),
 
+        new BackgroundObject('../img/set1/box_small.png', 2000, 335, 100, 77, 0),
+        new BackgroundObject('../img/set1/box_small.png', 2000, 279, 100, 77, 0),
+        new BackgroundObject('../img/set1/box_small.png', 2100, 335, 100, 77, 0),
+        new BackgroundObject('../img/set1/box_small.png', 2100, 279, 100, 77, 0),
+        new BackgroundObject('../img/set1/box_small.png', 2200, 335, 100, 77, 0),
+        new BackgroundObject('../img/set1/box_small.png', 2200, 279, 100, 77, 0),
+
         new BackgroundObject('../img/set1/box_small.png', 4220, 335, 100, 77, 0),
         new BackgroundObject('../img/set1/box_small.png', 4220, 279, 100, 77, 0),
 
@@ -75,6 +82,7 @@ const level1 = new Level(
     [
         new Platforms(350, 400),
         new Platforms(1450, 200),
+        new Platforms(2000, 300),
         new Platforms(4220, 100),
     ]
 );
