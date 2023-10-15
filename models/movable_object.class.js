@@ -13,6 +13,9 @@ class MovableObject {
     isJump = false;
     width;
     height;
+
+    platforms_toJump;
+
     yBaseline;
     flipH = false;
     imageCache = {};
@@ -39,17 +42,13 @@ class MovableObject {
 
     applyGravitation() {
         setInterval(() => {
+            let middle = this.x + (this.width / 2);
             if(this.y < 420) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } 
-            if((this.x + (this.width / 2)) >= 350 && (this.x + (this.width / 2)) <= 720 && (this.speedY) <= 0) {
-                if(this.y > 300 && this.y < 330) {
-                    this.y = 300;
-                    this.speedY = 0;
-                    this.isJump = false;
-                    this.currentImage_Jump = 0;
-                }
+            if(this.isRangeOfPlatforms(middle) && (this.speedY) <= 0) {
+                this.jumpOnPlatforms();
             } 
             if(this.y >= 420) {
                 this.y = 420;
@@ -60,6 +59,30 @@ class MovableObject {
 
         }, 1000 / 30);
     }
+
+
+    jumpOnPlatforms() {
+        if(this.y > 300 && this.y < 330) {
+            this.y = 300;
+            this.speedY = 0;
+            this.isJump = false;
+            this.currentImage_Jump = 0;
+        }
+    }
+
+
+    isRangeOfPlatforms(middle) {
+        let answer = false;
+        if(this.platforms_toJump) {
+            this.platforms_toJump.forEach( p => {
+                if(middle >= p.x && middle <= (p.x + p.width)) {
+                    answer = true;
+                }
+            });
+        }
+        return answer;
+    }
+
 
     isColliding(obj) {
         return  (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && 

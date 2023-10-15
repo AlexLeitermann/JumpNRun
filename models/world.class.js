@@ -3,6 +3,7 @@ class World {
     level_end_x = this.level.level_end_x
 
     character = this.level.character;
+    worldPlatforms = this.level.platforms;
     collidingStatus = false;
 
     camera_x = 0;
@@ -11,7 +12,6 @@ class World {
     fpsText = 0;
     ctx;
     canvas;
-    // keyboard;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -19,15 +19,13 @@ class World {
         this.keyboard = keyboard;
         this.setWorld();
         this.checkColliding();
-        // this.level = [new Level];
         this.draw();
     }
 
 
     setWorld() {
-        // this.character.world = this;
-        // this.character.cworld = this;
         this.level.character.cworld = this;
+        this.level.character.platforms_toJump = this.level.platforms;
     }
 
 
@@ -42,6 +40,7 @@ class World {
             
         }, 1000 / 20);
 
+        // set first chicken on x=720 - only for testing
         setInterval(() => {
             if(keyboard.Key1 == true) {
                 this.level.enemies[0].x = 720;
@@ -71,8 +70,10 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-        this.addBoxToMap(false, 350, 300, 370, 4, 0, "#000000");
-        this.addToMap(this.character, this.character.flipH ,true);
+
+        // this.addBoxToMap(false, 1450, 300, 200, 4, 0, "#000000");
+
+        this.addToMap(this.character, this.character.flipH ,false);
         this.addObjectsToMap(this.level.enemies, true, "#0000ff");
         this.addFpsToMap('0', 10, 452);
         this.addFpsToMap('1', 10 + 720, 452);
@@ -119,7 +120,7 @@ class World {
         if(flip) {
             this.ctx.restore();
         }
-        this.addDataToMap(Math.floor(mo.x) + ' ' + Math.floor(mo.y), mo.x, mo.y + 10);
+        // this.addDataToMap(Math.floor(mo.x) + ' ' + Math.floor(mo.y), mo.x, mo.y + 10);
     }
 
     addFpsToMap(text, x, y) {

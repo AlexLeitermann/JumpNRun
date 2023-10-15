@@ -93,8 +93,8 @@ class Character extends MovableObject {
         this.width = 92;
         this.height = 180;
         this.yBaseline = this.height;
-        // this.cworld = world.self;
 
+        
         this.animate();
         this.move();
         this.applyGravitation();
@@ -112,7 +112,7 @@ class Character extends MovableObject {
                 this.img.src = this.imageCache_Idle[path];
                 this.currentImage_Idle == (this.IMAGES_IDLE.length - 1) ? this.currentImage_Idle = 0 : this.currentImage_Idle++;
             }
-        }, 1000/6);
+        }, 1000/12);
 
         setInterval( () => {
             if(this.isJump == true) {
