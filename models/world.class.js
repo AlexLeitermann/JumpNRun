@@ -49,6 +49,9 @@ class World {
     }
 
 
+        // ################################################################################
+        // ################################################################################
+        // ################################################################################
     draw() {
         if(this.fpsStart == 0) {
             this.fpsStart = performance.now();
@@ -61,19 +64,22 @@ class World {
             }
         }
 
+        this.camera_x = -this.character.x;
+
 
         // Canvas leeren
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // ################################################################################
         // in Canvas-Context zeichnen
-        this.ctx.translate(this.camera_x + 50, 0);
+        this.ctx.translate(this.camera_x + 100, 0);
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
 
-        // this.addBoxToMap(false, 1450, 300, 200, 4, 0, "#000000");
+        // this.addBoxToMap(false, 720, 450, 1, 30, 0, "#000000");
 
-        this.addToMap(this.character, this.character.flipH ,false);
+        this.addToMap(this.character, this.character.flipH ,true);
+        this.addHitBoxToMap(this.character);
         this.addObjectsToMap(this.level.enemies, true, "#0000ff");
         this.addFpsToMap('0', 10, 452);
         this.addFpsToMap('1', 10 + 720, 452);
@@ -83,12 +89,13 @@ class World {
         this.addFpsToMap('5', 10 + 720 * 5, 452);
         this.addFpsToMap('6', 10 + 720 * 6, 452);
 
-        this.ctx.translate(-this.camera_x - 50, 0);
+        this.ctx.translate(-this.camera_x - 100, 0);
 
         this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
         this.addFpsToMap('Collision: ' + (this.collidingStatus ? '1' : '0'), 300, 32);
         this.addDataToMap(this.character.speedY, 500, 32);
-        this.addDataToMap(this.character.isJump, 500, 48);
+        this.addDataToMap(this.character.isFalling, 500, 48);
+        this.addDataToMap('Pepe: '+ this.character.energy, 10, 48);
 
 
         this.fpsValue++
@@ -107,7 +114,7 @@ class World {
         });
     }
 
-    addToMap(mo, flip = false, box = false, color) {
+    addToMap(mo, flip = false, box = false, color = '#000000') {
         if(flip) {
             this.ctx.save();
             this.ctx.scale(flip ? -1 : 1, 1);
@@ -139,6 +146,14 @@ class World {
         this.ctx.strokeStyle = color;
         this.ctx.beginPath();
         this.ctx.rect(flip ? (x + w) * -1 : x, y - yb, w, h);
+        this.ctx.stroke();
+        this.ctx.strokeStyle = "#000000";
+    }
+
+    addHitBoxToMap(mo, color = "#ff0000") {
+        this.ctx.strokeStyle = color;
+        this.ctx.beginPath();
+        this.ctx.rect(mo.x + mo.hitbox_x, mo.y - mo.yBaseline + mo.hitbox_y, mo.hitbox_width, mo.hitbox_height);
         this.ctx.stroke();
         this.ctx.strokeStyle = "#000000";
     }
