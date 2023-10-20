@@ -81,3 +81,58 @@ function resetKeyboard() {
     keyboard.D = false;
     keyboard.Key1 = false;
 }
+
+
+function touchOn(keyCode) {
+    // console.clear();
+    // resetKeyboard();
+    switch (keyCode) {
+        case 38: // up
+            keyboard.Up = true;
+        break;
+        case 40: // down
+            keyboard.Down = true;
+        break;
+        case 39: // right
+            keyboard.Right = true;
+        break;
+        case 37: // left
+            keyboard.Left = true;
+        break;
+        case 32: // space
+            keyboard.Space = true;
+        break;
+        case 49: // 1
+            keyboard.Key1 = true;
+        break;
+    }
+
+}
+
+
+function touchOff(keyCode) {
+    // console.clear();
+    // resetKeyboard();
+    switch (keyCode) {
+        case 38: // up
+            keyboard.Up = false;
+        break;
+        case 40: // down
+            keyboard.Down = false;
+        break;
+        case 39: // right
+            keyboard.Right = false;
+        break;
+        case 37: // left
+            keyboard.Left = false;
+        break;
+        case 32: // space
+            keyboard.Space = false;
+        break;
+        case 49: // 1
+            keyboard.Key1 = false;
+        break;
+    }
+
+}
+
