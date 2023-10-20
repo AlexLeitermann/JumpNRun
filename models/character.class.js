@@ -1,60 +1,60 @@
 class Character extends MovableObject {
     IMAGES_WALKING = [
-        './img/set1/2_character_pepe/2_walk/W-21.png',
-        './img/set1/2_character_pepe/2_walk/W-22.png',
-        './img/set1/2_character_pepe/2_walk/W-23.png',
-        './img/set1/2_character_pepe/2_walk/W-24.png',
-        './img/set1/2_character_pepe/2_walk/W-25.png',
-        './img/set1/2_character_pepe/2_walk/W-26.png'
+        '/img/set1/2_character_pepe/2_walk/W-21.png',
+        '/img/set1/2_character_pepe/2_walk/W-22.png',
+        '/img/set1/2_character_pepe/2_walk/W-23.png',
+        '/img/set1/2_character_pepe/2_walk/W-24.png',
+        '/img/set1/2_character_pepe/2_walk/W-25.png',
+        '/img/set1/2_character_pepe/2_walk/W-26.png'
     ];
     IMAGES_IDLE = [
-        './img/set1/2_character_pepe/1_idle/idle/I-1.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-2.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-3.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-4.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-5.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-6.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-7.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-8.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-9.png',
-        './img/set1/2_character_pepe/1_idle/idle/I-10.png'
+        '/img/set1/2_character_pepe/1_idle/idle/I-1.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-2.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-3.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-4.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-5.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-6.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-7.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-8.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-9.png',
+        '/img/set1/2_character_pepe/1_idle/idle/I-10.png'
     ];
     IMAGES_JUMP = [
-        './img/set1/2_character_pepe/3_jump/J-34.png',
-        './img/set1/2_character_pepe/3_jump/J-34.png',
-        './img/set1/2_character_pepe/3_jump/J-34.png',
-        './img/set1/2_character_pepe/3_jump/J-35.png',
-        './img/set1/2_character_pepe/3_jump/J-35.png',
-        './img/set1/2_character_pepe/3_jump/J-35.png',
-        './img/set1/2_character_pepe/3_jump/J-35.png',
-        './img/set1/2_character_pepe/3_jump/J-36.png',
-        './img/set1/2_character_pepe/3_jump/J-36.png',
-        './img/set1/2_character_pepe/3_jump/J-36.png',
-        './img/set1/2_character_pepe/3_jump/J-36.png',
-        './img/set1/2_character_pepe/3_jump/J-37.png',
-        './img/set1/2_character_pepe/3_jump/J-38.png',
-        './img/set1/2_character_pepe/3_jump/J-39.png'
+        '/img/set1/2_character_pepe/3_jump/J-34.png',
+        '/img/set1/2_character_pepe/3_jump/J-34.png',
+        '/img/set1/2_character_pepe/3_jump/J-34.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png',
+        '/img/set1/2_character_pepe/3_jump/J-37.png',
+        '/img/set1/2_character_pepe/3_jump/J-38.png',
+        '/img/set1/2_character_pepe/3_jump/J-39.png'
     ];
     IMAGES_JUMP_START = [
-        './img/set1/2_character_pepe/3_jump/J-31.png',
-        './img/set1/2_character_pepe/3_jump/J-32.png',
-        './img/set1/2_character_pepe/3_jump/J-33.png',
-        './img/set1/2_character_pepe/3_jump/J-34.png'
+        '/img/set1/2_character_pepe/3_jump/J-31.png',
+        '/img/set1/2_character_pepe/3_jump/J-32.png',
+        '/img/set1/2_character_pepe/3_jump/J-33.png',
+        '/img/set1/2_character_pepe/3_jump/J-34.png'
     ];
     IMAGES_JUMP_FLY = [
-        './img/set1/2_character_pepe/3_jump/J-34.png',
-        './img/set1/2_character_pepe/3_jump/J-34.png',
-        './img/set1/2_character_pepe/3_jump/J-35.png',
-        './img/set1/2_character_pepe/3_jump/J-35.png',
-        './img/set1/2_character_pepe/3_jump/J-35.png',
-        './img/set1/2_character_pepe/3_jump/J-36.png',
-        './img/set1/2_character_pepe/3_jump/J-36.png'
+        '/img/set1/2_character_pepe/3_jump/J-34.png',
+        '/img/set1/2_character_pepe/3_jump/J-34.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png'
     ];
     IMAGES_JUMP_END = [
-        './img/set1/2_character_pepe/3_jump/J-36.png',
-        './img/set1/2_character_pepe/3_jump/J-37.png',
-        './img/set1/2_character_pepe/3_jump/J-38.png',
-        './img/set1/2_character_pepe/3_jump/J-39.png'
+        '/img/set1/2_character_pepe/3_jump/J-36.png',
+        '/img/set1/2_character_pepe/3_jump/J-37.png',
+        '/img/set1/2_character_pepe/3_jump/J-38.png',
+        '/img/set1/2_character_pepe/3_jump/J-39.png'
     ];
     cworld;
     cworld_loaded = false;
@@ -112,16 +112,16 @@ class Character extends MovableObject {
     animate() {
         setInterval( () => {
             if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.jumpCount < 0 ) {
-                let path = this.IMAGES_WALKING[this.currentImage_Walk];
-                this.img.src = this.imageCache_Walk[path];
+                let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
+                this.img = this.imageCache_Walk[path];
                 this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
             }
         }, 1000/12);
 
         setInterval( () => {
             if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0) {
-                let path = this.IMAGES_IDLE[this.currentImage_Idle];
-                this.img.src = this.imageCache_Idle[path];
+                let path = mainPath + this.IMAGES_IDLE[this.currentImage_Idle];
+                this.img = this.imageCache_Idle[path];
                 this.currentImage_Idle == (this.IMAGES_IDLE.length - 1) ? this.currentImage_Idle = 0 : this.currentImage_Idle++;
             }
         }, 1000/6);
@@ -129,8 +129,8 @@ class Character extends MovableObject {
         setInterval( () => {
             if(this.isJump == true) {
                 // console.log(this.currentImage_Jump);
-                let path = this.IMAGES_JUMP[this.currentImage_Jump];
-                this.img.src = this.imageCache_Jump[path];
+                let path = mainPath + this.IMAGES_JUMP[this.currentImage_Jump];
+                this.img = this.imageCache_Jump[path];
                 // this.currentImage_Jump == (this.IMAGES_JUMP.length - 1) ? this.currentImage_Jump = 0 : this.currentImage_Jump++;
                 this.currentImage_Jump == (this.IMAGES_JUMP.length - 1) ? this.currentImage_Jump = (this.IMAGES_JUMP.length - 1) : this.currentImage_Jump++;
             } else {
@@ -139,8 +139,8 @@ class Character extends MovableObject {
 
             if(this.jumpCount > 0 ) {
                 // console.log(this.currentImage_Jump);
-                let path = this.IMAGES_JUMP_START[this.currentImage_Jump_Start];
-                this.img.src = this.imageCache_Jump_Start[path];
+                let path = mainPath + this.IMAGES_JUMP_START[this.currentImage_Jump_Start];
+                this.img = this.imageCache_Jump_Start[path];
                 this.currentImage_Jump_Start == (this.IMAGES_JUMP_START.length - 1) ? this.currentImage_Jump_Start = (this.IMAGES_JUMP_START.length - 1) : this.currentImage_Jump_Start++;
             } else {
                 this.currentImage_Jump_Start = 0;

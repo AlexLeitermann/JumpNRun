@@ -37,14 +37,15 @@ class MovableObject {
     currentImage_Jump = 0;
 
     loadImage(path) {
-        this.img.src = path;
+        this.img.src = mainPath + path;
     }
 
     loadImages(arr) {
         arr.forEach((path) => {
             let img = new Image();
-            img.src = path;
-            this.imageCache[path] = path;
+            let fullPath = mainPath + path;
+            img.src = fullPath;
+            this.imageCache[fullPath] = img;
         });
     }
 
