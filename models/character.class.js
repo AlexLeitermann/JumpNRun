@@ -92,7 +92,7 @@ class Character extends MovableObject {
         console.log('ic_walk: '+this.imageCache_Walk.length);
         this.x = 0;
         this.y = 420;
-        this.speed = 1.1;
+        this.speed = 1.6;
         this.width = 92;
         this.height = 180;
         this.yBaseline = this.height;
@@ -149,13 +149,13 @@ class Character extends MovableObject {
         }, 1000 / 11);
 
         setInterval( () => {
-            if(keyboard.Right && this.x < this.cworld.level_end_x) {
+            if(keyboard.Right && this.x < this.cworld.level_end_x && this.jumpCount == -1) {
                 this.flipH = false;
-                this.x > ((720*6) ) ? this.x = (0 ) : this.x += Math.floor(this.speed);
+                this.x > ((720*6) ) ? this.x = (0 ) : this.x += this.speed;
             }
-            if(keyboard.Left && this.x > 0) {
+            if(keyboard.Left && this.x > 0 && this.jumpCount == -1) {
                 this.flipH = true;
-                this.x < (0 ) ? this.x = Math.floor((720*6) ) : this.x -= Math.floor(this.speed);
+                this.x < (0 ) ? this.x = Math.floor((720*6) ) : this.x -= this.speed;
             }
         }, 1000/120);
 
