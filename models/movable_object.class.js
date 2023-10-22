@@ -15,7 +15,8 @@ class MovableObject {
     speed;
     speedY = 0;
     acceleration = 1;
-    isFalling = false;
+    isFalling;
+    isMarking = false;
 
     energy = 100;
     lastHit = 0;
@@ -23,6 +24,7 @@ class MovableObject {
     isJump = false;
     platforms_toJump;
 
+    isHurt = false;
 
     flipH = false;
 
@@ -31,10 +33,12 @@ class MovableObject {
     imageCache_Walk = [];
     imageCache_Idle = [];
     imageCache_Jump = [];
+    imageCache_Dead = [];
     currentImage = 0;
     currentImage_Walk = 0;
     currentImage_Idle = 0;
     currentImage_Jump = 0;
+    currentImage_Dead = 0;
 
     loadImage(path) {
         this.img.src = mainPath + path;
@@ -50,7 +54,7 @@ class MovableObject {
     }
 
     applyGravitation() {
-        setInterval(() => {
+        tempInterval = setInterval(() => {
             let middle = this.x + (this.width / 2);
             if(this.y < 420) {
                 this.y -= this.speedY;
@@ -67,6 +71,7 @@ class MovableObject {
             }
             
         }, 1000 / 30);
+        regInterval(tempInterval);
     }
 
     jumpOnPlatforms(y) {
@@ -109,8 +114,15 @@ class MovableObject {
     isColliding(obj) {
         return  (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && 
                 (this.y - this.yBaseline) >= (obj.y - obj.yBaseline) &&
-                (this.y) <= (obj.y)// && 
+                (this.y) <= (obj.y); // && 
                 //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
+    }
+
+    isCollidingHitbox(obj) {
+        return (this.x + this.hitbox_x + this.hitbox_width) >= (obj.x + obj.hitbox_x) &&
+        (this.x + this.hitbox_x) <= (obj.x + obj.hitbox_x + obj.hitbox_width) &&
+        (this.y - this.yBaseline + this.hitbox_y) <= (obj.y - obj.yBaseline + obj.hitbox_y + obj.hitbox_height) &&
+        (this.y - this.yBaseline + this.hitbox_y + this.hitbox_height) >= (obj.y - obj.yBaseline + obj.hitbox_y);
     }
 
     hit() {

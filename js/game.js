@@ -38,8 +38,14 @@ function Taste(event) {
         case 32: // space
             keyboard.Space = true;
         break;
+        case 48: // 1
+            keyboard.Key0 = true;
+        break;
         case 49: // 1
             keyboard.Key1 = true;
+        break;
+        case 50: // 1
+            keyboard.Key2 = true;
         break;
     }
 
@@ -64,8 +70,14 @@ function TasteLoslassen(event) {
         case 32: // space
             keyboard.Space = false;
         break;
+        case 48: // 1
+            keyboard.Key0 = false;
+        break;
         case 49: // 1
             keyboard.Key1 = false;
+        break;
+        case 50: // 1
+            keyboard.Key2 = false;
         break;
     }
 
@@ -79,6 +91,7 @@ function resetKeyboard() {
     keyboard.Up = false;
     keyboard.D = false;
     keyboard.Key1 = false;
+    keyboard.Key2 = false;
 }
 
 
@@ -101,8 +114,14 @@ function touchOn(keyCode) {
         case 32: // space
             keyboard.Space = true;
         break;
+        case 48: // 1
+            keyboard.Key0 = true;
+        break;
         case 49: // 1
             keyboard.Key1 = true;
+        break;
+        case 50: // 1
+            keyboard.Key2 = true;
         break;
     }
 
@@ -128,8 +147,14 @@ function touchOff(keyCode) {
         case 32: // space
             keyboard.Space = false;
         break;
+        case 48: // 1
+            keyboard.Key0 = false;
+        break;
         case 49: // 1
             keyboard.Key1 = false;
+        break;
+        case 50: // 1
+            keyboard.Key2 = false;
         break;
     }
 

@@ -1,6 +1,7 @@
 let comeFrom = document.location.pathname;
 let mainPath = getMainPath(comeFrom);
-
+let intervalIds = [];
+let tempInterval = null;
 
 function getMainPath(path) {
     // Finde die Position des letzten '/' im Pfad
@@ -16,3 +17,6 @@ function getMainPath(path) {
 }
 
 
+function regInterval(id) {
+    intervalIds.push(id);
+}

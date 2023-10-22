@@ -30,22 +30,45 @@ class World {
 
 
     checkColliding() {
-        setInterval( () => {
+        tempInterval = setInterval( () => {
             this.collidingStatus = false;
-            this.level.enemies.forEach( en => {
-                if(en.isColliding(this.character)) {
+            this.level.enemies.forEach( (enemy) => {
+                if(enemy.isCollidingHitbox(this.character)) {
                     this.collidingStatus = true;
+                    enemy.isMarking = true;
+                    if(enemy.energy > 0 && this.level.character.speedY < -1) {
+                        enemy.energy = 0;
+                        console.log('enemy.energy = 0');
+                    } else if(enemy.energy > 0 && this.character.isFalling == false && this.character.isHurt == false) {
+                        this.character.isHurt = true;
+                        this.character.energy > 0 ? this.character.energy -= 5 : this.character.energy = 0;
+                        setTimeout(() => {
+                            this.character.isHurt = false;
+                        }, 250);
+                    }
+                } else {
+                    enemy.isMarking = false;
                 }
             });
-            
+            if(this.character.energy <= 0) {
+                // Spieler tot
+            }
         }, 1000 / 20);
+        regInterval(tempInterval);
 
         // set first chicken on x=720 - only for testing
-        setInterval(() => {
+        tempInterval = setInterval(() => {
             if(keyboard.Key1 == true) {
                 this.level.enemies[0].x = 720;
             }
+            if(keyboard.Key0 == true) {
+                this.level.enemies[0].energy = 0;
+            }
+            if(keyboard.Key2 == true) {
+                this.level.enemies[0].energy = 1;
+            }
         }, 100);
+        regInterval(tempInterval);
     }
 
 
@@ -93,7 +116,7 @@ class World {
 
         this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
         this.addFpsToMap('Collision: ' + (this.collidingStatus ? '1' : '0'), 300, 32);
-        this.addDataToMap(this.character.speedY, 500, 32);
+        this.addDataToMap((this.character.isHurt ? '1' : '0'), 500, 32);
         this.addDataToMap(this.character.isFalling, 500, 48);
         this.addDataToMap('Pepe: '+ this.character.energy, 10, 48);
 
@@ -109,12 +132,12 @@ class World {
     }
 
     addObjectsToMap(obj, box = false, color){
-        obj.forEach(o => {
-            this.addToMap(o, false, box, color);
+        obj.forEach( (o, index) => {
+            this.addToMap(o, false, box, color, index);
         });
     }
 
-    addToMap(mo, flip = false, box = false, color = '#000000') {
+    addToMap(mo, flip = false, box = false, color = '#000000', index = -2) {
         if(flip) {
             this.ctx.save();
             this.ctx.scale(flip ? -1 : 1, 1);
@@ -122,6 +145,12 @@ class World {
         this.ctx.drawImage(mo.img, flip ? (mo.x + mo.width) * -1 : mo.x, mo.y - mo.yBaseline, mo.width, mo.height);
         if(box) {
             this.addBoxToMap(flip, mo.x, mo.y, mo.width, mo.height, mo.yBaseline, color);
+            if(index > -2) {
+                this.addDataToMap(index, mo.x, mo.y);
+            }
+        }
+        if(mo.isMarking == true) {
+            this.addBoxToMap(flip, mo.x, mo.y, mo.width, mo.height, mo.yBaseline, '#00ff00');
         }
 
         if(flip) {
