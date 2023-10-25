@@ -62,6 +62,8 @@ class Character extends MovableObject {
     currentImage_Jump_Start = 0;
     currentImage_Hurt = 0;
     jumpCount = -1;
+    coins = 0;
+    bottles = 0;
 
 
     constructor() {
@@ -92,6 +94,9 @@ class Character extends MovableObject {
         this.height = 180;
         this.yBaseline = this.height;
         this.energy = 100;
+        this.attack = 10;
+        this.coins = 0;
+        this.bottles = 0;
         this.isFalling = false;
         this.hitbox_x = 6;
         this.hitbox_y = 60;
@@ -105,7 +110,7 @@ class Character extends MovableObject {
 
     animate() {
         tempInterval = setInterval( () => {
-            if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.jumpCount < 0 ) {
+            if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.jumpCount < 0 && this.energy > 0) {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
@@ -114,10 +119,14 @@ class Character extends MovableObject {
         regInterval(tempInterval);
 
         tempInterval = setInterval( () => {
-            if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0) {
+            if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0 && this.energy > 0) {
                 let path = mainPath + this.IMAGES_IDLE[this.currentImage_Idle];
                 this.img = this.imageCache_Idle[path];
                 this.currentImage_Idle == (this.IMAGES_IDLE.length - 1) ? this.currentImage_Idle = 0 : this.currentImage_Idle++;
+            } else if(this.energy <= 0) {
+                let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
+                this.img = this.imageCache_Dead[path];
+                this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
             }
         }, 1000/6);
         regInterval(tempInterval);
@@ -153,28 +162,36 @@ class Character extends MovableObject {
                 this.jumpCount--;
             }
     
-            if(keyboard.Space && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt) {
+            if(keyboard.Space && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
                 this.jumpCount = 4;
             }
         }, 1000 / 11);
         regInterval(tempInterval);
 
         tempInterval = setInterval( () => {
-            if(keyboard.Right && this.x < this.cworld.level_end_x && this.jumpCount == -1) {
+            if(keyboard.Right && this.x < this.cworld.level_end_x && this.jumpCount == -1 && this.energy > 0) {
                 this.flipH = false;
                 this.x > ((720*6) ) ? this.x = (0 ) : this.x += this.speed;
             }
-            if(keyboard.Left && this.x > 0 && this.jumpCount == -1) {
+            if(keyboard.Left && this.x > 0 && this.jumpCount == -1 && this.energy > 0) {
                 this.flipH = true;
                 this.x < (0 ) ? this.x = Math.floor((720*6) ) : this.x -= this.speed;
             }
+            // Cheats
             if (keyboard.Up) {
                 this.energy = 100;
+                this.currentImage_Dead = 0;
             }
         }, 1000/120);
         regInterval(tempInterval);
     }
 
-
+    getEnergy(en) {
+        this.energy += en;
+        if (this.energy > 100) {
+            this.energy = 100;
+        }
+    }
+    
 
 }

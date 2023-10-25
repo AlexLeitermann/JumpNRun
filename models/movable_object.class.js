@@ -19,6 +19,8 @@ class MovableObject {
     isMarking = false;
 
     energy = 100;
+    energy_return = 0;
+    attack = 0;
     lastHit = 0;
 
     isJump = false;

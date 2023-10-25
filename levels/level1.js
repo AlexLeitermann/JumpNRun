@@ -1,15 +1,12 @@
 const level1 = new Level(
     new Character(),
     [
-        new Chicken,
-        new Chicken,
-        new Chicken,
-        new Chicken,
-        new Chicken,
-        new Chicken,
-        new Chicken,
-        new Chicken,
-        new Chicken
+        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
     ],    
     [
         new Cloud('/img/set1/5_background/layers/4_clouds/2.png', -720),
@@ -87,5 +84,17 @@ const level1 = new Level(
         new Platforms(1450, 300, 200),
         new Platforms(2000, 300, 300),
         new Platforms(4220, 300, 100),
+    ],
+    [
+        new Coin(200, 150),
+        new Coin(800, 150),
+        new Coin(450, 400),
+        new Bottle(500, 420),
+        
+        new Coin(1250, 150),
+        new Coin(1250, 400),
+        new Coin(1350, 320),
+        new Coin(1450, 250),
+
     ]
 );

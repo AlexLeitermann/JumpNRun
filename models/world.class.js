@@ -32,24 +32,8 @@ class World {
     checkColliding() {
         tempInterval = setInterval( () => {
             this.collidingStatus = false;
-            this.level.enemies.forEach( (enemy) => {
-                if(enemy.isCollidingHitbox(this.character)) {
-                    this.collidingStatus = true;
-                    enemy.isMarking = true;
-                    if(enemy.energy > 0 && this.level.character.speedY < -1) {
-                        enemy.energy = 0;
-                        console.log('enemy.energy = 0');
-                    } else if(enemy.energy > 0 && this.character.isFalling == false && this.character.isHurt == false) {
-                        this.character.isHurt = true;
-                        this.character.energy > 0 ? this.character.energy -= 5 : this.character.energy = 0;
-                        setTimeout(() => {
-                            this.character.isHurt = false;
-                        }, 250);
-                    }
-                } else {
-                    enemy.isMarking = false;
-                }
-            });
+            this.checkCollidingEnemies();
+            this.checkCollidingItems();
             if(this.character.energy <= 0) {
                 // Spieler tot
             }
@@ -69,6 +53,43 @@ class World {
             }
         }, 100);
         regInterval(tempInterval);
+    }
+
+
+    checkCollidingEnemies() {
+        this.level.enemies.forEach( (enemy) => {
+            if(enemy.isCollidingHitbox(this.character)) {
+                this.collidingStatus = true;
+                if(enemy.energy > 0 && this.level.character.speedY < -1) {
+                    enemy.energy = 0;
+                    enemy.revive();
+                    this.character.getEnergy(enemy.energy_return);
+                } else if(enemy.energy > 0 && this.character.isFalling == false && this.character.isHurt == false) {
+                    this.character.isHurt = true;
+                    this.character.energy > 0 ? this.character.energy -= enemy.attack : this.character.energy = 0;
+                    setTimeout(() => {
+                        this.character.isHurt = false;
+                    }, 250);
+                }
+            }
+        });
+    }
+
+
+    checkCollidingItems() {
+        this.level.items.forEach( (item) => {
+            if(item.isCollidingHitbox(this.character)) {
+                if(item instanceof Coin && item.energy > 0) {
+                    item.energy = 0;
+                    this.character.coins += 1;
+                }
+                if(item instanceof Bottle && item.energy > 0) {
+                    item.energy = 0;
+                    this.character.bottles += 1;
+                }
+            }
+        });
+
     }
 
 
@@ -98,12 +119,13 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.items, false, "#ff0000");
 
         // this.addBoxToMap(false, 720, 450, 1, 30, 0, "#000000");
 
-        this.addToMap(this.character, this.character.flipH ,true);
-        this.addHitBoxToMap(this.character);
-        this.addObjectsToMap(this.level.enemies, true, "#0000ff");
+        this.addToMap(this.character, this.character.flipH, false);
+        // this.addHitBoxToMap(this.character);
+        this.addObjectsToMap(this.level.enemies, false, "#0000ff");
         this.addFpsToMap('0', 10, 452);
         this.addFpsToMap('1', 10 + 720, 452);
         this.addFpsToMap('2', 10 + 720 * 2, 452);
@@ -115,10 +137,10 @@ class World {
         this.ctx.translate(-this.camera_x - 100, 0);
 
         this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
-        this.addFpsToMap('Collision: ' + (this.collidingStatus ? '1' : '0'), 300, 32);
         this.addDataToMap((this.character.isHurt ? '1' : '0'), 500, 32);
-        this.addDataToMap(this.character.isFalling, 500, 48);
         this.addDataToMap('Pepe: '+ this.character.energy, 10, 48);
+        this.addDataToMap('Coins: '+ this.character.coins, 10, 64);
+        this.addDataToMap('Bottles: '+ this.character.bottles, 10, 80);
 
 
         this.fpsValue++

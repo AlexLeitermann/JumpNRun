@@ -1,12 +1,12 @@
-class Chicken extends MovableObject {
+class SmallChicken extends MovableObject {
     IMAGES_WALKING = [
-        '/img/set1/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
-        '/img/set1/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
-        '/img/set1/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
-        '/img/set1/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
+        '/img/set1/3_enemies_chicken/chicken_small/1_walk/1_w.png',
+        '/img/set1/3_enemies_chicken/chicken_small/1_walk/2_w.png',
+        '/img/set1/3_enemies_chicken/chicken_small/1_walk/3_w.png',
+        '/img/set1/3_enemies_chicken/chicken_small/1_walk/2_w.png'
     ];
     IMAGES_DEAD = [
-        '/img/set1/3_enemies_chicken/chicken_normal/2_dead/dead.png'
+        '/img/set1/3_enemies_chicken/chicken_small/2_dead/dead.png'
     ];
 
 
@@ -22,16 +22,16 @@ class Chicken extends MovableObject {
         this.setChickenToRandomX(500, 3500);
         this.y = 420;
         this.speed = this.initSpeed();
-        this.width = 50;
-        this.height = 50;
+        this.width = 34;
+        this.height = 30;
         this.yBaseline = this.height;
         this.hitbox_x = 0;
         this.hitbox_y = 0;
         this.hitbox_width = this.width;
         this.hitbox_height = this.height;
         this.energy = 1;
-        this.energy_return = 4;
-        this.attack = 5;
+        this.energy_return = 2;
+        this.attack = 3;
 
         this.animation();
     }
