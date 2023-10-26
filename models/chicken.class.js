@@ -8,6 +8,7 @@ class Chicken extends MovableObject {
     IMAGES_DEAD = [
         '/img/set1/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
+    cworld;
 
 
     constructor() {
@@ -18,6 +19,8 @@ class Chicken extends MovableObject {
         this.imageCache = {};
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
+
+        this.currentImage_Walk = this.randomAnimationStart(this.IMAGES_WALKING.length - 1);
         
         this.setChickenToRandomX(500, 3500);
         this.y = 420;
@@ -47,9 +50,9 @@ class Chicken extends MovableObject {
 
         tempInterval = setInterval( () => {
             if(this.energy > 0) {
-                let path = mainPath + this.IMAGES_WALKING[this.currentImage];
+                let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
-                this.currentImage == (this.IMAGES_WALKING.length - 1) ? this.currentImage = 0 : this.currentImage++;
+                this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
             } else {
                 let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
                 this.img = this.imageCache_Dead[path];
@@ -64,7 +67,7 @@ class Chicken extends MovableObject {
     }
 
     initSpeed() {
-        return  ((Math.random() * .75) + 0.75);
+        return  ((Math.random() * 1.1) + 0.75);
     }
 
     revive() {
@@ -73,6 +76,10 @@ class Chicken extends MovableObject {
             this.speed = this.initSpeed();
             this.energy = 1;
         }, 2000);
+    }
+
+    randomAnimationStart(range = 0) {
+        return (Math.floor(Math.random() * range));
     }
 }
     

@@ -1,11 +1,11 @@
 class Level {
-    character;
-    enemies;
-    clouds;
     backgroundObjects;
+    character;
+    clouds;
+    enemies;
+    items;
     level_end_x;
     platforms;
-    items;
 
     constructor(character, enemies, clouds, backgroundObjects, level_end_x, platforms, items) {
         this.character = character;

@@ -2,6 +2,7 @@ let comeFrom = document.location.pathname;
 let mainPath = getMainPath(comeFrom);
 let intervalIds = [];
 let tempInterval = null;
+let worldLoaded = false;
 
 function getMainPath(path) {
     // Finde die Position des letzten '/' im Pfad

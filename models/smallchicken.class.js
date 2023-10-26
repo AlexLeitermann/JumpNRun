@@ -8,6 +8,7 @@ class SmallChicken extends MovableObject {
     IMAGES_DEAD = [
         '/img/set1/3_enemies_chicken/chicken_small/2_dead/dead.png'
     ];
+    cworld;
 
 
     constructor() {
@@ -34,6 +35,7 @@ class SmallChicken extends MovableObject {
         this.attack = 3;
 
         this.animation();
+        this.applyGravitation(); //from movable_object.class
     }
 
 
@@ -57,6 +59,15 @@ class SmallChicken extends MovableObject {
             }
         }, 1000/8);
         regInterval(tempInterval);
+
+        tempInterval = setInterval( () => {
+            if(this.energy > 0) {
+                this.speedY = 12;
+                this.y -= 0.5;
+            }
+        }, (1500 + (this.initSpeed() * 1000)));
+        regInterval(tempInterval);
+
     }
     
     setChickenToRandomX(startX, rangeX) {
@@ -64,7 +75,7 @@ class SmallChicken extends MovableObject {
     }
 
     initSpeed() {
-        return  ((Math.random() * .75) + 0.75);
+        return  ((Math.random() * .75) + 0.5);
     }
 
     revive() {
@@ -73,6 +84,10 @@ class SmallChicken extends MovableObject {
             this.speed = this.initSpeed();
             this.energy = 1;
         }, 2000);
+    }
+
+    randomAnimationStart(range = 0) {
+        return (Math.floor(Math.random() * range));
     }
 }
     

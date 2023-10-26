@@ -1,8 +1,24 @@
 class BossChicken extends MovableObject {
     IMAGES_WALKING = [
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G4.png'
     ];
     IMAGES_DEAD = [
@@ -36,13 +52,10 @@ class BossChicken extends MovableObject {
         '/img/set1/4_enemie_boss_chicken/4_hurt/G23.png'
     ];
 
-    currentImage_Dead = 0;
-    currentImage_Walk = 0;
+    cworld;
     currentImage_Alert = 0;
     currentImage_Attack = 0;
     currentImage_Hurt = 0;
-    imageCache_Dead;
-    imageCache_Walk;
     imageCache_Alert;
     imageCache_Attack;
     imageCache_Hurt;
@@ -55,52 +68,54 @@ class BossChicken extends MovableObject {
         this.imageCache = {};
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
-        
-        this.setChickenToRandomX(500, 3500);
-        this.y = 420;
-        this.speed = this.initSpeed();
+        this.imageCache = {};
+        this.loadImages(this.IMAGES_ALERT);
+        this.imageCache_Alert = this.imageCache;
+        this.imageCache = {};
+        this.loadImages(this.IMAGES_ATTACK);
+        this.imageCache_Attack = this.imageCache;
+        this.imageCache = {};
+        this.loadImages(this.IMAGES_HURT);
+        this.imageCache_Hurt = this.imageCache;
+
+        this.x = 720 * 5.2;
+        this.y = 450;
+        this.speed = 0.2;
         this.width = 261;
         this.height = 304;
         this.yBaseline = this.height;
-        this.hitbox_x = 0;
-        this.hitbox_y = 0;
-        this.hitbox_width = this.width;
-        this.hitbox_height = this.height;
+        this.hitbox_x = 25;
+        this.hitbox_y = 60;
+        this.hitbox_width = this.width - (this.hitbox_x * 2);
+        this.hitbox_height = this.height - this.hitbox_y -20;
         this.energy = 1;
 
-        this.animation();
+        // this.animation();
     }
 
 
     animation() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0) {
+            if(this.energy > 0 && world.character.x > (this.x - 700)) {
                 this.x < ( -200 ) ? this.x += (720 * 7.2) : this.x -= this.speed;
             }
         }, 25);
         regInterval(tempInterval);
 
         tempInterval = setInterval( () => {
-            if(this.energy > 0) {
+            if(this.energy <= 0) {
+                let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
+                this.img = this.imageCache_Dead[path];
+                this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
+            } else {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage == (this.IMAGES_WALKING.length - 1) ? this.currentImage = 0 : this.currentImage++;
-            } else {
-                let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
-                this.img = this.imageCache_Dead[path];
-                this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = 0 : this.currentImage_Dead++;
             }
         }, 1000/8);
         regInterval(tempInterval);
     }
     
-    setChickenToRandomX(startX, rangeX) {
-        this.x = startX + Math.floor(Math.random() * rangeX);
-    }
-
-    initSpeed() {
-        return  ((Math.random() * .75) + 0.75);
-    }
 
     revive() {
         this.x = 720 * 7.2;

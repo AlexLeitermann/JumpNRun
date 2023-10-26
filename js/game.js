@@ -1,10 +1,12 @@
 window.addEventListener('keydown', Taste);
 window.addEventListener('keyup', TasteLoslassen);
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
 let canvas;
 let world;
 let keyboard = new Keyboard();
-// let elembody = document.querySelector('body');
-// elembody.addEventListener('keydown', Taste);
+
 
 
 
@@ -38,13 +40,16 @@ function Taste(event) {
         case 32: // space
             keyboard.Space = true;
         break;
-        case 48: // 1
+        case 48: // 0
             keyboard.Key0 = true;
+        break;
+        case 96: // 0
+            keyboard.Num0 = true;
         break;
         case 49: // 1
             keyboard.Key1 = true;
         break;
-        case 50: // 1
+        case 50: // 2
             keyboard.Key2 = true;
         break;
     }
@@ -70,13 +75,16 @@ function TasteLoslassen(event) {
         case 32: // space
             keyboard.Space = false;
         break;
-        case 48: // 1
+        case 48: // 0
             keyboard.Key0 = false;
+        break;
+        case 96: // 0
+            keyboard.Num0 = false;
         break;
         case 49: // 1
             keyboard.Key1 = false;
         break;
-        case 50: // 1
+        case 50: // 2
             keyboard.Key2 = false;
         break;
     }
@@ -114,13 +122,16 @@ function touchOn(keyCode) {
         case 32: // space
             keyboard.Space = true;
         break;
-        case 48: // 1
+        case 48: // 0
             keyboard.Key0 = true;
+        break;
+        case 96: // 0
+            keyboard.Num0 = true;
         break;
         case 49: // 1
             keyboard.Key1 = true;
         break;
-        case 50: // 1
+        case 50: // 2
             keyboard.Key2 = true;
         break;
     }
@@ -147,13 +158,16 @@ function touchOff(keyCode) {
         case 32: // space
             keyboard.Space = false;
         break;
-        case 48: // 1
+        case 48: // 0
             keyboard.Key0 = false;
+        break;
+        case 96: // 0
+            keyboard.Num0 = false;
         break;
         case 49: // 1
             keyboard.Key1 = false;
         break;
-        case 50: // 1
+        case 50: // 2
             keyboard.Key2 = false;
         break;
     }

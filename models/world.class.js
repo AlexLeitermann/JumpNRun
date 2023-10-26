@@ -1,6 +1,6 @@
 class World {
     level = level1;
-    level_end_x = this.level.level_end_x
+    level_end_x = this.level.level_end_x;
 
     character = this.level.character;
     worldPlatforms = this.level.platforms;
@@ -12,11 +12,16 @@ class World {
     fpsText = 0;
     ctx;
     canvas;
+    playgame = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        // this.level_end_x = this.level.level_end_x;
+        // this.character = this.level.character;
+        // this.worldPlatforms = this.level.platforms;
+        worldLoaded = true;
         this.setWorld();
         this.checkColliding();
         this.draw();
@@ -25,6 +30,12 @@ class World {
 
     setWorld() {
         this.level.character.cworld = this;
+        this.level.enemies.cworld = this;
+        this.level.enemies.forEach(element => {
+            if(element instanceof BossChicken)
+                element.animation();
+        });
+
         this.level.character.platforms_toJump = this.level.platforms;
     }
 
@@ -42,15 +53,12 @@ class World {
 
         // set first chicken on x=720 - only for testing
         tempInterval = setInterval(() => {
-            if(keyboard.Key1 == true) {
+            if(keyboard.Key1 == true) 
                 this.level.enemies[0].x = 720;
-            }
-            if(keyboard.Key0 == true) {
+            if(keyboard.Key0 == true) 
                 this.level.enemies[0].energy = 0;
-            }
-            if(keyboard.Key2 == true) {
+            if(keyboard.Key2 == true) 
                 this.level.enemies[0].energy = 1;
-            }
         }, 100);
         regInterval(tempInterval);
     }
@@ -61,8 +69,7 @@ class World {
             if(enemy.isCollidingHitbox(this.character)) {
                 this.collidingStatus = true;
                 if(enemy.energy > 0 && this.level.character.speedY < -1) {
-                    enemy.energy = 0;
-                    enemy.revive();
+                    this.checkCollidingChickenOrBoss(enemy);
                     this.character.getEnergy(enemy.energy_return);
                 } else if(enemy.energy > 0 && this.character.isFalling == false && this.character.isHurt == false) {
                     this.character.isHurt = true;
@@ -74,6 +81,17 @@ class World {
             }
         });
     }
+
+    checkCollidingChickenOrBoss(enemy) {
+        if(enemy instanceof Chicken || enemy instanceof SmallChicken) {
+            enemy.energy -= this.level.character.attack;
+            if(enemy.speedY != 0 && world.character.speedY < -1)
+                enemy.speedY = world.character.speedY;
+            enemy.revive();
+        } else if(enemy instanceof BossChicken) {
+
+        }
+}
 
 
     checkCollidingItems() {
@@ -126,22 +144,11 @@ class World {
         this.addToMap(this.character, this.character.flipH, false);
         // this.addHitBoxToMap(this.character);
         this.addObjectsToMap(this.level.enemies, false, "#0000ff");
-        this.addFpsToMap('0', 10, 452);
-        this.addFpsToMap('1', 10 + 720, 452);
-        this.addFpsToMap('2', 10 + 720 * 2, 452);
-        this.addFpsToMap('3', 10 + 720 * 3, 452);
-        this.addFpsToMap('4', 10 + 720 * 4, 452);
-        this.addFpsToMap('5', 10 + 720 * 5, 452);
-        this.addFpsToMap('6', 10 + 720 * 6, 452);
+        this.drawSites();
 
         this.ctx.translate(-this.camera_x - 100, 0);
 
-        this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
-        this.addDataToMap((this.character.isHurt ? '1' : '0'), 500, 32);
-        this.addDataToMap('Pepe: '+ this.character.energy, 10, 48);
-        this.addDataToMap('Coins: '+ this.character.coins, 10, 64);
-        this.addDataToMap('Bottles: '+ this.character.bottles, 10, 80);
-
+        this.drawTextInfo();
 
         this.fpsValue++
         // ################################################################################
@@ -156,6 +163,9 @@ class World {
     addObjectsToMap(obj, box = false, color){
         obj.forEach( (o, index) => {
             this.addToMap(o, false, box, color, index);
+            if(o instanceof BossChicken) {
+                this.addHitBoxToMap(o);
+            }
         });
     }
 
@@ -207,6 +217,26 @@ class World {
         this.ctx.rect(mo.x + mo.hitbox_x, mo.y - mo.yBaseline + mo.hitbox_y, mo.hitbox_width, mo.hitbox_height);
         this.ctx.stroke();
         this.ctx.strokeStyle = "#000000";
+    }
+
+
+    drawSites() {
+        this.addFpsToMap('0', 10, 452);
+        this.addFpsToMap('1', 10 + 720, 452);
+        this.addFpsToMap('2', 10 + 720 * 2, 452);
+        this.addFpsToMap('3', 10 + 720 * 3, 452);
+        this.addFpsToMap('4', 10 + 720 * 4, 452);
+        this.addFpsToMap('5', 10 + 720 * 5, 452);
+        this.addFpsToMap('6', 10 + 720 * 6, 452);
+    }
+
+    drawTextInfo() {
+        this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
+        this.addDataToMap((this.character.isHurt ? '1' : '0'), 500, 32);
+        this.addDataToMap((this.level.enemies[0].x), 500, 48);
+        this.addDataToMap('Pepe: '+ this.character.energy, 10, 48);
+        this.addDataToMap('Coins: '+ this.character.coins, 10, 64);
+        this.addDataToMap('Bottles: '+ this.character.bottles, 10, 80);
     }
 
 }

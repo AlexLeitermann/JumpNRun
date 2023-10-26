@@ -13,9 +13,17 @@ body {
     font-size: 16px;
     width: 100%;
     height: 100%;
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
+    /* touch-action: pan-y, pan-x; */
+    touch-action: none;
 }
 
 canvas {
+    width: 720px;
+    height: 480px;
     position: relative;
     z-index: 0;
     padding: 12px;
@@ -28,7 +36,7 @@ canvas {
                 8px -8px 8px 0 #ffffff75 inset,
                 -8px -8px 8px 0 #ffffff75 inset;
     display: block;
-    
+    aspect-ratio: 3 / 2;
 }
 
 .rahmen {
@@ -56,6 +64,9 @@ a {
     height: 100%;
     min-width: 350px;
     background-color: #fff;
+    background-image: url('./img/49422.jpg');
+    background-position: center;
+    background-size: cover;
 }
 
 
@@ -134,7 +145,10 @@ a {
 .back {
     position: relative;
     cursor: pointer;
-    /* top: 0px; */
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
 }
 
 .back span {
@@ -146,10 +160,18 @@ a {
 /* ################################################################################ */
 /* ################################################################################ */
 /* ################################################################################ */
+#fullscreen {
+    max-width: 800px;
+    width: 800px;
+    max-height: 500px;
+    height: 500px;
+    /* background-color: lavender; */
+}
+
 .key {
     width: 80px;
     height: 80px;
-    position: fixed;
+    position: absolute;
     border-radius: 500px;
     border: 1px solid #00000080;
     background-color: #00000030;
@@ -158,39 +180,66 @@ a {
     -ms-user-select: none; 
     user-select: none;
     cursor: pointer;
+    background-position: center;
+    /* touch-action: manipulation; */
 }
 
 .left {
-    left: 0;
+    left: 20px;
     bottom: 3%;
+    background-image: url('./img/btn-left.png');
 }
 
 .right {
-    left: calc(3% + 80px);
+    left: calc(3% + 100px);
     bottom: 3%;
+    background-image: url('./img/btn-right.png');
 }
 
 .jump {
-    right: 0;
+    right: 20px;
     bottom: 3%;
+    background-image: url('./img/btn-up.png');
 }
 
 /* ################################################################################ */
 /* ################################################################################ */
 /* ################################################################################ */
-@media only screen and (max-width: 720px) {
+@media only screen and (orientation: landscape) and (max-height: 580px) {
     canvas {
-        width: 100%;
+        width: auto;
+        height: calc(100vh - 92px);
+        aspect-ratio: 3/2 auto;
     }
-}
-
-@media only screen and (max-height: 480px) {
-    canvas {
-        height: 80vh;
-    }
-
+    
     .fullpage div {
         display: flex;
+    }
+}
+
+@media only screen and (orientation: portrait) and (max-width: 750px) {
+    canvas {
+        width: calc(100% - 32px);
+        height: auto;
+        aspect-ratio: 3/2 auto;
+    }
+}
+
+@media screen and (orientation: landscape) and (max-width: 750px) and (max-height: 580px) {
+    canvas {
+        /* width: calc(100% - 32px); */
+        width: auto;
+        /* height: auto; */
+        height: calc(100vh - 92px);
+        aspect-ratio: 3/2 auto;
+    }
+}
+
+@media screen and (orientation: portrait) and (max-width: 750px) and (max-height: 580px) {
+    canvas {
+        width: auto;
+        height: calc(100vh - 92px);
+        aspect-ratio: 3/2 auto;
     }
 }
 

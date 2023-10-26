@@ -56,7 +56,6 @@ class Character extends MovableObject {
         '/img/set1/2_character_pepe/5_dead/D-57.png'
     ];
     cworld;
-    cworld_loaded = false;
     imageCache_Jump_Start;
     imageCache_Hurt;
     currentImage_Jump_Start = 0;
@@ -68,44 +67,47 @@ class Character extends MovableObject {
 
     constructor() {
         super();
+        this.initImages();
+        this.initValues();
+        this.animate();
+        this.applyGravitation(); //from movable_object.class
+    }
+
+    initImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
-        this.imageCache = {};
+        // this.imageCache = {};
         this.loadImages(this.IMAGES_IDLE);
         this.imageCache_Idle = this.imageCache;
-        this.imageCache = {};
+        // this.imageCache = {};
         this.loadImages(this.IMAGES_JUMP);
         this.imageCache_Jump = this.imageCache;
-        this.imageCache = {};
+        // this.imageCache = {};
         this.loadImages(this.IMAGES_JUMP_START);
         this.imageCache_Jump_Start = this.imageCache;
-        this.imageCache = {};
+        // this.imageCache = {};
         this.loadImages(this.IMAGES_HURT);
         this.imageCache_Hurt = this.imageCache;
-        this.imageCache = {};
+        // this.imageCache = {};
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
-        this.imageCache = {};
+        // this.imageCache = {};
+    }
 
+    initValues() {
         this.x = 0;
         this.y = 420;
-        this.speed = 1.6;
         this.width = 92;
         this.height = 180;
         this.yBaseline = this.height;
+        this.speed = 1.6;
         this.energy = 100;
         this.attack = 10;
-        this.coins = 0;
-        this.bottles = 0;
         this.isFalling = false;
-        this.hitbox_x = 6;
-        this.hitbox_y = 60;
-        this.hitbox_width = 80;
-        this.hitbox_height = 120;
-
-        
-        this.animate();
-        this.applyGravitation(); //from movable_object.class
+        this.hitbox_x = 16;
+        this.hitbox_y = 70;
+        this.hitbox_width = this.width - (this.hitbox_x * 2);
+        this.hitbox_height = 100;
     }
 
     animate() {
@@ -120,9 +122,16 @@ class Character extends MovableObject {
 
         tempInterval = setInterval( () => {
             if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0 && this.energy > 0) {
-                let path = mainPath + this.IMAGES_IDLE[this.currentImage_Idle];
-                this.img = this.imageCache_Idle[path];
-                this.currentImage_Idle == (this.IMAGES_IDLE.length - 1) ? this.currentImage_Idle = 0 : this.currentImage_Idle++;
+                if (this.isHurt) {
+                    let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
+                    this.img = this.imageCache_Hurt[path];
+                    this.currentImage_Hurt == (this.IMAGES_HURT.length - 1) ? this.currentImage_Hurt = (this.IMAGES_HURT.length - 1) : this.currentImage_Hurt++;
+                } else {
+                    this.currentImage_Hurt = 0;
+                    let path = mainPath + this.IMAGES_IDLE[this.currentImage_Idle];
+                    this.img = this.imageCache_Idle[path];
+                    this.currentImage_Idle == (this.IMAGES_IDLE.length - 1) ? this.currentImage_Idle = 0 : this.currentImage_Idle++;
+                }
             } else if(this.energy <= 0) {
                 let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
                 this.img = this.imageCache_Dead[path];
@@ -162,7 +171,7 @@ class Character extends MovableObject {
                 this.jumpCount--;
             }
     
-            if(keyboard.Space && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
+            if(keyboard.Up && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
                 this.jumpCount = 4;
             }
         }, 1000 / 11);

@@ -3,9 +3,9 @@ class Bottle extends MovableObject {
     constructor(x = 0, right = false) {
         super();
         if (right) {
-            this.loadImage('/img/set1/6_salsa_bottle/1_salsa_bottle_on_ground.png'); 
-        } else {
             this.loadImage('/img/set1/6_salsa_bottle/2_salsa_bottle_on_ground.png'); 
+        } else {
+            this.loadImage('/img/set1/6_salsa_bottle/1_salsa_bottle_on_ground.png'); 
         }
         this.x = x;
         this.y = 420;

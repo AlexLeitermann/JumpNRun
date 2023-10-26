@@ -1,12 +1,13 @@
 const level1 = new Level(
     new Character(),
     [
-        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
-        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
-        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        new BossChicken,
+        // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
     ],    
     [
         new Cloud('/img/set1/5_background/layers/4_clouds/2.png', -720),
@@ -86,15 +87,32 @@ const level1 = new Level(
         new Platforms(4220, 300, 100),
     ],
     [
+        new Coin(440, 380),
+        new Coin(380, 250),
+        new Coin(480, 250),
+        new Coin(580, 250),
+        new Coin(150, 150),
         new Coin(200, 150),
-        new Coin(800, 150),
-        new Coin(450, 400),
-        new Bottle(500, 420),
+        new Coin(770, 150),
+        new Coin(820, 150),
+        new Bottle(330, true),
+        new Bottle(620),
         
-        new Coin(1250, 150),
-        new Coin(1250, 400),
-        new Coin(1350, 320),
+        new Coin(1350, 400),
+        new Coin(1350, 150),
+        new Coin(1400, 320),
         new Coin(1450, 250),
+        new Coin(1535, 250),
+        new Coin(1620, 250),
+        new Bottle(1270),
+
+        new Coin(1900, 400),
+        new Coin(1900, 150),
+        new Coin(1950, 320),
+        new Coin(2000, 250),
+        new Coin(2130, 250),
+        new Coin(2270, 250),
+        new Bottle(2030, true),
 
     ]
 );

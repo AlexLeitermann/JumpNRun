@@ -8,6 +8,7 @@ class Keyboard {
     Key0 = false;
     Key1 = false;
     Key2 = false;
+    Num0 = false;
 
     constructor() {
 

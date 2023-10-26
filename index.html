@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <script src="./js/first.js"></script>
+    <script src="./models/keyboard.class.js"></script>
     <script src="./models/platform.class.js"></script>
     <script src="./models/movable_object.class.js"></script>
     <script src="./models/character.class.js"></script>
@@ -16,7 +17,6 @@
     <script src="./models/cloud.class.js"></script>
     <script src="./models/world.class.js"></script>
     <script src="./models/background_object.class.js"></script>
-    <script src="./models/keyboard.class.js"></script>
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
     <script src="./js/game.js"></script>
@@ -32,13 +32,13 @@
         </div>
     </section>
     <section id="gamepage" class="fullpage">
-        <div>
+        <div id="fullscreen">
             <div class="back" onclick="openGame(0)"><span>zurück</span></div>
             <canvas id="canvas" width="720" height="480"><div class="rahmen"></div></canvas>
+            <button id="keyright" class="key right" onmousedown="touchOn(39)" onmouseup="touchOff(39)" ontouchstart="touchOn(39)" ontouchend="touchOff(39)"></button>
+            <button id="keyleft" class="key left" onmousedown="touchOn(37)" onmouseup="touchOff(37)" ontouchstart="touchOn(37)" ontouchend="touchOff(37)"></button>
+            <button id="keyjump" class="key jump" onmousedown="touchOn(38)" onmouseup="touchOff(38)" ontouchstart="touchOn(38)" ontouchend="touchOff(38)"></button>
         </div>
-        <button id="keyright" class="key right" onmousedown="touchOn(39)" onmouseup="touchOff(39)" ontouchstart="touchOn(39)" ontouchend="touchOff(39)"></button>
-        <button id="keyleft" class="key left" onmousedown="touchOn(37)" onmouseup="touchOff(37)" ontouchstart="touchOn(37)" ontouchend="touchOff(37)"></button>
-        <button id="keyjump" class="key jump" onmousedown="touchOn(32)" onmouseup="touchOff(32)" ontouchstart="touchOn(32)" ontouchend="touchOff(32)"></button>
     </section>
 </body>
 </html>
