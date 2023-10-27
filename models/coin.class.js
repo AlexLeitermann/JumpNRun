@@ -2,7 +2,7 @@ class Coin extends MovableObject {
     IMAGES_WALKING = [
         '/img/set1/8_coin/coin_1c.png'
     ];
-
+    snd_coin = new Audio(mainPath + '/audio/coin.mp3');
 
     constructor(x = 0, y = 0) {
         super();

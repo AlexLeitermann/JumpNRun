@@ -9,6 +9,7 @@ class Chicken extends MovableObject {
         '/img/set1/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
     cworld;
+    snd_chicken_dead = new Audio(mainPath + '/audio/chicken_dead.mp3');
 
 
     constructor() {

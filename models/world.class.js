@@ -73,6 +73,7 @@ class World {
                     this.character.getEnergy(enemy.energy_return);
                 } else if(enemy.energy > 0 && this.character.isFalling == false && this.character.isHurt == false) {
                     this.character.isHurt = true;
+                    this.character.snd_hurt.play();
                     this.character.energy > 0 ? this.character.energy -= enemy.attack : this.character.energy = 0;
                     setTimeout(() => {
                         this.character.isHurt = false;
@@ -88,6 +89,7 @@ class World {
             if(enemy.speedY != 0 && world.character.speedY < -1)
                 enemy.speedY = world.character.speedY;
             enemy.revive();
+            enemy.snd_chicken_dead.play();
         } else if(enemy instanceof BossChicken) {
 
         }
@@ -100,10 +102,12 @@ class World {
                 if(item instanceof Coin && item.energy > 0) {
                     item.energy = 0;
                     this.character.coins += 1;
+                    item.snd_coin.play();
                 }
                 if(item instanceof Bottle && item.energy > 0) {
                     item.energy = 0;
                     this.character.bottles += 1;
+                    item.snd_bottle.play();
                 }
             }
         });

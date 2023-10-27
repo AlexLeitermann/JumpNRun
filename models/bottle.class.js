@@ -1,4 +1,5 @@
 class Bottle extends MovableObject {
+    snd_bottle = new Audio(mainPath + '/audio/bottle_open.mp3');
 
     constructor(x = 0, right = false) {
         super();

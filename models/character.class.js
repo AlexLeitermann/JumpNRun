@@ -64,9 +64,14 @@ class Character extends MovableObject {
     coins = 0;
     bottles = 0;
 
+    snd_walk = new Audio(mainPath + '/audio/walking.mp3');
+    snd_jump = new Audio(mainPath + '/audio/jump_1.mp3');
+    snd_hurt = new Audio(mainPath + '/audio/hurt_1.mp3');
 
     constructor() {
         super();
+        this.snd_walk.loop = true;
+        this.snd_walk.playbackRate = 2.5;
         this.initImages();
         this.initValues();
         this.animate();
@@ -111,15 +116,28 @@ class Character extends MovableObject {
     }
 
     animate() {
+        this.animate_walking();
+        this.animate_idle_hurt_dead();
+        this.animate_jump();
+        this.animate_move();
+    }
+
+
+    animate_walking(){
         tempInterval = setInterval( () => {
             if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.jumpCount < 0 && this.energy > 0) {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
+                this.snd_walk.play();
+            } else {
+                this.snd_walk.pause();
             }
         }, 1000/12);
         regInterval(tempInterval);
+    }
 
+    animate_idle_hurt_dead() {
         tempInterval = setInterval( () => {
             if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0 && this.energy > 0) {
                 if (this.isHurt) {
@@ -139,7 +157,9 @@ class Character extends MovableObject {
             }
         }, 1000/6);
         regInterval(tempInterval);
+    }
 
+    animate_jump(){
         tempInterval = setInterval( () => {
             if(this.isJump == true) {
                 let path = mainPath + this.IMAGES_JUMP[this.currentImage_Jump];
@@ -166,17 +186,20 @@ class Character extends MovableObject {
                     this.isJump = true;
                 }
             }
-
-            if(this.jumpCount > 0) {
+            
+            if(this.jumpCount > 0)
                 this.jumpCount--;
-            }
-    
+
+            
             if(keyboard.Up && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
                 this.jumpCount = 4;
+                this.snd_jump.play();
             }
         }, 1000 / 11);
         regInterval(tempInterval);
+    }
 
+    animate_move() {
         tempInterval = setInterval( () => {
             if(keyboard.Right && this.x < this.cworld.level_end_x && this.jumpCount == -1 && this.energy > 0) {
                 this.flipH = false;
@@ -187,12 +210,13 @@ class Character extends MovableObject {
                 this.x < (0 ) ? this.x = Math.floor((720*6) ) : this.x -= this.speed;
             }
             // Cheats
-            if (keyboard.Up) {
+            if (keyboard.Key0) {
                 this.energy = 100;
                 this.currentImage_Dead = 0;
             }
         }, 1000/120);
         regInterval(tempInterval);
+
     }
 
     getEnergy(en) {

@@ -89,6 +89,7 @@ class BossChicken extends MovableObject {
         this.hitbox_width = this.width - (this.hitbox_x * 2);
         this.hitbox_height = this.height - this.hitbox_y -20;
         this.energy = 1;
+        this.attack = 1;
 
         // this.animation();
     }

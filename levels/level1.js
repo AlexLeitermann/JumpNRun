@@ -2,12 +2,12 @@ const level1 = new Level(
     new Character(),
     [
         new BossChicken,
-        // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-        // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-        // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-        // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
-        // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
-        // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+        new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
     ],    
     [
         new Cloud('/img/set1/5_background/layers/4_clouds/2.png', -720),
