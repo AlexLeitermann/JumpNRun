@@ -9,7 +9,7 @@ class SmallChicken extends MovableObject {
         '/img/set1/3_enemies_chicken/chicken_small/2_dead/dead.png'
     ];
     cworld;
-    snd_chicken_dead = new Audio(mainPath + '/audio/bird_dead.mp3');
+    snd_chicken_dead = new Audio(mainPath + '/audio/birds_1_beep.mp3');
 
 
     constructor() {
@@ -17,10 +17,18 @@ class SmallChicken extends MovableObject {
         // this.loadImage('/img/set1/3_enemies_chicken/chicken_normal/1_walk/1_w.png'); 
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
-        this.imageCache = {};
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
         
+        this.loadValues();
+        this.move();
+        this.jump();
+        this.animation();
+        this.applyGravitation(); //from movable_object.class
+    }
+
+
+    loadValues() {
         this.setChickenToRandomX(500, 3500);
         this.y = 420;
         this.speed = this.initSpeed();
@@ -34,33 +42,20 @@ class SmallChicken extends MovableObject {
         this.energy = 1;
         this.energy_return = 2;
         this.attack = 3;
-
-        this.animation();
-        this.applyGravitation(); //from movable_object.class
     }
 
 
-    animation() {
+    move() {
         tempInterval = setInterval( () => {
             if(this.energy > 0) {
                 this.x < ( -200 ) ? this.x += (720 * 7.2) : this.x -= this.speed;
             }
         }, 25);
         regInterval(tempInterval);
+    }
 
-        tempInterval = setInterval( () => {
-            if(this.energy > 0) {
-                let path = mainPath + this.IMAGES_WALKING[this.currentImage];
-                this.img = this.imageCache_Walk[path];
-                this.currentImage == (this.IMAGES_WALKING.length - 1) ? this.currentImage = 0 : this.currentImage++;
-            } else {
-                let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
-                this.img = this.imageCache_Dead[path];
-                this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = 0 : this.currentImage_Dead++;
-            }
-        }, 1000/8);
-        regInterval(tempInterval);
 
+    jump() {
         tempInterval = setInterval( () => {
             if(this.energy > 0) {
                 this.speedY = 12;
@@ -68,16 +63,34 @@ class SmallChicken extends MovableObject {
             }
         }, (1500 + (this.initSpeed() * 1000)));
         regInterval(tempInterval);
+    }
 
+
+    animation() {
+        tempInterval = setInterval( () => {
+            if(this.energy > 0) {
+                let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
+                this.img = this.imageCache_Walk[path];
+                this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
+            } else {
+                let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
+                this.img = this.imageCache_Dead[path];
+                this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = 0 : this.currentImage_Dead++;
+            }
+        }, 1000/8);
+        regInterval(tempInterval);
     }
     
+
     setChickenToRandomX(startX, rangeX) {
         this.x = startX + Math.floor(Math.random() * rangeX);
     }
 
+
     initSpeed() {
         return  ((Math.random() * .75) + 0.5);
     }
+
 
     revive() {
         setTimeout(() => {
@@ -86,6 +99,7 @@ class SmallChicken extends MovableObject {
             this.energy = 1;
         }, 2000);
     }
+
 
     randomAnimationStart(range = 0) {
         return (Math.floor(Math.random() * range));

@@ -61,12 +61,16 @@ class Character extends MovableObject {
     currentImage_Jump_Start = 0;
     currentImage_Hurt = 0;
     jumpCount = -1;
+    isDead = false;
+    isThrowing = false;
     coins = 0;
     bottles = 0;
+    backpack = [];
 
     snd_walk = new Audio(mainPath + '/audio/walking.mp3');
-    snd_jump = new Audio(mainPath + '/audio/jump_1.mp3');
+    snd_jump = new Audio(mainPath + '/audio/jump_2.mp3');
     snd_hurt = new Audio(mainPath + '/audio/hurt_1.mp3');
+    snd_dead = new Audio(mainPath + '/audio/player_dead_short.mp3');
 
     constructor() {
         super();
@@ -74,29 +78,23 @@ class Character extends MovableObject {
         this.snd_walk.playbackRate = 2.5;
         this.initImages();
         this.initValues();
-        this.animate();
+        this.run();
         this.applyGravitation(); //from movable_object.class
     }
 
     initImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
-        // this.imageCache = {};
         this.loadImages(this.IMAGES_IDLE);
         this.imageCache_Idle = this.imageCache;
-        // this.imageCache = {};
         this.loadImages(this.IMAGES_JUMP);
         this.imageCache_Jump = this.imageCache;
-        // this.imageCache = {};
         this.loadImages(this.IMAGES_JUMP_START);
         this.imageCache_Jump_Start = this.imageCache;
-        // this.imageCache = {};
         this.loadImages(this.IMAGES_HURT);
         this.imageCache_Hurt = this.imageCache;
-        // this.imageCache = {};
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
-        // this.imageCache = {};
     }
 
     initValues() {
@@ -115,11 +113,11 @@ class Character extends MovableObject {
         this.hitbox_height = 100;
     }
 
-    animate() {
+    run() {
         this.animate_walking();
         this.animate_idle_hurt_dead();
         this.animate_jump();
-        this.animate_move();
+        this.checkKeyboard();
     }
 
 
@@ -191,24 +189,16 @@ class Character extends MovableObject {
                 this.jumpCount--;
 
             
-            if(keyboard.Up && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
-                this.jumpCount = 4;
-                this.snd_jump.play();
-            }
         }, 1000 / 11);
         regInterval(tempInterval);
     }
 
-    animate_move() {
+    checkKeyboard() {
         tempInterval = setInterval( () => {
-            if(keyboard.Right && this.x < this.cworld.level_end_x && this.jumpCount == -1 && this.energy > 0) {
-                this.flipH = false;
-                this.x > ((720*6) ) ? this.x = (0 ) : this.x += this.speed;
-            }
-            if(keyboard.Left && this.x > 0 && this.jumpCount == -1 && this.energy > 0) {
-                this.flipH = true;
-                this.x < (0 ) ? this.x = Math.floor((720*6) ) : this.x -= this.speed;
-            }
+            this.checkMoveRight();
+            this.checkMoveLeft();
+            this.checkMoveJump();
+            this.checkMoveThrow();
             // Cheats
             if (keyboard.Key0) {
                 this.energy = 100;
@@ -216,8 +206,54 @@ class Character extends MovableObject {
             }
         }, 1000/120);
         regInterval(tempInterval);
-
     }
+
+
+    checkMoveRight() {
+        if(keyboard.Right && this.x < this.cworld.level_end_x && this.jumpCount == -1 && this.energy > 0) {
+            this.flipH = false;
+            this.x > ((720*6) ) ? this.x = (0 ) : this.x += this.speed;
+        }
+    }
+
+    checkMoveLeft() {
+        if(keyboard.Left && this.x > 0 && this.jumpCount == -1 && this.energy > 0) {
+            this.flipH = true;
+            this.x < (0 ) ? this.x = Math.floor((720*6) ) : this.x -= this.speed;
+        }
+    }
+
+    checkMoveJump() {
+        if((keyboard.Up || keyboard.Space) && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
+            this.jumpCount = 4;
+            this.snd_jump.play();
+        }
+    }
+
+    checkMoveThrow() {
+        if((keyboard.D || keyboard.Num0) && !this.isHurt && !this.isThrowing && this.energy > 0 && this.bottles > 0) {
+            this.bottles--;
+            this.isThrowing = true;
+            let backpackitem = this.cworld.level.items[this.backpack[0]];
+            this.loadMoveThrow(backpackitem);
+            this.backpack.splice(0, 1);
+            setTimeout(() => {
+                this.isThrowing = false;
+            }, 300);
+        }
+    }
+
+
+    loadMoveThrow(backpackitem) {
+        backpackitem.energy = 10;
+        backpackitem.x = this.flipH ? (this.x  - backpackitem.width) : (this.x + (this.width / 1));
+        backpackitem.y = this.y - 100;
+        backpackitem.speedY = 15;
+        backpackitem.speed = this.flipH ? -4 : 4;
+        backpackitem.acceleration = 1;
+        backpackitem.fly = true;
+    }
+
 
     getEnergy(en) {
         this.energy += en;

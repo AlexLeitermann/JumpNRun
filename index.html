@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" href="./img/set1/6_salsa_bottle/salsa_bottle.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <script src="./js/first.js"></script>
     <script src="./models/keyboard.class.js"></script>
@@ -27,8 +28,8 @@
         <h1>Wähle dein Spiel</h1>
         <div class="gamelist">
             <div class="card" onclick="openGame(1)"><span>El Polo Loco</span><div class="imgpreview"><img src="./img/set1/9_intro_outro_screens/start/startscreen_2.png"></div></div>
-            <div class="card" onclick="openGame(2)"><span>Sharkie</span><div class="imgpreview"><img src="./img/set2/4. Marcadores/op L1.png"></div></div>
-            <div class="card" onclick="openGame(3)"><span>Spaceman Tom</span><div class="imgpreview"><img src="./img/set2/4. Marcadores/op L1.png"></div></div>
+            <!-- <div class="card" onclick="openGame(2)"><span>Sharkie</span><div class="imgpreview"><img src="./img/set2/4. Marcadores/op L1.png"></div></div>
+            <div class="card" onclick="openGame(3)"><span>Spaceman Tom</span><div class="imgpreview"><img src="./img/set2/4. Marcadores/op L1.png"></div></div> -->
         </div>
     </section>
     <section id="gamepage" class="fullpage">
@@ -38,7 +39,11 @@
             <button id="keyright" class="key right" onmousedown="touchOn(39)" onmouseup="touchOff(39)" ontouchstart="touchOn(39)" ontouchend="touchOff(39)"></button>
             <button id="keyleft" class="key left" onmousedown="touchOn(37)" onmouseup="touchOff(37)" ontouchstart="touchOn(37)" ontouchend="touchOff(37)"></button>
             <button id="keyjump" class="key jump" onmousedown="touchOn(38)" onmouseup="touchOff(38)" ontouchstart="touchOn(38)" ontouchend="touchOff(38)"></button>
+            <button id="keythrow" class="key throw" onmousedown="touchOn(68)" onmouseup="touchOff(68)" ontouchstart="touchOn(68)" ontouchend="touchOff(68)"></button>
         </div>
+        <div id="startscreen"></div>
+        <div id="gameoverscreen"></div>
+        <div id="youlostscreen"></div>
     </section>
 </body>
 </html>

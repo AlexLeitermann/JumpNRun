@@ -5,6 +5,7 @@ document.addEventListener('gesturestart', function (e) {
 });
 let canvas;
 let world;
+let GameIsRunning = false;
 let keyboard = new Keyboard();
 
 
@@ -52,6 +53,9 @@ function Taste(event) {
         case 50: // 2
             keyboard.Key2 = true;
         break;
+        case 68: // D
+            keyboard.D = true;
+        break;
     }
 
 }
@@ -86,6 +90,9 @@ function TasteLoslassen(event) {
         break;
         case 50: // 2
             keyboard.Key2 = false;
+        break;
+        case 68: // D
+            keyboard.D = false;
         break;
     }
 
@@ -134,6 +141,9 @@ function touchOn(keyCode) {
         case 50: // 2
             keyboard.Key2 = true;
         break;
+        case 68: // D
+            keyboard.D = true;
+        break;
     }
 
 }
@@ -169,6 +179,9 @@ function touchOff(keyCode) {
         break;
         case 50: // 2
             keyboard.Key2 = false;
+        break;
+        case 68: // D
+            keyboard.D = false;
         break;
     }
 

@@ -4,8 +4,6 @@ class BossChicken extends MovableObject {
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
-        '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
-        '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G2.png',
@@ -14,8 +12,6 @@ class BossChicken extends MovableObject {
         '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
-        '/img/set1/4_enemie_boss_chicken/1_walk/G3.png',
-        '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G4.png',
@@ -23,7 +19,10 @@ class BossChicken extends MovableObject {
     ];
     IMAGES_DEAD = [
         '/img/set1/4_enemie_boss_chicken/5_dead/G24.png',
+        '/img/set1/4_enemie_boss_chicken/5_dead/G24.png',
         '/img/set1/4_enemie_boss_chicken/5_dead/G25.png',
+        '/img/set1/4_enemie_boss_chicken/5_dead/G25.png',
+        '/img/set1/4_enemie_boss_chicken/5_dead/G26.png',
         '/img/set1/4_enemie_boss_chicken/5_dead/G26.png'
     ];
     IMAGES_ALERT = [
@@ -51,7 +50,6 @@ class BossChicken extends MovableObject {
         '/img/set1/4_enemie_boss_chicken/4_hurt/G22.png',
         '/img/set1/4_enemie_boss_chicken/4_hurt/G23.png'
     ];
-
     cworld;
     currentImage_Alert = 0;
     currentImage_Attack = 0;
@@ -60,68 +58,80 @@ class BossChicken extends MovableObject {
     imageCache_Attack;
     imageCache_Hurt;
 
+
     constructor() {
         super();
-        // this.loadImage('/img/set1/3_enemies_chicken/chicken_normal/1_walk/1_w.png'); 
+        this.loadAllImages();
+        this.loadValues();
+        this.animation();
+    }
+
+
+    loadAllImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
-        this.imageCache = {};
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
-        this.imageCache = {};
         this.loadImages(this.IMAGES_ALERT);
         this.imageCache_Alert = this.imageCache;
-        this.imageCache = {};
         this.loadImages(this.IMAGES_ATTACK);
         this.imageCache_Attack = this.imageCache;
-        this.imageCache = {};
         this.loadImages(this.IMAGES_HURT);
         this.imageCache_Hurt = this.imageCache;
+    }
 
-        this.x = 720 * 5.2;
+
+    loadValues() {
+        this.x = 720 * 5.4;
         this.y = 450;
         this.speed = 0.2;
         this.width = 261;
         this.height = 304;
         this.yBaseline = this.height;
-        this.hitbox_x = 25;
+        this.hitbox_x = 50;
         this.hitbox_y = 60;
         this.hitbox_width = this.width - (this.hitbox_x * 2);
         this.hitbox_height = this.height - this.hitbox_y -20;
-        this.energy = 1;
-        this.attack = 1;
-
-        // this.animation();
+        this.energy = 30;
+        this.attack = 10;
     }
 
 
-    animation() {
+    move() {
         tempInterval = setInterval( () => {
             if(this.energy > 0 && world.character.x > (this.x - 700)) {
                 this.x < ( -200 ) ? this.x += (720 * 7.2) : this.x -= this.speed;
             }
         }, 25);
         regInterval(tempInterval);
+    }
 
+
+    animation() {
         tempInterval = setInterval( () => {
             if(this.energy <= 0) {
                 let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
                 this.img = this.imageCache_Dead[path];
+                if(this.currentImage_Dead == (this.IMAGES_DEAD.length - 1)) {
+                    setTimeout(() => {
+                        this.x = (720 * 6.4);
+                    }, 2000);
+                }
                 this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
             } else {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage == (this.IMAGES_WALKING.length - 1) ? this.currentImage = 0 : this.currentImage++;
             }
-        }, 1000/8);
+        }, 1000/4);
         regInterval(tempInterval);
     }
     
 
     revive() {
-        this.x = 720 * 7.2;
+        this.x = 720 * 5.4;
         this.speed = this.initSpeed();
-        this.energy = 1;
+        this.energy = 50;
     }
 }
     

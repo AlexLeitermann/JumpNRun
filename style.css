@@ -17,7 +17,6 @@ body {
     -moz-user-select: none; 
     -ms-user-select: none; 
     user-select: none;
-    /* touch-action: pan-y, pan-x; */
     touch-action: none;
 }
 
@@ -27,14 +26,14 @@ canvas {
     position: relative;
     z-index: 0;
     padding: 12px;
-    background-color: #000;
+    background-color: #fff;
     border-radius: 2.5rem;
     border: 8px transparent;
     box-shadow: 0 4px 8px 2px #00000075,
-                8px 8px 8px 0 #ffffff75 inset,
-                -8px 8px 8px 0 #ffffff75 inset,
-                8px -8px 8px 0 #ffffff75 inset,
-                -8px -8px 8px 0 #ffffff75 inset;
+                8px 8px 8px 0 #00000075 inset,
+                -8px 8px 8px 0 #00000075 inset,
+                8px -8px 8px 0 #00000075 inset,
+                -8px -8px 8px 0 #00000075 inset;
     display: block;
     aspect-ratio: 3 / 2;
 }
@@ -181,7 +180,8 @@ a {
     user-select: none;
     cursor: pointer;
     background-position: center;
-    /* touch-action: manipulation; */
+    touch-action: none;
+    display: none;
 }
 
 .left {
@@ -199,7 +199,13 @@ a {
 .jump {
     right: 20px;
     bottom: 3%;
-    background-image: url('./img/btn-up.png');
+    background-image: url('./img/btn-jump.png');
+}
+
+.throw {
+    right: calc(3% + 100px);
+    bottom: 3%;
+    background-image: url('./img/btn-throw.png');
 }
 
 /* ################################################################################ */
@@ -240,6 +246,12 @@ a {
         width: auto;
         height: calc(100vh - 92px);
         aspect-ratio: 3/2 auto;
+    }
+}
+
+@media (pointer: coarse) {
+    .key {
+        display: block;
     }
 }
 
