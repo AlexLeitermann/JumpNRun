@@ -33,6 +33,13 @@ class Bottle extends MovableObject {
         }
         this.loadImages(this.IMAGES_FLY);
         this.imageCache_Fly = this.imageCache;
+        this.loadValues(x, y);
+
+        this.animation();
+        this.applyGravitation();
+    }
+
+    loadValues(x = 0, y = 420) {
         this.x = x;
         this.y = y;
         this.speed = 0;
@@ -47,9 +54,6 @@ class Bottle extends MovableObject {
         this.hitbox_height = this.height;
         this.energy = -1;
         this.attack = 10;
-
-        this.animation();
-        this.applyGravitation();
     }
 
 

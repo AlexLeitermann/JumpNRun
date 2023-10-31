@@ -56,18 +56,19 @@ const level1 = new Level(
         new BackgroundObject('/img/set1/5_background/layers/1_first_layer/2.png', 719*5, 0, 720),
         new BackgroundObject('/img/set1/5_background/layers/1_first_layer/1.png', 719*6, 0, 720),
 
+        
         new BackgroundObject('/img/set1/box_small_left.png', 350, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_left.png', 350, 277, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_middle.png', 450, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_middle.png', 450, 277, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_right.png', 550, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_right.png', 550, 277, 100, 77, 0),
-
+        
         new BackgroundObject('/img/set1/box_small_left.png', 1450, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_left.png', 1450, 277, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_right.png', 1550, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_right.png', 1550, 277, 100, 77, 0),
-
+        
         new BackgroundObject('/img/set1/box_small_left.png', 2000, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_left.png', 2000, 277, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_middle.png', 2100, 335, 100, 77, 0),
@@ -75,12 +76,18 @@ const level1 = new Level(
         new BackgroundObject('/img/set1/box_small_right.png', 2200, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_right.png', 2200, 277, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small_right.png', 2300, 335, 100, 77, 0),
-
+        
         new BackgroundObject('/img/set1/box_small.png', 3250, 335, 100, 77, 0),
-
+        
         new BackgroundObject('/img/set1/box_small.png', 4220, 335, 100, 77, 0),
         new BackgroundObject('/img/set1/box_small.png', 4220, 277, 100, 77, 0),
-
+        
+        new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*0.4, 406, 55, 100, 100),
+        new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*1.1, 406, 55, 100, 100),
+        new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*2.55, 406, 55, 100, 100),
+        new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*3.35, 406, 55, 100, 100),
+        new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*5.7, 406, 55, 100, 100),
+        new BackgroundObject('/img/set1/5_background/exit_sign3.png', 719*5.89, 406, 77, 150, 150),
     ],
     [4320],
     [

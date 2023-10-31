@@ -43,7 +43,7 @@ class World {
         tempInterval = setInterval( () => {
             this.collidingStatus = false;
             this.checkCollidingEnemies();
-            this.checkCollidingItems();
+            this.checkCollectItems();
             this.checkCollidingEnemItems();
             if(this.character.energy <= 0 && !this.character.isDead) {
                 // Spieler tot
@@ -104,17 +104,17 @@ class World {
     }
 
 
-    checkCollidingItems() {
+    checkCollectItems() {
         this.level.items.forEach( (item, index) => {
             if(item.isCollidingHitbox(this.character)) {
-                this.isCollidingCoin(item);
-                this.isCollidingBottle(item, index);
+                this.isCollectCoin(item);
+                this.isCollectBottle(item, index);
             }
         });
     }
 
 
-    isCollidingCoin(item) {
+    isCollectCoin(item) {
         if(item instanceof Coin && item.energy > 0) {
             item.energy = 0;
             this.character.coins += 1;
@@ -123,7 +123,7 @@ class World {
     }
 
 
-    isCollidingBottle(item, index) {
+    isCollectBottle(item, index) {
         if(item instanceof Bottle && item.energy == -1 && !item.fly) {
             item.energy = 0;
             let finding = false;
@@ -148,12 +148,28 @@ class World {
                     this.collidingStatus = true;
                     if(enemy.energy > 0 && item.fly) {
                         enemy.energy > 0 ? enemy.energy -= item.attack : enemy.energy = 0;
+                        this.collidingEnemItemsIsBoss(enemy);
                         item.noJump();
                         item.snd_bottlebroken.play();
                     }
                 }
             });
         });
+    }
+
+
+    collidingEnemItemsIsBoss(enemy) {
+        if(!(enemy instanceof BossChicken)) {
+            enemy.revive();
+        } else if(enemy instanceof BossChicken){
+            if(enemy.energy > 0) {
+                // sound hurt
+                enemy.snd_boss_hurt.play();
+            } else {
+                // sound death
+                enemy.snd_boss_death.play();
+            }
+        }
     }
 
 

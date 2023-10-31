@@ -26,6 +26,9 @@ function Taste(event) {
     // console.clear();
     // resetKeyboard();
     switch (event.keyCode) {
+        case 13: // enter
+            keyboard.Enter = true;
+        break;
         case 38: // up
             keyboard.Up = true;
         break;
@@ -64,6 +67,9 @@ function TasteLoslassen(event) {
     // console.clear();
     // resetKeyboard();
     switch (event.keyCode) {
+        case 13: // enter
+            keyboard.Enter = false;
+        break;
         case 38: // up
             keyboard.Up = false;
         break;
@@ -105,8 +111,11 @@ function resetKeyboard() {
     keyboard.Space = false;
     keyboard.Up = false;
     keyboard.D = false;
+    keyboard.Key0 = false;
     keyboard.Key1 = false;
     keyboard.Key2 = false;
+    keyboard.Num0 = false;
+    keyboard.Enter = false;
 }
 
 
@@ -114,6 +123,9 @@ function touchOn(keyCode) {
     // console.clear();
     // resetKeyboard();
     switch (keyCode) {
+        case 13: // enter
+            keyboard.Enter = true;
+        break;
         case 38: // up
             keyboard.Up = true;
         break;
@@ -153,6 +165,9 @@ function touchOff(keyCode) {
     // console.clear();
     // resetKeyboard();
     switch (keyCode) {
+        case 13: // enter
+            keyboard.Enter = false;
+        break;
         case 38: // up
             keyboard.Up = false;
         break;

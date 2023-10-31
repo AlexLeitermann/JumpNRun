@@ -58,6 +58,10 @@ class BossChicken extends MovableObject {
     imageCache_Attack;
     imageCache_Hurt;
 
+    snd_boss_death = new Audio(mainPath + '/audio/win.mp3');
+    snd_boss_alarm = new Audio(mainPath + '/audio/chicken_boss_alarm.mp3');
+    snd_boss_hurt = new Audio(mainPath + '/audio/chicken_alarm.mp3');
+
 
     constructor() {
         super();
@@ -114,7 +118,8 @@ class BossChicken extends MovableObject {
                 this.img = this.imageCache_Dead[path];
                 if(this.currentImage_Dead == (this.IMAGES_DEAD.length - 1)) {
                     setTimeout(() => {
-                        this.x = (720 * 6.4);
+                        this.x = (720 * 7.1);
+                        // Entweder hier GameOver (win) oder nach Zieldurchlauf => character.x > 720 * 6.9
                     }, 2000);
                 }
                 this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
