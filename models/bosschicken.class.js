@@ -1,6 +1,6 @@
 class BossChicken extends MovableObject {
     IMAGES_WALKING = [
-        '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
+        '/img/set1/4_enemie_boss_chicken/1_walk/G1.png ',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
@@ -58,14 +58,12 @@ class BossChicken extends MovableObject {
     imageCache_Attack;
     imageCache_Hurt;
 
-    snd_boss_death = new Audio(mainPath + '/audio/win.mp3');
-    snd_boss_alarm = new Audio(mainPath + '/audio/chicken_boss_alarm.mp3');
-    snd_boss_hurt = new Audio(mainPath + '/audio/chicken_alarm.mp3');
 
 
     constructor() {
         super();
         this.loadAllImages();
+        this.loadSounds();
         this.loadValues();
         this.animation();
     }
@@ -85,10 +83,22 @@ class BossChicken extends MovableObject {
     }
 
 
+    loadSounds() {
+        if (!this.snd_boss_death) {
+            this.snd_boss_death = new Audio(mainPath + '/audio/win.mp3');
+        }
+        if (!this.snd_boss_alarm) {
+            this.snd_boss_alarm = new Audio(mainPath + '/audio/chicken_boss_alarm.mp3');
+        }
+        if (!this.snd_boss_hurt) {
+            this.snd_boss_hurt = new Audio(mainPath + '/audio/chicken_alarm.mp3');
+        }
+    }
+
+
     loadValues() {
-        this.x = 720 * 5.4;
+        this.x = 720 * 5.5;
         this.y = 450;
-        this.speed = 0.2;
         this.width = 261;
         this.height = 304;
         this.yBaseline = this.height;
@@ -96,15 +106,16 @@ class BossChicken extends MovableObject {
         this.hitbox_y = 60;
         this.hitbox_width = this.width - (this.hitbox_x * 2);
         this.hitbox_height = this.height - this.hitbox_y -20;
-        this.energy = 30;
-        this.attack = 10;
+        this.speed = 0.2;
+        this.energy = 50;
+        this.attack = 15;
     }
 
 
     move() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0 && world.character.x > (this.x - 700)) {
-                this.x < ( -200 ) ? this.x += (720 * 7.2) : this.x -= this.speed;
+            if(this.energy > 0 && world.character.x > (this.x - 700) && GameIsRunning) {
+                this.x < ( -200 ) ? this.x += (720 * 7.0) : this.x -= this.speed;
             }
         }, 25);
         regInterval(tempInterval);
@@ -113,7 +124,7 @@ class BossChicken extends MovableObject {
 
     animation() {
         tempInterval = setInterval( () => {
-            if(this.energy <= 0) {
+            if(this.energy <= 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
                 this.img = this.imageCache_Dead[path];
                 if(this.currentImage_Dead == (this.IMAGES_DEAD.length - 1)) {
@@ -123,10 +134,10 @@ class BossChicken extends MovableObject {
                     }, 2000);
                 }
                 this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
-            } else {
-                let path = mainPath + this.IMAGES_WALKING[this.currentImage];
+            } else if(this.energy > 0 && GameIsRunning) {
+                let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
-                this.currentImage == (this.IMAGES_WALKING.length - 1) ? this.currentImage = 0 : this.currentImage++;
+                this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
             }
         }, 1000/4);
         regInterval(tempInterval);

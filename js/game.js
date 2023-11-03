@@ -1,14 +1,11 @@
-window.addEventListener('keydown', Taste);
-window.addEventListener('keyup', TasteLoslassen);
+window.addEventListener('keydown', keyIsDown);
+window.addEventListener('keyup', keyIsUp);
 document.addEventListener('gesturestart', function (e) {
     e.preventDefault();
 });
 let canvas;
 let world;
-let GameIsRunning = false;
 let keyboard = new Keyboard();
-
-
 
 
 function init() {
@@ -17,12 +14,19 @@ function init() {
 }
 
 
-function openGame() {
+function openGame(game) {
     document.getElementById('loadpage').classList.toggle('hide');
+    if (game >= 1) {
+        setTimeout(() => {
+            GameIsRunning = true;
+        }, 1500);
+    } else {
+        GameIsRunning = false;
+    }
 }
 
 
-function Taste(event) {
+function keyIsDown(event) {
     // console.clear();
     // resetKeyboard();
     switch (event.keyCode) {
@@ -63,7 +67,7 @@ function Taste(event) {
 
 }
 
-function TasteLoslassen(event) {
+function keyIsUp(event) {
     // console.clear();
     // resetKeyboard();
     switch (event.keyCode) {

@@ -67,13 +67,10 @@ class Character extends MovableObject {
     bottles = 0;
     backpack = [];
 
-    snd_walk = new Audio(mainPath + '/audio/walking.mp3');
-    snd_jump = new Audio(mainPath + '/audio/jump_2.mp3');
-    snd_hurt = new Audio(mainPath + '/audio/hurt_1.mp3');
-    snd_dead = new Audio(mainPath + '/audio/player_dead_short.mp3');
 
     constructor() {
         super();
+        this.initSounds()
         this.snd_walk.loop = true;
         this.snd_walk.playbackRate = 2.5;
         this.initImages();
@@ -81,6 +78,23 @@ class Character extends MovableObject {
         this.run();
         this.applyGravitation(); //from movable_object.class
     }
+
+
+    initSounds() {
+        if (!this.snd_walk) {
+            this.snd_walk = new Audio(mainPath + '/audio/walking.mp3');
+        }
+        if (!this.snd_jump) {
+            this.snd_jump = new Audio(mainPath + '/audio/jump_2.mp3');
+        }
+        if (!this.snd_hurt) {
+            this.snd_hurt = new Audio(mainPath + '/audio/hurt_1.mp3');
+        }
+        if (!this.snd_dead) {
+            this.snd_dead = new Audio(mainPath + '/audio/player_dead_short.mp3');
+        }
+    }
+
 
     initImages() {
         this.loadImages(this.IMAGES_WALKING);
@@ -96,6 +110,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
     }
+
 
     initValues() {
         this.x = 0;
@@ -113,17 +128,18 @@ class Character extends MovableObject {
         this.hitbox_height = 100;
     }
 
+
     run() {
-        this.animate_walking();
-        this.animate_idle_hurt_dead();
-        this.animate_jump();
+        this.animateWalking();
+        this.animateIdleHurtDead();
+        this.animateJumping();
         this.checkKeyboard();
     }
 
 
-    animate_walking(){
+    animateWalking(){
         tempInterval = setInterval( () => {
-            if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.jumpCount < 0 && this.energy > 0) {
+            if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
@@ -135,20 +151,16 @@ class Character extends MovableObject {
         regInterval(tempInterval);
     }
 
-    animate_idle_hurt_dead() {
+
+    animateIdleHurtDead() {
         tempInterval = setInterval( () => {
-            if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0 && this.energy > 0) {
+            if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
                 if (this.isHurt) {
-                    let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
-                    this.img = this.imageCache_Hurt[path];
-                    this.currentImage_Hurt == (this.IMAGES_HURT.length - 1) ? this.currentImage_Hurt = (this.IMAGES_HURT.length - 1) : this.currentImage_Hurt++;
+                    this.animateHurt();
                 } else {
-                    this.currentImage_Hurt = 0;
-                    let path = mainPath + this.IMAGES_IDLE[this.currentImage_Idle];
-                    this.img = this.imageCache_Idle[path];
-                    this.currentImage_Idle == (this.IMAGES_IDLE.length - 1) ? this.currentImage_Idle = 0 : this.currentImage_Idle++;
+                    this.animateIdle();
                 }
-            } else if(this.energy <= 0) {
+            } else if(this.energy <= 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
                 this.img = this.imageCache_Dead[path];
                 this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
@@ -157,52 +169,76 @@ class Character extends MovableObject {
         regInterval(tempInterval);
     }
 
-    animate_jump(){
+
+    animateHurt() {
+        let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
+        this.img = this.imageCache_Hurt[path];
+        this.currentImage_Hurt == (this.IMAGES_HURT.length - 1) ? this.currentImage_Hurt = (this.IMAGES_HURT.length - 1) : this.currentImage_Hurt++;
+    }
+
+
+    animateIdle() {
+        this.currentImage_Hurt = 0;
+        let path = mainPath + this.IMAGES_IDLE[this.currentImage_Idle];
+        this.img = this.imageCache_Idle[path];
+        this.currentImage_Idle == (this.IMAGES_IDLE.length - 1) ? this.currentImage_Idle = 0 : this.currentImage_Idle++;
+    }
+
+
+    animateJumping(){
         tempInterval = setInterval( () => {
-            if(this.isJump == true) {
-                let path = mainPath + this.IMAGES_JUMP[this.currentImage_Jump];
-                this.img = this.imageCache_Jump[path];
-                this.currentImage_Jump == (this.IMAGES_JUMP.length - 1) ? this.currentImage_Jump = (this.IMAGES_JUMP.length - 1) : this.currentImage_Jump++;
-            } else {
-                this.currentImage_Jump = 0;
-            }
-
-            if(this.jumpCount > 0 ) {
-                let path = mainPath + this.IMAGES_JUMP_START[this.currentImage_Jump_Start];
-                this.img = this.imageCache_Jump_Start[path];
-                this.currentImage_Jump_Start == (this.IMAGES_JUMP_START.length - 1) ? this.currentImage_Jump_Start = (this.IMAGES_JUMP_START.length - 1) : this.currentImage_Jump_Start++;
-            } else {
-                this.currentImage_Jump_Start = 0;
-            }
-
-            if(this.jumpCount == 0) {
-                this.jumpCount = -1;
-                if (!this.isFalling) {
-                    this.acceleration = 1;
-                    this.speedY = 16;
-                    this.y -= .5;
-                    this.isJump = true;
-                }
-            }
-            
-            if(this.jumpCount > 0)
-                this.jumpCount--;
-
-            
+            this.animateJump();
+            this.animateJumpStart();
+            this.checkJumpCount();
         }, 1000 / 11);
         regInterval(tempInterval);
     }
 
+
+    checkJumpCount() {
+        if(this.jumpCount == 0) {
+            this.jumpCount = -1;
+            if (!this.isFalling) {
+                this.acceleration = 1;
+                this.speedY = 16;
+                this.y -= .5;
+                this.isJump = true;
+            }
+        } else if(this.jumpCount > 0) {
+                this.jumpCount--;
+        }
+    }
+
+
+    animateJumpStart() {
+        if(this.jumpCount > 0 ) {
+            let path = mainPath + this.IMAGES_JUMP_START[this.currentImage_Jump_Start];
+            this.img = this.imageCache_Jump_Start[path];
+            this.currentImage_Jump_Start == (this.IMAGES_JUMP_START.length - 1) ? this.currentImage_Jump_Start = (this.IMAGES_JUMP_START.length - 1) : this.currentImage_Jump_Start++;
+        } else {
+            this.currentImage_Jump_Start = 0;
+        }
+    }
+
+
+    animateJump() {
+        if(this.isJump == true) {
+            let path = mainPath + this.IMAGES_JUMP[this.currentImage_Jump];
+            this.img = this.imageCache_Jump[path];
+            this.currentImage_Jump == (this.IMAGES_JUMP.length - 1) ? this.currentImage_Jump = (this.IMAGES_JUMP.length - 1) : this.currentImage_Jump++;
+        } else {
+            this.currentImage_Jump = 0;
+        }
+    }
+
+
     checkKeyboard() {
         tempInterval = setInterval( () => {
-            this.checkMoveRight();
-            this.checkMoveLeft();
-            this.checkMoveJump();
-            this.checkMoveThrow();
-            // Cheats
-            if (keyboard.Key0) {
-                this.energy = 100;
-                this.currentImage_Dead = 0;
+            if(GameIsRunning) {
+                this.checkMoveRight();
+                this.checkMoveLeft();
+                this.checkMoveJump();
+                this.checkMoveThrow();
             }
         }, 1000/120);
         regInterval(tempInterval);
@@ -210,12 +246,13 @@ class Character extends MovableObject {
 
 
     checkMoveRight() {
-        if(keyboard.Right && this.x < this.cworld.level_end_x && this.jumpCount == -1 && this.energy > 0) {
+        if(keyboard.Right && this.x < world.level_end_x && this.jumpCount == -1 && this.energy > 0) {
             this.flipH = false;
             this.x > ((720*6) ) ? this.x = (0 ) : this.x += this.speed;
         }
     }
 
+    
     checkMoveLeft() {
         if(keyboard.Left && this.x > 0 && this.jumpCount == -1 && this.energy > 0) {
             this.flipH = true;
@@ -223,12 +260,14 @@ class Character extends MovableObject {
         }
     }
 
+
     checkMoveJump() {
         if((keyboard.Up || keyboard.Space) && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
             this.jumpCount = 4;
             this.snd_jump.play();
         }
     }
+
 
     checkMoveThrow() {
         if((keyboard.D || keyboard.Num0) && !this.isHurt && !this.isThrowing && this.energy > 0 && this.bottles > 0) {
@@ -248,10 +287,16 @@ class Character extends MovableObject {
         backpackitem.energy = 10;
         backpackitem.x = this.flipH ? (this.x  - backpackitem.width) : (this.x + (this.width / 1));
         backpackitem.y = this.y - 100;
-        backpackitem.speedY = 15;
+        backpackitem.speedY = 5 + this.ThrowPower();
         backpackitem.speed = this.flipH ? -4 : 4;
         backpackitem.acceleration = 1;
         backpackitem.fly = true;
+    }
+
+
+    ThrowPower() {
+        return Math.floor(Math.random() * 10);
+        // return 3;
     }
 
 
@@ -261,6 +306,4 @@ class Character extends MovableObject {
             this.energy = 100;
         }
     }
-    
-
 }

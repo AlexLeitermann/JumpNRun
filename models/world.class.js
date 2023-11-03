@@ -1,11 +1,11 @@
 class World {
     level = level1;
-    level_end_x = this.level.level_end_x;
+    level_end_x = 720;
 
-    character = this.level.character;
-    worldPlatforms = this.level.platforms;
+    
+    character;
     collidingStatus = false;
-
+    
     camera_x = 0;
     fpsStart = 0;
     fpsValue = 0;
@@ -13,7 +13,9 @@ class World {
     ctx;
     canvas;
     playgame = false;
-
+    game = -1;
+    b0 = '';
+    
     
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -22,37 +24,49 @@ class World {
 
         worldLoaded = true;
         this.setWorld();
+        this.setIndexes();
         this.checkColliding();
+        this.checkKeybordForTesting();
         this.draw();
     }
 
 
+    setIndexes() {
+        this.level.items.forEach((element, index) => {
+            element.index = index;
+        });
+    }
+    
+    
     setWorld() {
-        this.level.character.cworld = this;
-        this.level.enemies.cworld = this;
+        this.level_end_x = this.level.level_end_x;
+        this.character = this.level.character;
+        this.character.platforms_toJump = this.level.platforms;
+        this.character.cworld = this;
         this.level.enemies.forEach(element => {
             if(element instanceof BossChicken)
+                element.cworld = this;
                 element.move();
         });
-
-        this.character.platforms_toJump = this.level.platforms;
     }
 
 
     checkColliding() {
         tempInterval = setInterval( () => {
-            this.collidingStatus = false;
-            this.checkCollidingEnemies();
-            this.checkCollectItems();
-            this.checkCollidingEnemItems();
-            if(this.character.energy <= 0 && !this.character.isDead) {
-                // Spieler tot
-                this.character.isDead = true;
-                this.character.snd_dead.play();
+            if(GameIsRunning == true ) {
+                this.collidingStatus = false;
+                this.checkCollidingEnemies();
+                this.checkCollectItems();
+                this.checkCollidingEnemItems();
+                this.checkCharacterOnExit();
+                this.checkCharacterDeath();
             }
         }, 1000 / 60);
         regInterval(tempInterval);
+    }
 
+
+    checkKeybordForTesting() {
         // set first chicken on x=720 - only for testing
         tempInterval = setInterval(() => {
             if(keyboard.Key1 == true) 
@@ -98,9 +112,9 @@ class World {
                 enemy.speedY = this.character.speedY;
             enemy.revive();
             enemy.snd_chicken_dead.play();
-        } else if(enemy instanceof BossChicken) {
+        } //else if(enemy instanceof BossChicken) {
 
-        }
+        //}
     }
 
 
@@ -136,6 +150,7 @@ class World {
                 this.character.backpack.push(index);
                 this.character.bottles += 1;
                 item.snd_bottle.play();
+                item.initStatus = false;
             }
         }
     }
@@ -149,7 +164,7 @@ class World {
                     if(enemy.energy > 0 && item.fly) {
                         enemy.energy > 0 ? enemy.energy -= item.attack : enemy.energy = 0;
                         this.collidingEnemItemsIsBoss(enemy);
-                        item.noJump();
+                        item.noJump(-100, true);
                         item.snd_bottlebroken.play();
                     }
                 }
@@ -163,27 +178,55 @@ class World {
             enemy.revive();
         } else if(enemy instanceof BossChicken){
             if(enemy.energy > 0) {
-                // sound hurt
                 enemy.snd_boss_hurt.play();
             } else {
-                // sound death
                 enemy.snd_boss_death.play();
             }
         }
     }
 
 
+    checkCharacterOnExit() {
+        if(this.character.x > 720 * 5.9) {
+            // Spiel beendet
+            this.gameStop();
+            world.game = -1;
+        }
+    }
+
+
+    checkCharacterDeath() {
+        if(this.character.energy <= 0 && !this.character.isDead) {
+            // Spieler tot, Spiel beendet
+            this.character.energy = 0;
+            this.character.isDead = true;
+            this.character.snd_dead.play();
+            setTimeout(() => {
+                this.gameStop();
+            }, 2000);
+        }
+    }
+
+
+    gameStop() {
+        // stopAllInterval();
+        this.character.snd_walk.pause();
+        this.character.snd_walk.currentTime = 0;
+        openGame(0);
+    }
+    
+    
 // ################################################################################
 // ################################################################################
 // ################################################################################
     draw() {
         this.getFPS();
-        this.camera_x = -this.character.x;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.camera_x + 100, 0);
-        this.drawMovableWorld();
-        this.ctx.translate(-this.camera_x - 100, 0);
-        this.drawTextInfo();
+            this.camera_x = -this.character.x;
+            this.ctx.translate(this.camera_x + 100, 0);
+            this.drawMovableWorld();
+            this.ctx.translate(-this.camera_x - 100, 0);
+            this.drawTextInfo();
         this.fpsValue++
         let self = this;
         requestAnimationFrame(function() {
@@ -198,7 +241,7 @@ class World {
         } else {
             let fpsStop = performance.now();
             if((fpsStop - this.fpsStart) > 1000 ) {
-                this.fpsText = this.fpsValue;
+                this.fpsText = Math.floor((this.fpsValue / (fpsStop - this.fpsStart)) * 1000);
                 this.fpsValue = 0;
                 this.fpsStart = fpsStop;
             }
@@ -209,7 +252,7 @@ class World {
     drawMovableWorld() {
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.level.items);
+        this.addObjectsToMap(this.level.items, false);
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.character, this.character.flipH);
         this.drawSites(); // Für Abgabe entfernen!!!
@@ -270,7 +313,7 @@ class World {
         this.addDataToMap('Pepe: '+ this.character.energy, 10, 48);
         this.addDataToMap('Coins: '+ this.character.coins, 10, 64);
         this.addDataToMap('Bottles: '+ this.character.bottles, 10, 80);
-        this.addDataToMap('Move: Arrow left/right - Jump: Arrow up/Space - Attack: Num 0/D', 120, 454);
+        // this.addDataToMap('Move: Arrow left/right - Jump: Arrow up/Space - Attack: Num 0/D', 120, 454);
         this.addDataToMap('Boss: '+ this.level.enemies[0].energy, 500, 64);
     }
 

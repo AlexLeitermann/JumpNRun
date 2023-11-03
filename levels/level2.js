@@ -1,13 +1,17 @@
-const level1 = new Level(
+let level2;
+
+function initLevel2() {
+    console.log('level 2');
+    level2 = new Level(
         [
-            new Character(),
+            new Character()
         ],
         [
             new BossChicken,
+            new Chicken, // new Chicken, new Chicken, new Chicken, new Chicken,
             // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
             // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-            // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-            // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+            new SmallChicken, // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
             // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
             // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
         ],    
@@ -59,45 +63,45 @@ const level1 = new Level(
             new BackgroundObject('/img/set1/5_background/layers/1_first_layer/1.png', 719*6, 0, 720),
     
             
-            new BackgroundObject('/img/set1/box_small_left.png', 350, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_left.png', 350, 277, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_middle.png', 450, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_middle.png', 450, 277, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_right.png', 550, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_right.png', 550, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_left.png', 350, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_left.png', 350, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_middle.png', 450, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_middle.png', 450, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_right.png', 550, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_right.png', 550, 277, 100, 77, 0),
             
-            new BackgroundObject('/img/set1/box_small_left.png', 1450, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_left.png', 1450, 277, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_right.png', 1550, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_right.png', 1550, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_left.png', 1450, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_left.png', 1450, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_right.png', 1550, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_right.png', 1550, 277, 100, 77, 0),
             
-            new BackgroundObject('/img/set1/box_small_left.png', 2000, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_left.png', 2000, 277, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_middle.png', 2100, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_middle.png', 2100, 277, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_right.png', 2200, 335, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_right.png', 2200, 277, 100, 77, 0),
-            new BackgroundObject('/img/set1/box_small_right.png', 2300, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_left.png', 2000, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_left.png', 2000, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_middle.png', 2100, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_middle.png', 2100, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_right.png', 2200, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_right.png', 2200, 277, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small_right.png', 2300, 335, 100, 77, 0),
             
-            new BackgroundObject('/img/set1/box_small.png', 3250, 335, 100, 77, 0),
+            // new BackgroundObject('/img/set1/box_small.png', 3250, 335, 100, 77, 0),
             
             new BackgroundObject('/img/set1/box_small.png', 4220, 335, 100, 77, 0),
             new BackgroundObject('/img/set1/box_small.png', 4220, 277, 100, 77, 0),
             
-            new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*0.4, 406, 55, 100, 100),
-            new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*1.1, 406, 55, 100, 100),
-            new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*2.55, 406, 55, 100, 100),
-            new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*3.35, 406, 55, 100, 100),
-            new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*5.7, 406, 55, 100, 100),
+            // new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*0.4, 406, 55, 100, 100),
+            // new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*1.1, 406, 55, 100, 100),
+            // new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*2.55, 406, 55, 100, 100),
+            // new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*3.35, 406, 55, 100, 100),
+            // new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*5.7, 406, 55, 100, 100),
             new BackgroundObject('/img/set1/5_background/exit_sign3.png', 719*5.89, 406, 77, 150, 150),
         ],
         [4320],
         [
-            new Platforms(350,  300, 300),
-            new Platforms(1450, 300, 200),
-            new Platforms(2000, 300, 300),
-            new Platforms(2300, 358, 100),
-            new Platforms(3250, 358, 100),
+            // new Platforms(350,  300, 300),
+            // new Platforms(1450, 300, 200),
+            // new Platforms(2000, 300, 300),
+            // new Platforms(2300, 358, 100),
+            // new Platforms(3250, 358, 100),
             new Platforms(4220, 300, 100),
         ],
         [
@@ -106,11 +110,11 @@ const level1 = new Level(
             new Bottle(1270, 420, 0),
             new Bottle(1570, 420, 0),
             new Bottle(2030, 420, 1),
-            new Bottle(2280, 358, -1),
+            // new Bottle(2280, 358, -1),
     
-            new Bottle(-500, 0, -1),
-            new Bottle(-500, 0, -1),
-            new Bottle(-500, 0, -1),
+            // new Bottle(-500, 0, -1),
+            // new Bottle(-500, 0, -1),
+            // new Bottle(-500, 0, -1),
             
             // new Coin(150, 150),
             // new Coin(200, 150),
@@ -150,3 +154,4 @@ const level1 = new Level(
     
         ]
     );
+}

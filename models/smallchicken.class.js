@@ -9,7 +9,6 @@ class SmallChicken extends MovableObject {
         '/img/set1/3_enemies_chicken/chicken_small/2_dead/dead.png'
     ];
     cworld;
-    snd_chicken_dead = new Audio(mainPath + '/audio/birds_1_beep.mp3');
 
 
     constructor() {
@@ -20,11 +19,19 @@ class SmallChicken extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
         
+        this.loadSounds();
         this.loadValues();
         this.move();
         this.jump();
         this.animation();
         this.applyGravitation(); //from movable_object.class
+    }
+
+
+    loadSounds() {
+        if(!this.snd_chicken_dead) {
+            this.snd_chicken_dead = new Audio(mainPath + '/audio/birds_1_beep.mp3');
+        }
     }
 
 
@@ -40,14 +47,14 @@ class SmallChicken extends MovableObject {
         this.hitbox_width = this.width;
         this.hitbox_height = this.height;
         this.energy = 1;
-        this.energy_return = 2;
+        this.energy_return = 1;
         this.attack = 3;
     }
 
 
     move() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0) {
+            if(this.energy > 0 && GameIsRunning) {
                 this.x < ( -200 ) ? this.x += (720 * 7.2) : this.x -= this.speed;
             }
         }, 25);
@@ -57,7 +64,7 @@ class SmallChicken extends MovableObject {
 
     jump() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0) {
+            if(this.energy > 0 && GameIsRunning) {
                 this.speedY = 12;
                 this.y -= 0.5;
             }
@@ -68,11 +75,11 @@ class SmallChicken extends MovableObject {
 
     animation() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0) {
+            if(this.energy > 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
-            } else {
+            } else if(this.energy <= 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
                 this.img = this.imageCache_Dead[path];
                 this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = 0 : this.currentImage_Dead++;
@@ -88,7 +95,7 @@ class SmallChicken extends MovableObject {
 
 
     initSpeed() {
-        return  ((Math.random() * .75) + 0.5);
+        return  ((Math.random() * .5) + 0.3);
     }
 
 

@@ -11,17 +11,17 @@ class MovableObject {
     speed = 0;
     speedY = 0;
     acceleration = 1;
-    isFalling;
-    fly = false;
-    isMarking = false; // Für Abgabe entfernen!!!
+    attack = 0;
     energy = 100;
     energy_return = 0;
-    attack = 0;
-    lastHit = 0; // Nicht genutzt
-    isJump = false;
-    platforms_toJump = [];
-    isHurt = false;
+    initStatus = true;
     flipH = false;
+    isFalling = false;
+    fly = false;
+    isMarking = false; // Für Abgabe entfernen!!!
+    isJump = false;
+    isHurt = false;
+    platforms_toJump = [];
     img = new Image();
     imageCache = [];
     imageCache_Walk = [];
@@ -33,6 +33,7 @@ class MovableObject {
     currentImage_Idle = 0;
     currentImage_Jump = 0;
     currentImage_Dead = 0;
+    index = -99;
 
 
     loadImage(path) {
@@ -54,13 +55,17 @@ class MovableObject {
     applyGravitation() {
         tempInterval = setInterval(() => {
             let middle = this.x + (this.width / 2);
-            if(this.y < 420 ) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
-            } 
-            if(this.isRangeOfPlatforms(middle)[0] && (this.speedY) < 0) {
-                this.jumpOnPlatforms(this.isRangeOfPlatforms(middle)[1]);
-            } 
+            if (!(this instanceof Bottle && !this.fly) && this.energy > 0) {
+                if(this.y < 420) {
+                    this.y -= this.speedY;
+                    this.speedY -= this.acceleration;
+                } 
+            }
+            if (this instanceof Character) {
+                if(this.isRangeOfPlatforms(middle)[0] && (this.speedY) < 0) {
+                    this.jumpOnPlatforms(this.isRangeOfPlatforms(middle)[1]);
+                } 
+            }
             this.landedOnGround(420);
             this.speedY < -1 ? this.isFalling = true : this.isFalling = false;
         }, 1000 / 30);
@@ -77,38 +82,44 @@ class MovableObject {
 
     landedOnGround(y) {
         if(this.y >= y) {
-            this.noJump(y);
+            this.noJump(y, false);
         }
     }
 
 
-    noJump(y = -100) {
-        this.y = y;
+    noJump(y = -100, splash = false) {
         this.speedY = 0;
         if(this instanceof Bottle) {
-            this.speed = 0;
-            this.fly = false;
-            this.acceleration = 0;
-            this.energy = -1;
-            this.currentImage_Fly = 0;
+            this.noJumpBottle(splash);
+            setTimeout(() => {
+                this.y = y;
+            }, splash ? 600 : 0);
+        } else {
+            this.y = y;
         }
         this.isJump = false;
         this.currentImage_Jump = 0;
     }
 
 
+    noJumpBottle(splash) {
+        this.speed = 0;
+        this.fly = false;
+        this.acceleration = 0;
+        this.energy = -1;
+        this.currentImage_Fly = 0;
+        this.splash = splash;
+    }
+
+
     isRangeOfPlatforms(middle) {
         let answer = false;
-        let x = 0;
         let y = 0;
-        let width = 0;
         if(this.platforms_toJump) {
             this.platforms_toJump.forEach( p => {
                 if(middle >= p.x && middle <= (p.x + p.width)) {
                     answer = true;
-                    x = p.x;
                     y = p.y;
-                    width = p.width;
                 }
             });
         }
@@ -116,12 +127,12 @@ class MovableObject {
     }
 
 
-    isColliding(obj) {
-        return  (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && 
-                (this.y - this.yBaseline) >= (obj.y - obj.yBaseline) &&
-                (this.y) <= (obj.y); // && 
-                //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
-    }
+    // isColliding(obj) {
+    //     return  (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && 
+    //             (this.y - this.yBaseline) >= (obj.y - obj.yBaseline) &&
+    //             (this.y) <= (obj.y); // && 
+    //             //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
+    // }
 
 
     isCollidingHitbox(obj) {
@@ -129,16 +140,6 @@ class MovableObject {
         (this.x + this.hitbox_x) <= (obj.x + obj.hitbox_x + obj.hitbox_width) &&
         (this.y - this.yBaseline + this.hitbox_y) <= (obj.y - obj.yBaseline + obj.hitbox_y + obj.hitbox_height) &&
         (this.y - this.yBaseline + this.hitbox_y + this.hitbox_height) >= (obj.y - obj.yBaseline + obj.hitbox_y);
-    }
-
-    
-    hit() {
-        this.energy -= 5;
-        if(this.energy < 0) {
-            this.energy = 0;
-        } else {
-            this.lastHit = new Date().getTime();
-        }
     }
 
 }
