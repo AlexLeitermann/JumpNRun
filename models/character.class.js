@@ -66,6 +66,7 @@ class Character extends MovableObject {
     coins = 0;
     bottles = 0;
     backpack = [];
+    findReserve = false;
 
 
     constructor() {
@@ -239,6 +240,7 @@ class Character extends MovableObject {
                 this.checkMoveLeft();
                 this.checkMoveJump();
                 this.checkMoveThrow();
+                this.checkCoinToBottle();
             }
         }, 1000/120);
         regInterval(tempInterval);
@@ -265,6 +267,26 @@ class Character extends MovableObject {
         if((keyboard.Up || keyboard.Space) && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
             this.jumpCount = 4;
             this.snd_jump.play();
+        }
+    }
+
+
+    checkCoinToBottle() {
+        if(keyboard.Enter && this.coins >= 10) {
+            this.cworld.level.items.forEach( (element, index) => {
+                if (element instanceof Bottle && element.reserve && this.findReserve == false) {
+                    this.findReserve = true;
+                    this.backpack.push(index);
+                    this.bottles += 1;
+                    this.coins -= 10;
+                    element.reserve = false;
+                    element.initStatus = false;
+                    element.snd_bottle.play();
+                    setTimeout(() => {
+                        this.findReserve = false;
+                    }, 200);
+                }
+            });
         }
     }
 

@@ -21,11 +21,12 @@ class Bottle extends MovableObject {
     imageCache_Splash;
     currentImage_Fly = 0;
     currentImage_Splash = 0;
+    reserve = false;
     speedX = 0;
     splash = false;
 
 
-    constructor(x = 0, y = 420, right = 0) {
+    constructor(x = 0, y = 420, right = 0, reserve = false) {
         super();
         if (right == 1) {
             this.loadImage('/img/set1/6_salsa_bottle/2_salsa_bottle_on_ground.png'); 
@@ -34,6 +35,7 @@ class Bottle extends MovableObject {
         } else if(right == -1){
             this.loadImage('/img/set1/6_salsa_bottle/salsa_bottle.png'); 
         }
+        this.reserve = reserve;
         this.loadImages(this.IMAGES_FLY);
         this.imageCache_Fly = this.imageCache;
         this.loadImages(this.IMAGES_SPLASH);
