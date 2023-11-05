@@ -302,7 +302,7 @@ class Character extends MovableObject {
             this.backpack.splice(0, 1);
             setTimeout(() => {
                 this.isThrowing = false;
-            }, 300);
+            }, 2000);
         }
     }
 

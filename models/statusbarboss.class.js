@@ -1,4 +1,4 @@
-class StatusBar {
+class StatusBarBoss {
     iconX;
     iconY;
     iconWidth;
@@ -21,8 +21,8 @@ class StatusBar {
 
 
     loadImages(path) {
-        this.imgBackground.src = mainPath + '/img/set1/7_statusbars/4_bar_elements/statusbar_empty.png';
-        this.imgForeground.src = mainPath + '/img/set1/7_statusbars/4_bar_elements/statusbar_blue.png';
+        this.imgBackground.src = mainPath + '/img/set1/7_statusbars/4_bar_elements/statusbar_empty_r.png';
+        this.imgForeground.src = mainPath + '/img/set1/7_statusbars/4_bar_elements/statusbar_blue_r.png';
         this.imgIcon.src = mainPath + path;
     }
 
@@ -32,12 +32,12 @@ class StatusBar {
         this.iconY = y;
         this.iconWidth = 50;
         this.iconHeight = 50;
-        this.barX = 40;
+        this.barX = 677;
         this.barY = this.iconY + 10;
         this.barWidth = 120;
         this.barHeight = 32;
-        this.max = 100;
-        this.current = 100;
+        this.max = 50;
+        this.current = 50;
     }
 
 

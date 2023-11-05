@@ -12,7 +12,7 @@ class World {
     statusbarHealth = new StatusBar('/img/set1/7_statusbars/3_icons/icon_health.png', 10, 0);
     statusbarCoin = new StatusBar('/img/set1/7_statusbars/3_icons/icon_coin.png', 10, 50);
     statusbarBottle = new StatusBar('/img/set1/7_statusbars/3_icons/icon_salsa_bottle.png', 90, 50);
-    statusbarBoss = new StatusBar('img/set1/7_statusbars/3_icons/icon_health_endboss.png', 680, 0);
+    statusbarBoss = new StatusBarBoss('img/set1/7_statusbars/3_icons/icon_health_endboss.png', 660, 10);
     audio = new AudioManager();
     playgame = false;
     game = -1;
@@ -67,15 +67,15 @@ class World {
     }
 
 
-    checkKeybordForTesting() {
+    checkKeybordForTesting() { // diese Funktion muss noch weg
         // set first chicken on x=720 - only for testing
         tempInterval = setInterval(() => {
-            if(keyboard.Key1 == true) 
-                this.level.enemies[0].x = 720;
             if(keyboard.Key0 == true) 
+                this.level.enemies[0].x = 720;
+            if(keyboard.Key1 == true) 
                 this.level.enemies[0].energy = 0;
             if(keyboard.Key2 == true) 
-                this.level.enemies[0].energy = 1;
+                this.level.enemies[0].energy += 1;
         }, 100);
         regInterval(tempInterval);
     }
@@ -141,7 +141,7 @@ class World {
     }
 
 
-    isCollectBottle(item, index) {
+    isCollectBottle(item, index) { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if(item instanceof Bottle && item.energy == -1 && !item.fly) {
             item.energy = 0;
             let finding = false;
@@ -166,7 +166,7 @@ class World {
                 if(enemy.isCollidingHitbox(item)) {
                     this.collidingStatus = true;
                     if(enemy.energy > 0 && item.fly) {
-                        enemy.energy > 0 ? enemy.energy -= item.attack : enemy.energy = 0;
+                        enemy.energy >= item.attack ? enemy.energy -= item.attack : enemy.energy = 0;
                         this.collidingEnemItemsIsBoss(enemy);
                         item.noJump(-100, true);
                         item.snd_bottlebroken.play();
@@ -177,15 +177,16 @@ class World {
     }
 
 
-    collidingEnemItemsIsBoss(enemy) {
+    collidingEnemItemsIsBoss(enemy) { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if(enemy instanceof BossChicken){
+            this.statusbarBoss.current = enemy.energy;
             if(enemy.energy > 0 && !enemy.isHurt) {
                 enemy.isHurt = true;
                 enemy.snd_boss_hurt.play();
                 setTimeout(() => {
                     enemy.isHurt = false;
                 }, 1500);
-            } else {
+            } else if(enemy.energy <= 0){
                 enemy.isHurt = false;
                 enemy.snd_boss_death.play();
             }
@@ -221,31 +222,34 @@ class World {
         // view GameEnd or GameLose
         openGame(0);
         if(win) {
-        //     // level1 = loadLevel1();
-        //     this.character.x = 0;
-        //     // this.level = loadLevel1();
-
+            this.clearGame();
             setTimeout(() => {
-                this.character = null;
-                this.level = null;
-            }, 200);
-            setTimeout(() => {
-                this.level = loadLevel1();
-                this.setWorld();
-                this.character.loadSounds();
-                this.setIndexes();
-                this.firstFrame = true;
+                this.loadGame();
             }, 1300);
-        //     // GameIsRunning = true;
         }
     }
-    
 
-    restart() {
-        this.character.loadValues();
 
+    clearGame() {
+        setTimeout(() => {
+            this.character = null;
+            this.level = null;
+        }, 200);
+    }
+
+
+    loadGame(startLevel = 1) {
+        if(startLevel == 1) {
+            this.level = loadLevel1();
+        } else if(startLevel == 2) {
+            this.level = loadLevel2();
+        }
+        this.setWorld();
+        this.setIndexes();
+        this.firstFrame = true;
     }
     
+
 // ################################################################################
 // ################################################################################
 // ################################################################################
@@ -283,19 +287,18 @@ class World {
 
     drawMovableWorld() {
         this.ctx.translate(this.camera_x + 100, 0);
-            this.addObjectsToMap(this.level.backgroundObjects);
-            this.addObjectsToMap(this.level.clouds);
-            this.addObjectsToMap(this.level.items);
-            this.addObjectsToMap(this.level.enemies);
-            this.addToMap(this.character, this.character.flipH);
-            this.drawSites(); // Für Abgabe entfernen!!!
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.items);
+        this.addObjectsToMap(this.level.enemies);
+        this.addToMap(this.character, this.character.flipH);
         this.ctx.translate(-this.camera_x - 100, 0);
     }
 
 
     addObjectsToMap(obj){
         obj.forEach( (o) => {
-            this.addToMap(o, false);
+            this.addToMap(o, o.flipH);
         });
     }
 
@@ -317,16 +320,17 @@ class World {
     }
 
 
-    // let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
-    // this.img = this.imageCache_Hurt[path];
-
     addStatusToMap() {
-        this.addImageToMap(this.statusbarHealth.imgBackground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth, this.statusbarHealth.barHeight); // Statusbar Background
-        this.addImageToMap(this.statusbarHealth.imgForeground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth / this.statusbarHealth.max * this.statusbarHealth.current, this.statusbarHealth.barHeight); // Statusbar Foreground
+        this.addImageToMap(this.statusbarHealth.imgBackground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth, this.statusbarHealth.barHeight); // Statusbar Health Background
+        this.addImageToMap(this.statusbarHealth.imgForeground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth / this.statusbarHealth.max * this.statusbarHealth.current, this.statusbarHealth.barHeight); // Statusbar Health Foreground
         this.addImageToMap(this.statusbarHealth.imgIcon, this.statusbarHealth.iconX, this.statusbarHealth.iconY, this.statusbarHealth.iconWidth, this.statusbarHealth.iconHeight); // Icon Health
-
+        
         this.addImageToMap(this.statusbarCoin.imgIcon, this.statusbarCoin.iconX, this.statusbarCoin.iconY, this.statusbarCoin.iconWidth, this.statusbarCoin.iconHeight); // Icon Coin
         this.addImageToMap(this.statusbarBottle.imgIcon, this.statusbarBottle.iconX, this.statusbarBottle.iconY, this.statusbarBottle.iconWidth, this.statusbarBottle.iconHeight); // Icon Bottle
+
+        this.addImageToMap(this.statusbarBoss.imgBackground, this.statusbarBoss.barX - this.statusbarBoss.barWidth, this.statusbarBoss.barY, this.statusbarBoss.barWidth, this.statusbarBoss.barHeight); // Statusbar Boss Background
+        this.addImageToMap(this.statusbarBoss.imgForeground, this.statusbarBoss.barX - (this.statusbarBoss.barWidth / this.statusbarBoss.max * this.statusbarBoss.current), this.statusbarBoss.barY, this.statusbarBoss.barWidth / this.statusbarBoss.max * this.statusbarBoss.current, this.statusbarBoss.barHeight); // Statusbar Boss Foreground
+        this.addImageToMap(this.statusbarBoss.imgIcon, this.statusbarBoss.iconX, this.statusbarBoss.iconY, this.statusbarBoss.iconWidth, this.statusbarBoss.iconHeight); // Icon Boss
     }
 
 
@@ -337,7 +341,7 @@ class World {
     }
 
 
-    addDataToMap(text, x, y, size = 16, fontbold = false, color = '#000000', middle = false) {
+    addTextToMap(text, x, y, size = 16, fontbold = false, color = '#000000', middle = false) {
         let halfWidth = 0;
         let bold = fontbold ? 'bold ' : '';
         this.ctx.font = bold + size + 'px sans-serif';
@@ -353,12 +357,10 @@ class World {
         if(optionFPS) {
             this.addFpsToMap(this.fpsText+'FPS', 710, 460, 12, '#00ff00');
         } 
-        this.addDataToMap(this.character.coins, 75, 86, 24, true, null, true);
-        this.addDataToMap(this.character.bottles, 150, 86, 24, true, null, true);
-        this.addDataToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);
-        this.addDataToMap('Fall down: Arrow down   Change 10 Coins into 1 Bottle: Enter', 360, 468, 16, null, '#000000', true);
-
-        this.addDataToMap('Boss: '+ this.level.enemies[0].energy, 500, 64);
+        this.addTextToMap(this.character.coins, 75, 86, 24, true, null, true);
+        this.addTextToMap(this.character.bottles, 150, 86, 24, true, null, true);
+        this.addTextToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);
+        this.addTextToMap('Fall down: Arrow down   Change 10 Coins into 1 Bottle: Enter', 360, 468, 16, null, '#000000', true);
     }
 
 // Für Abgabe entfernen!!! ---------------------------------------------------------------------

@@ -1,14 +1,14 @@
-let level2;
+// let level2;
 
-function initLevel2() {
-    console.log('level 2');
-    level2 = new Level(
+function loadLevel2() {
+    return new Level(
         [
-            new Character()
+            new Character(),
         ],
         [
             new BossChicken,
             new Chicken, // new Chicken, new Chicken, new Chicken, new Chicken,
+            // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
             // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
             // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
             new SmallChicken, // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
