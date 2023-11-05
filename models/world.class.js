@@ -1,27 +1,28 @@
 class World {
-    level = level1;
+    level = loadLevel1();
     level_end_x = 720;
-
-    
     character;
     collidingStatus = false;
-    
     camera_x = 0;
     fpsStart = 0;
     fpsValue = 0;
     fpsText = 0;
     ctx;
     canvas;
+    statusbarHealth = new StatusBar('/img/set1/7_statusbars/3_icons/icon_health.png', 10, 0);
+    statusbarCoin = new StatusBar('/img/set1/7_statusbars/3_icons/icon_coin.png', 10, 50);
+    statusbarBottle = new StatusBar('/img/set1/7_statusbars/3_icons/icon_salsa_bottle.png', 90, 50);
+    statusbarBoss = new StatusBar('img/set1/7_statusbars/3_icons/icon_health_endboss.png', 680, 0);
+    audio = new AudioManager();
     playgame = false;
     game = -1;
-    b0 = '';
+
     
     
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-
         worldLoaded = true;
         this.setWorld();
         this.setIndexes();
@@ -44,9 +45,9 @@ class World {
         this.character.platforms_toJump = this.level.platforms;
         this.character.cworld = this;
         this.level.enemies.forEach(element => {
-            if(element instanceof BossChicken)
-                element.cworld = this;
-                element.move();
+        if(element instanceof BossChicken)
+            element.cworld = this;
+            element.move();
         });
     }
 
@@ -92,13 +93,14 @@ class World {
                     if(this.character.energy > 0)
                         this.setCharacterIsHurt();
                 }
+                this.statusbarHealth.current = this.character.energy;
             }
         });
     }
 
     setCharacterIsHurt() {
         this.character.isHurt = true;
-        this.character.snd_hurt.play();
+        this.audio.snd_hurt.play();
         setTimeout(() => {
             this.character.isHurt = false;
         }, 330);
@@ -107,14 +109,16 @@ class World {
 
     checkCollidingChickenOrBoss(enemy) {
         if(enemy instanceof Chicken || enemy instanceof SmallChicken) {
-            enemy.energy -= this.character.attack;
-            if(enemy.y < 420 && this.character.speedY < -1)
+            (enemy.energy >= this.character.attack) ? enemy.energy -= this.character.attack : enemy.energy = 0;
+            if(enemy.y < 420 && this.character.isFalling) {
                 enemy.speedY = this.character.speedY;
+            }
+            if(optionBouncing){
+                this.character.speedY = 6;
+            }
             enemy.revive();
             enemy.snd_chicken_dead.play();
-        } //else if(enemy instanceof BossChicken) {
-
-        //}
+        }
     }
 
 
@@ -174,60 +178,87 @@ class World {
 
 
     collidingEnemItemsIsBoss(enemy) {
-        if(!(enemy instanceof BossChicken)) {
-            enemy.revive();
-        } else if(enemy instanceof BossChicken){
-            if(enemy.energy > 0) {
+        if(enemy instanceof BossChicken){
+            if(enemy.energy > 0 && !enemy.isHurt) {
+                enemy.isHurt = true;
                 enemy.snd_boss_hurt.play();
+                setTimeout(() => {
+                    enemy.isHurt = false;
+                }, 1500);
             } else {
+                enemy.isHurt = false;
                 enemy.snd_boss_death.play();
             }
-        }
-    }
-
-
-    checkCharacterOnExit() {
-        if(this.character.x > 720 * 5.9) {
-            // Spiel beendet
-            this.gameStop();
-            world.game = -1;
+        } else {
+            enemy.revive();
         }
     }
 
 
     checkCharacterDeath() {
         if(this.character.energy <= 0 && !this.character.isDead) {
-            // Spieler tot, Spiel beendet
             this.character.energy = 0;
             this.character.isDead = true;
             this.character.snd_dead.play();
             setTimeout(() => {
-                this.gameStop();
+                this.gameStop(true);
             }, 2000);
+        }
+    }
+    
+    
+    checkCharacterOnExit() {
+        if(this.character.x > 720 * 5.9) {
+            world.game = -1;
+            this.gameStop(true);
         }
     }
 
 
-    gameStop() {
-        // stopAllInterval();
-        this.character.snd_walk.pause();
-        this.character.snd_walk.currentTime = 0;
+    gameStop(win = false) {
+        this.audio.snd_walk.pause();
+        this.audio.snd_walk.currentTime = 0;
+        // view GameEnd or GameLose
         openGame(0);
+        if(win) {
+        //     // level1 = loadLevel1();
+        //     this.character.x = 0;
+        //     // this.level = loadLevel1();
+
+            setTimeout(() => {
+                this.character = null;
+                this.level = null;
+            }, 200);
+            setTimeout(() => {
+                this.level = loadLevel1();
+                this.setWorld();
+                this.character.loadSounds();
+                this.setIndexes();
+                this.firstFrame = true;
+            }, 1300);
+        //     // GameIsRunning = true;
+        }
     }
     
+
+    restart() {
+        this.character.loadValues();
+
+    }
     
 // ################################################################################
 // ################################################################################
 // ################################################################################
     draw() {
         this.getFPS();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.camera_x = -this.character.x;
-            this.ctx.translate(this.camera_x + 100, 0);
+        if (GameIsRunning || firstFrame) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            firstFrame = false;
+            this.camera_x = this.character instanceof Character ? -this.character.x : 0;
             this.drawMovableWorld();
-            this.ctx.translate(-this.camera_x - 100, 0);
             this.drawTextInfo();
-        this.fpsValue++
+            this.addStatusToMap();
+        }
         let self = this;
         requestAnimationFrame(function() {
             self.draw();
@@ -246,74 +277,87 @@ class World {
                 this.fpsStart = fpsStop;
             }
         }
+        this.fpsValue++
     }
 
 
     drawMovableWorld() {
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.level.items, false);
-        this.addObjectsToMap(this.level.enemies);
-        this.addToMap(this.character, this.character.flipH);
-        this.drawSites(); // Für Abgabe entfernen!!!
+        this.ctx.translate(this.camera_x + 100, 0);
+            this.addObjectsToMap(this.level.backgroundObjects);
+            this.addObjectsToMap(this.level.clouds);
+            this.addObjectsToMap(this.level.items);
+            this.addObjectsToMap(this.level.enemies);
+            this.addToMap(this.character, this.character.flipH);
+            this.drawSites(); // Für Abgabe entfernen!!!
+        this.ctx.translate(-this.camera_x - 100, 0);
     }
 
 
-    addObjectsToMap(obj, box = false, color){
-        obj.forEach( (o, index) => {
-            this.addToMap(o, false, box, color, index);
-            if(o instanceof BossChicken) { // NUR ZUM TESTEN
-                // this.addHitBoxToMap(o);
-            } // --------------------------------
+    addObjectsToMap(obj){
+        obj.forEach( (o) => {
+            this.addToMap(o, false);
         });
     }
 
 
-    addToMap(mo, flip = false, box = false, color = '#000000', index = -2) {
+    addToMap(mo, flip = false) {
         if(flip) {
             this.ctx.save();
             this.ctx.scale(flip ? -1 : 1, 1);
         }
         this.ctx.drawImage(mo.img, flip ? (mo.x + mo.width) * -1 : mo.x, mo.y - mo.yBaseline, mo.width, mo.height);
-        // Für Abgabe entfernen!!! -------------------------------------------------------------------------------------
-        if(box) { // Für Abgabe entfernen!!!
-            this.addBoxToMap(flip, mo.x, mo.y, mo.width, mo.height, mo.yBaseline, color);
-            if(index > -2) {
-                this.addDataToMap(index, mo.x, mo.y);
-            }
-        } 
-        if(mo.isMarking == true) { // Für Abgabe entfernen!!!
-            this.addBoxToMap(flip, mo.x, mo.y, mo.width, mo.height, mo.yBaseline, '#00ff00');
-        } 
-        // Für Abgabe bis hier entfernen!!! --------------------------------------------------------------------------------
         if(flip) {
             this.ctx.restore();
         }
     }
 
 
-    addFpsToMap(text, x, y, size = 24, color = '#000000') {
-        this.ctx.font = size + 'px sans-serif';
-        this.ctx.color = color;
-        this.ctx.fillText(text, x, y);
+    addImageToMap(moimg, x, y, width, height) {
+        this.ctx.drawImage(moimg, x, y, width, height);
     }
 
 
-    addDataToMap(text, x, y, size = 16, color = '#000000') {
+    // let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
+    // this.img = this.imageCache_Hurt[path];
+
+    addStatusToMap() {
+        this.addImageToMap(this.statusbarHealth.imgBackground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth, this.statusbarHealth.barHeight); // Statusbar Background
+        this.addImageToMap(this.statusbarHealth.imgForeground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth / this.statusbarHealth.max * this.statusbarHealth.current, this.statusbarHealth.barHeight); // Statusbar Foreground
+        this.addImageToMap(this.statusbarHealth.imgIcon, this.statusbarHealth.iconX, this.statusbarHealth.iconY, this.statusbarHealth.iconWidth, this.statusbarHealth.iconHeight); // Icon Health
+
+        this.addImageToMap(this.statusbarCoin.imgIcon, this.statusbarCoin.iconX, this.statusbarCoin.iconY, this.statusbarCoin.iconWidth, this.statusbarCoin.iconHeight); // Icon Coin
+        this.addImageToMap(this.statusbarBottle.imgIcon, this.statusbarBottle.iconX, this.statusbarBottle.iconY, this.statusbarBottle.iconWidth, this.statusbarBottle.iconHeight); // Icon Bottle
+    }
+
+
+    addFpsToMap(text, x, y, size = 24, color = '#000000') {
         this.ctx.font = size + 'px sans-serif';
         this.ctx.color = color;
-        this.ctx.fillText(text, x, y);
+        this.ctx.fillText(text, x - this.ctx.measureText(text).width, y);
+    }
+
+
+    addDataToMap(text, x, y, size = 16, fontbold = false, color = '#000000', middle = false) {
+        let halfWidth = 0;
+        let bold = fontbold ? 'bold ' : '';
+        this.ctx.font = bold + size + 'px sans-serif';
+        this.ctx.color = color;
+        if(middle) {
+            halfWidth = this.ctx.measureText(text).width / 2;
+        }
+        this.ctx.fillText(text, x - halfWidth, y);
     }
 
 
     drawTextInfo() {
-        this.addFpsToMap('FPS: ' + this.fpsText, 10, 32);
-        this.addDataToMap((this.character.isHurt ? '1' : '0'), 500, 32);
-        this.addDataToMap(Math.floor(this.level.enemies[0].x), 500, 48);
-        this.addDataToMap('Pepe: '+ this.character.energy, 10, 48);
-        this.addDataToMap('Coins: '+ this.character.coins, 10, 64);
-        this.addDataToMap('Bottles: '+ this.character.bottles, 10, 80);
-        // this.addDataToMap('Move: Arrow left/right - Jump: Arrow up/Space - Attack: Num 0/D', 120, 454);
+        if(optionFPS) {
+            this.addFpsToMap(this.fpsText+'FPS', 710, 460, 12, '#00ff00');
+        } 
+        this.addDataToMap(this.character.coins, 75, 86, 24, true, null, true);
+        this.addDataToMap(this.character.bottles, 150, 86, 24, true, null, true);
+        this.addDataToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);
+        this.addDataToMap('Fall down: Arrow down   Change 10 Coins into 1 Bottle: Enter', 360, 468, 16, null, '#000000', true);
+
         this.addDataToMap('Boss: '+ this.level.enemies[0].energy, 500, 64);
     }
 

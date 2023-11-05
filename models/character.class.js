@@ -41,6 +41,13 @@ class Character extends MovableObject {
         '/img/set1/2_character_pepe/3_jump/J-38.png',
         '/img/set1/2_character_pepe/3_jump/J-39.png'
     ];
+    IMAGES_FALL = [
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-35.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png',
+        '/img/set1/2_character_pepe/3_jump/J-36.png'
+    ];
     IMAGES_HURT = [
         '/img/set1/2_character_pepe/4_hurt/H-41.png',
         '/img/set1/2_character_pepe/4_hurt/H-42.png',
@@ -57,8 +64,10 @@ class Character extends MovableObject {
     ];
     cworld;
     imageCache_Jump_Start;
+    imageCache_Fall;
     imageCache_Hurt;
     currentImage_Jump_Start = 0;
+    currentImage_Fall = 0;
     currentImage_Hurt = 0;
     jumpCount = -1;
     isDead = false;
@@ -71,33 +80,14 @@ class Character extends MovableObject {
 
     constructor() {
         super();
-        this.initSounds()
-        this.snd_walk.loop = true;
-        this.snd_walk.playbackRate = 2.5;
-        this.initImages();
-        this.initValues();
+        this.loadAnimations();
+        this.loadValues();
         this.run();
-        this.applyGravitation(); //from movable_object.class
+        this.applyGravitation();
     }
 
 
-    initSounds() {
-        if (!this.snd_walk) {
-            this.snd_walk = new Audio(mainPath + '/audio/walking.mp3');
-        }
-        if (!this.snd_jump) {
-            this.snd_jump = new Audio(mainPath + '/audio/jump_2.mp3');
-        }
-        if (!this.snd_hurt) {
-            this.snd_hurt = new Audio(mainPath + '/audio/hurt_1.mp3');
-        }
-        if (!this.snd_dead) {
-            this.snd_dead = new Audio(mainPath + '/audio/player_dead_short.mp3');
-        }
-    }
-
-
-    initImages() {
+    loadAnimations() {
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
         this.loadImages(this.IMAGES_IDLE);
@@ -106,6 +96,8 @@ class Character extends MovableObject {
         this.imageCache_Jump = this.imageCache;
         this.loadImages(this.IMAGES_JUMP_START);
         this.imageCache_Jump_Start = this.imageCache;
+        this.loadImages(this.IMAGES_FALL);
+        this.imageCache_Fall = this.imageCache;
         this.loadImages(this.IMAGES_HURT);
         this.imageCache_Hurt = this.imageCache;
         this.loadImages(this.IMAGES_DEAD);
@@ -113,7 +105,7 @@ class Character extends MovableObject {
     }
 
 
-    initValues() {
+    loadValues() {
         this.x = 0;
         this.y = 420;
         this.width = 92;
@@ -140,13 +132,15 @@ class Character extends MovableObject {
 
     animateWalking(){
         tempInterval = setInterval( () => {
-            if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
+            if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.isFalling == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
-                this.snd_walk.play();
+                world.audio.snd_walk.play();
             } else {
-                this.snd_walk.pause();
+                if(GameIsRunning) {
+                    world.audio.snd_walk.pause();
+                }
             }
         }, 1000/12);
         regInterval(tempInterval);
@@ -155,12 +149,8 @@ class Character extends MovableObject {
 
     animateIdleHurtDead() {
         tempInterval = setInterval( () => {
-            if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
-                if (this.isHurt) {
-                    this.animateHurt();
-                } else {
-                    this.animateIdle();
-                }
+            if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.isFalling == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
+                this.isHurt ? this.animateHurt() : this.animateIdle();
             } else if(this.energy <= 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
                 this.img = this.imageCache_Dead[path];
@@ -191,6 +181,7 @@ class Character extends MovableObject {
             this.animateJump();
             this.animateJumpStart();
             this.checkJumpCount();
+            this.animateFall();
         }, 1000 / 11);
         regInterval(tempInterval);
     }
@@ -233,6 +224,17 @@ class Character extends MovableObject {
     }
 
 
+    animateFall() {
+        if(this.isFalling == true && this.isJump == false) {
+            let path = mainPath + this.IMAGES_FALL[this.currentImage_Fall];
+            this.img = this.imageCache_Fall[path];
+            this.currentImage_Fall == (this.IMAGES_FALL.length - 1) ? this.currentImage_Fall = (this.IMAGES_FALL.length - 1) : this.currentImage_Fall++;
+        } else {
+            this.currentImage_Fall = 0;
+        }
+    }
+
+
     checkKeyboard() {
         tempInterval = setInterval( () => {
             if(GameIsRunning) {
@@ -266,7 +268,7 @@ class Character extends MovableObject {
     checkMoveJump() {
         if((keyboard.Up || keyboard.Space) && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
             this.jumpCount = 4;
-            this.snd_jump.play();
+            world.audio.snd_jump.play();
         }
     }
 
@@ -307,7 +309,7 @@ class Character extends MovableObject {
 
     loadMoveThrow(backpackitem) {
         backpackitem.energy = 10;
-        backpackitem.x = this.flipH ? (this.x  - backpackitem.width) : (this.x + (this.width / 1));
+        backpackitem.x = this.flipH ? (this.x + this.hitbox_x  ) : (this.x + (this.width / 2));
         backpackitem.y = this.y - 100;
         backpackitem.speedY = 5 + this.ThrowPower();
         backpackitem.speed = this.flipH ? -4 : 4;
@@ -318,7 +320,6 @@ class Character extends MovableObject {
 
     ThrowPower() {
         return Math.floor(Math.random() * 10);
-        // return 3;
     }
 
 

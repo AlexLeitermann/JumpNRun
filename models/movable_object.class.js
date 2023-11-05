@@ -34,6 +34,11 @@ class MovableObject {
     currentImage_Jump = 0;
     currentImage_Dead = 0;
     index = -99;
+    memX;
+    memY;
+    memEnergy;
+    memReserve;
+    
 
 
     loadImage(path) {
@@ -55,12 +60,7 @@ class MovableObject {
     applyGravitation() {
         tempInterval = setInterval(() => {
             let middle = this.x + (this.width / 2);
-            if (!(this instanceof Bottle && !this.fly) && this.energy > 0) {
-                if(this.y < 420) {
-                    this.y -= this.speedY;
-                    this.speedY -= this.acceleration;
-                } 
-            }
+            this.gravitationMove();
             if (this instanceof Character) {
                 if(this.isRangeOfPlatforms(middle)[0] && (this.speedY) < 0) {
                     this.jumpOnPlatforms(this.isRangeOfPlatforms(middle)[1]);
@@ -73,8 +73,18 @@ class MovableObject {
     }
 
 
+    gravitationMove() {
+        if (!(this instanceof Bottle && !this.fly) && this.energy >= 0) {
+            if(this.y < 420) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            } 
+        }
+    }
+    
+    
     jumpOnPlatforms(y) {
-        if(this.y > y && this.y < (y+30)) {
+        if(this.y > y && this.y < (y+30) && !keyboard.Down) {
             this.noJump(y);
         }
     }
@@ -127,19 +137,10 @@ class MovableObject {
     }
 
 
-    // isColliding(obj) {
-    //     return  (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && 
-    //             (this.y - this.yBaseline) >= (obj.y - obj.yBaseline) &&
-    //             (this.y) <= (obj.y); // && 
-    //             //obj.onCollisionCourse; // Optional: hiermit könnten wir schauen, ob ein Objekt sich in die richtige Richtung bewegt. Nur dann kollidieren wir. Nützlich bei Gegenständen, auf denen man stehen kann.
-    // }
-
-
     isCollidingHitbox(obj) {
         return (this.x + this.hitbox_x + this.hitbox_width) >= (obj.x + obj.hitbox_x) &&
         (this.x + this.hitbox_x) <= (obj.x + obj.hitbox_x + obj.hitbox_width) &&
         (this.y - this.yBaseline + this.hitbox_y) <= (obj.y - obj.yBaseline + obj.hitbox_y + obj.hitbox_height) &&
         (this.y - this.yBaseline + this.hitbox_y + this.hitbox_height) >= (obj.y - obj.yBaseline + obj.hitbox_y);
     }
-
 }

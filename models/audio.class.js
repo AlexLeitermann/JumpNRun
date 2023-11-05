@@ -18,8 +18,8 @@ class AudioManager {
 
     constructor() {
         this.initCharacterSound();
-        this.initChickenSound();
-        this.initItemSound();
+        // this.initChickenSound();
+        // this.initItemSound();
     }
 
 
@@ -28,6 +28,7 @@ class AudioManager {
         this.snd_jump = new Audio(mainPath + '/audio/jump_2.mp3');
         this.snd_hurt = new Audio(mainPath + '/audio/hurt_1.mp3');
         this.snd_dead = new Audio(mainPath + '/audio/player_dead_short.mp3');
+        this.snd_walk.playbackRate = 2.5;
     }
 
 

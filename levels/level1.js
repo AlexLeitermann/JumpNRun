@@ -1,15 +1,18 @@
-const level1 = new Level(
+// let level1 = loadLevel1();
+
+function loadLevel1() {
+    return new Level(
         [
             new Character(),
         ],
         [
             new BossChicken,
-            // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-            // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-            // new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
-            // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
-            // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
-            // new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+            new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+            new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+            new Chicken, new Chicken, new Chicken, new Chicken, new Chicken,
+            new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+            new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
+            new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken, new SmallChicken,
         ],    
         [
             new Cloud('/img/set1/5_background/layers/4_clouds/2.png', -720),
@@ -88,7 +91,7 @@ const level1 = new Level(
             new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*1.1, 406, 55, 100, 100),
             new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*2.55, 406, 55, 100, 100),
             new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*3.35, 406, 55, 100, 100),
-            new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*5.7, 406, 55, 100, 100),
+            new BackgroundObject('/img/set1/5_background/exit_sign.png', 719*5.3, 406, 55, 100, 100),
             new BackgroundObject('/img/set1/5_background/exit_sign3.png', 719*5.89, 406, 77, 150, 150),
         ],
         [4320],
@@ -150,3 +153,4 @@ const level1 = new Level(
     
         ]
     );
+}

@@ -28,6 +28,27 @@ class Bottle extends MovableObject {
 
     constructor(x = 0, y = 420, right = 0, reserve = false) {
         super();
+        this.setMemory(x, y, right, reserve);
+        this.loadStartImage(right);
+        this.reserve = reserve;
+        this.loadAnimations();
+        this.loadSounds();
+        this.loadValues(x, y);
+        this.animation();
+        this.move();
+        this.applyGravitation();
+    }
+
+
+    setMemory(x, y, right, reserve) {
+        this.memX = x;
+        this.memY = y;
+        this.right = right;
+        this.reserve = reserve;
+    }
+
+
+    loadStartImage(right) {
         if (right == 1) {
             this.loadImage('/img/set1/6_salsa_bottle/2_salsa_bottle_on_ground.png'); 
         } else if(right == 0){
@@ -35,17 +56,14 @@ class Bottle extends MovableObject {
         } else if(right == -1){
             this.loadImage('/img/set1/6_salsa_bottle/salsa_bottle.png'); 
         }
-        this.reserve = reserve;
+    }
+
+
+    loadAnimations() {
         this.loadImages(this.IMAGES_FLY);
         this.imageCache_Fly = this.imageCache;
         this.loadImages(this.IMAGES_SPLASH);
         this.imageCache_Splash = this.imageCache;
-        this.loadSounds();
-        this.loadValues(x, y);
-
-        this.animation();
-        this.move();
-        this.applyGravitation();
     }
 
 
@@ -59,7 +77,7 @@ class Bottle extends MovableObject {
     }
 
 
-    loadValues(x = 0, y = 420) {
+    loadValues(x, y) {
         this.x = x;
         this.y = y;
         this.width = 50;
@@ -80,21 +98,36 @@ class Bottle extends MovableObject {
     animation() {
         tempInterval = setInterval( () => {
             if(this.fly) {
-                this.currentImage_Splash = 0;
-                let path = mainPath + this.IMAGES_FLY[this.currentImage_Fly];
-                this.img = this.imageCache_Fly[path];
-                this.currentImage_Fly == (this.IMAGES_FLY.length - 1) ? this.currentImage_Fly = 0 : this.currentImage_Fly++;
+                this.animationFly();
             } else if(this.splash) {
-                let path = mainPath + this.IMAGES_SPLASH[this.currentImage_Splash];
-                this.img = this.imageCache_Splash[path];
-                this.currentImage_Splash == (this.IMAGES_SPLASH.length - 1) ? this.currentImage_Splash = (this.IMAGES_SPLASH.length - 1) : this.currentImage_Splash++;
+                this.animationSplash();
             } else if(!this.fly && !this.initStatus) {
-                this.currentImage_Fly = 0;
-                let path = mainPath + this.IMAGES_FLY[this.currentImage_Fly];
-                this.img = this.imageCache_Fly[path];
+                this.animationFlyStop();
             }
         }, 1000 / 16);
         regInterval(tempInterval);
+    }
+
+
+    animationFly() {
+        this.currentImage_Splash = 0;
+        let path = mainPath + this.IMAGES_FLY[this.currentImage_Fly];
+        this.img = this.imageCache_Fly[path];
+        this.currentImage_Fly == (this.IMAGES_FLY.length - 1) ? this.currentImage_Fly = 0 : this.currentImage_Fly++;
+    }
+
+
+    animationFlyStop() {
+        this.currentImage_Fly = 0;
+        let path = mainPath + this.IMAGES_FLY[this.currentImage_Fly];
+        this.img = this.imageCache_Fly[path];
+    }
+
+
+    animationSplash() {
+        let path = mainPath + this.IMAGES_SPLASH[this.currentImage_Splash];
+        this.img = this.imageCache_Splash[path];
+        this.currentImage_Splash == (this.IMAGES_SPLASH.length - 1) ? this.currentImage_Splash = (this.IMAGES_SPLASH.length - 1) : this.currentImage_Splash++;
     }
 
 

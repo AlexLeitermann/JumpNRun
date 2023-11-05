@@ -6,6 +6,9 @@ document.addEventListener('gesturestart', function (e) {
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let firstFrame = false;
+let optionBouncing = false;
+let optionFPS = true;
 
 
 function init() {
@@ -17,9 +20,10 @@ function init() {
 function openGame(game) {
     document.getElementById('loadpage').classList.toggle('hide');
     if (game >= 1) {
+        firstFrame = true;
         setTimeout(() => {
             GameIsRunning = true;
-        }, 1500);
+        }, 1300);
     } else {
         GameIsRunning = false;
     }

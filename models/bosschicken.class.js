@@ -57,6 +57,7 @@ class BossChicken extends MovableObject {
     imageCache_Alert;
     imageCache_Attack;
     imageCache_Hurt;
+    hasFirstContact = false;
 
 
 
@@ -114,8 +115,18 @@ class BossChicken extends MovableObject {
 
     move() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0 && world.character.x > (this.x - 700) && GameIsRunning) {
-                this.x < ( -200 ) ? this.x += (720 * 7.0) : this.x -= this.speed;
+            if(this.energy > 0 && world.character.x > ((this.x + (this.width / 2)) - 800) && world.character.x < ((this.x + (this.width / 2)) + 800) && GameIsRunning) {
+                if(world.character.x < this.x) {
+                    this.flipH = false;
+                    (this.x + (this.width / 2)) < ( -200 ) ? this.x += (720 * 7.0) : this.x -= this.speed;
+                } else {
+                    this.flipH = true;
+                    (this.x + (this.width / 2)) > (720 * 7.0) ? this.x -= (720 * 7.0) + 200 : this.x += this.speed;
+                }
+                if(!this.hasFirstContact) {
+                    this.hasFirstContact = true;
+                    this.snd_boss_alarm.play();
+                }
             }
         }, 25);
         regInterval(tempInterval);
@@ -125,22 +136,41 @@ class BossChicken extends MovableObject {
     animation() {
         tempInterval = setInterval( () => {
             if(this.energy <= 0 && GameIsRunning) {
-                let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
-                this.img = this.imageCache_Dead[path];
-                if(this.currentImage_Dead == (this.IMAGES_DEAD.length - 1)) {
-                    setTimeout(() => {
-                        this.x = (720 * 7.1);
-                        // Entweder hier GameOver (win) oder nach Zieldurchlauf => character.x > 720 * 6.9
-                    }, 2000);
-                }
-                this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
-            } else if(this.energy > 0 && GameIsRunning) {
-                let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
-                this.img = this.imageCache_Walk[path];
-                this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
+                this.animationDead();
+            } else if(this.energy > 0 && !this.isHurt && GameIsRunning) {
+                this.animationWalking();
+            } else if(this.energy > 0 && this.isHurt && GameIsRunning) {
+                this.animationHurt();
             }
         }, 1000/4);
         regInterval(tempInterval);
+    }
+
+
+    animationDead() {
+        let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
+        this.img = this.imageCache_Dead[path];
+        if(this.currentImage_Dead == (this.IMAGES_DEAD.length - 1)) {
+            setTimeout(() => {
+                this.x = (720 * 7.1);
+                // Entweder hier GameOver (win) oder nach Zieldurchlauf => character.x > 720 * 5.9
+            }, 2000);
+        }
+        this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
+    }
+
+
+    animationWalking() {
+        let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
+        this.img = this.imageCache_Walk[path];
+        this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
+    }
+    
+
+    animationHurt() {
+        let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
+        this.img = this.imageCache_Hurt[path];
+        this.currentImage_Hurt == (this.IMAGES_HURT.length - 1) ? this.currentImage_Hurt = 0 : this.currentImage_Hurt++;
     }
     
 

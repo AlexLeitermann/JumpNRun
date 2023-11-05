@@ -13,18 +13,16 @@ class SmallChicken extends MovableObject {
 
     constructor() {
         super();
-        // this.loadImage('/img/set1/3_enemies_chicken/chicken_normal/1_walk/1_w.png'); 
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
         this.loadImages(this.IMAGES_DEAD);
         this.imageCache_Dead = this.imageCache;
-        
         this.loadSounds();
         this.loadValues();
         this.move();
         this.jump();
         this.animation();
-        this.applyGravitation(); //from movable_object.class
+        this.applyGravitation();
     }
 
 

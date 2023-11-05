@@ -21,13 +21,13 @@ body {
 }
 
 canvas {
+    z-index: 0;
+    position: relative;
     width: 720px;
     height: 480px;
-    position: relative;
-    z-index: 0;
     padding: 12px;
     background-color: #fff;
-    border-radius: 2.5rem;
+    border-radius: 1rem;
     border: 8px transparent;
     box-shadow: 0 4px 8px 2px #00000075,
                 8px 8px 8px 0 #00000075 inset,
@@ -45,6 +45,8 @@ canvas {
     left: 0;
     width: 720px;
     height: 480px;
+    width: 100%;
+    height: 100%;
     background-color: #f00;
     border: 4px solid green;
 }
@@ -63,7 +65,7 @@ a {
     height: 100%;
     min-width: 350px;
     background-color: #fff;
-    background-image: url('./img/49422.jpg');
+    background-image: url('./img/desert.png');
     background-position: center;
     background-size: cover;
 }
@@ -77,6 +79,10 @@ a {
     opacity: 1;
     background-color: #f5f6f7;
     /* display: none; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #loadpage.hide {
@@ -89,6 +95,12 @@ a {
 #loadpage:not(.hide) {
     transition: left 5ms linear 0ms,
                 opacity 1300ms linear 5ms;
+}
+
+#loadpage h1 {
+    background-color: #ffffffa0;
+    padding: 8px;
+    border-radius: 8px;
 }
 
 .gamelist {
@@ -133,16 +145,18 @@ a {
     align-items: center;
 }
 
-#gamepage div {
+/* #gamepage div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-}
+} */
 
 .back {
-    position: relative;
+    z-index: 4;
+    position: absolute;
+    top: 0;
     cursor: pointer;
     -webkit-user-select: none; 
     -moz-user-select: none; 
@@ -160,6 +174,12 @@ a {
 /* ################################################################################ */
 /* ################################################################################ */
 #fullscreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
     max-width: 800px;
     width: 800px;
     max-height: 500px;
@@ -168,16 +188,19 @@ a {
 }
 
 .key {
+    z-index: 2;
     width: 80px;
     height: 80px;
     position: absolute;
     border-radius: 500px;
     border: 1px solid #00000080;
     background-color: #00000030;
+    background-size: cover;
     -webkit-user-select: none; 
     -moz-user-select: none; 
     -ms-user-select: none; 
     user-select: none;
+    touch-action: none;
     cursor: pointer;
     background-position: center;
     touch-action: none;
@@ -208,6 +231,12 @@ a {
     background-image: url('./img/btn-throw.png');
 }
 
+.change {
+    right: 20px;
+    bottom: calc(3% + 100px);
+    background-image: url('./img/btn-starbig.png');
+}
+
 /* ################################################################################ */
 /* ################################################################################ */
 /* ################################################################################ */
@@ -221,6 +250,11 @@ a {
     .fullpage div {
         display: flex;
     }
+
+    .key {
+        width: 60px;
+        height: 60px;
+    }
 }
 
 @media only screen and (orientation: portrait) and (max-width: 750px) {
@@ -229,13 +263,16 @@ a {
         height: auto;
         aspect-ratio: 3/2 auto;
     }
+
+    .key {
+        width: 60px;
+        height: 60px;
+    }
 }
 
 @media screen and (orientation: landscape) and (max-width: 750px) and (max-height: 580px) {
     canvas {
-        /* width: calc(100% - 32px); */
         width: auto;
-        /* height: auto; */
         height: calc(100vh - 92px);
         aspect-ratio: 3/2 auto;
     }
@@ -256,6 +293,27 @@ a {
 }
 
 
+
+
+
+@media screen and (min-width: 350px) and (min-height: 650px) and (orientation: portrait) {
+    canvas {
+        border-radius: clamp(1rem, -0.1667rem + 5.3333vw, 2.5rem);
+    }
+}
+
+
+@media screen and (min-height: 350px) and (min-width: 650px) and (orientation: landscape) {
+    canvas {
+        border-radius: clamp(1rem, -0.1667rem + 5.3333vh, 2.5rem);
+    }
+}
+
+@media screen and (orientation: portrait) and (min-width: 800px), screen and (orientation: landscape) and (min-height: 800px) {
+    canvas {
+        border-radius: 2.5rem;
+    }
+}
 
 /* ################################################################################ */
 /* ################################################################################ */
