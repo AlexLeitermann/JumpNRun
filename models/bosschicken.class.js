@@ -115,21 +115,33 @@ class BossChicken extends MovableObject {
 
     move() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0 && world.character.x > ((this.x + (this.width / 2)) - 800) && world.character.x < ((this.x + (this.width / 2)) + 800) && GameIsRunning) {
-                if(world.character.x < this.x) {
-                    this.flipH = false;
-                    (this.x + (this.width / 2)) < ( -200 ) ? this.x += (720 * 7.0) : this.x -= this.speed;
-                } else {
-                    this.flipH = true;
-                    (this.x + (this.width / 2)) > (720 * 7.0) ? this.x -= (720 * 7.0) + 200 : this.x += this.speed;
-                }
-                if(!this.hasFirstContact) {
-                    this.hasFirstContact = true;
-                    this.snd_boss_alarm.play();
-                }
+            if (GameIsRunning) {
+                this.moveDirection();
             }
         }, 25);
         regInterval(tempInterval);
+    }
+
+
+    moveDirection() {
+        if(this.energy > 0 && world.character.x > ((this.x + (this.width / 2)) - 800) && world.character.x < ((this.x + (this.width / 2)) + 800)) {
+            if(world.character.x < this.x) {
+                this.flipH = false;
+                (this.x + (this.width / 2)) < ( -200 ) ? this.x += (720 * 7.0) : this.x -= this.speed;
+            } else {
+                this.flipH = true;
+                (this.x + (this.width / 2)) > (720 * 7.0) ? this.x -= (720 * 7.0) + 200 : this.x += this.speed;
+            }
+            this.moveContact();
+        }
+    }
+
+
+    moveContact() {
+        if(!this.hasFirstContact) {
+            this.hasFirstContact = true;
+            this.snd_boss_alarm.play();
+        }
     }
 
 

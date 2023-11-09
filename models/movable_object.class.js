@@ -59,15 +59,17 @@ class MovableObject {
 
     applyGravitation() {
         tempInterval = setInterval(() => {
-            let middle = this.x + (this.width / 2);
-            this.gravitationMove();
-            if (this instanceof Character) {
-                if(this.isRangeOfPlatforms(middle)[0] && (this.speedY) < 0) {
-                    this.jumpOnPlatforms(this.isRangeOfPlatforms(middle)[1]);
-                } 
+            if(GameIsRunning) {
+                let middle = this.x + (this.width / 2);
+                this.gravitationMove();
+                if (this instanceof Character) {
+                    if(this.isRangeOfPlatforms(middle)[0] && (this.speedY) < 0) {
+                        this.jumpOnPlatforms(this.isRangeOfPlatforms(middle)[1]);
+                    } 
+                }
+                this.landedOnGround(420);
+                this.speedY < -1 ? this.isFalling = true : this.isFalling = false;
             }
-            this.landedOnGround(420);
-            this.speedY < -1 ? this.isFalling = true : this.isFalling = false;
         }, 1000 / 30);
         regInterval(tempInterval);
     }

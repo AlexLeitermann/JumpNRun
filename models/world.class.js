@@ -26,6 +26,7 @@ class World {
         worldLoaded = true;
         this.setWorld();
         this.setIndexes();
+        this.updateBossEnergy();
         this.checkColliding();
         this.checkKeybordForTesting();
         this.draw();
@@ -97,6 +98,7 @@ class World {
             }
         });
     }
+
 
     setCharacterIsHurt() {
         this.character.isHurt = true;
@@ -179,7 +181,6 @@ class World {
 
     collidingEnemItemsIsBoss(enemy) { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if(enemy instanceof BossChicken){
-            this.statusbarBoss.current = enemy.energy;
             if(enemy.energy > 0 && !enemy.isHurt) {
                 enemy.isHurt = true;
                 enemy.snd_boss_hurt.play();
@@ -200,9 +201,9 @@ class World {
         if(this.character.energy <= 0 && !this.character.isDead) {
             this.character.energy = 0;
             this.character.isDead = true;
-            this.character.snd_dead.play();
+            this.audio.snd_dead.play();
             setTimeout(() => {
-                this.gameStop(true);
+                this.gameStop(false);
             }, 2000);
         }
     }
@@ -219,13 +220,11 @@ class World {
     gameStop(win = false) {
         this.audio.snd_walk.pause();
         this.audio.snd_walk.currentTime = 0;
-        // view GameEnd or GameLose
-        openGame(0);
         if(win) {
             this.clearGame();
-            setTimeout(() => {
-                this.loadGame();
-            }, 1300);
+            openGame(-4);
+        } else {
+            openGame(-5);
         }
     }
 
@@ -257,11 +256,11 @@ class World {
         this.getFPS();
         if (GameIsRunning || firstFrame) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            firstFrame = false;
             this.camera_x = this.character instanceof Character ? -this.character.x : 0;
             this.drawMovableWorld();
             this.drawTextInfo();
             this.addStatusToMap();
+            firstFrame = false;
         }
         let self = this;
         requestAnimationFrame(function() {
@@ -321,6 +320,7 @@ class World {
 
 
     addStatusToMap() {
+        // this.updateBossEnergy();
         this.addImageToMap(this.statusbarHealth.imgBackground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth, this.statusbarHealth.barHeight); // Statusbar Health Background
         this.addImageToMap(this.statusbarHealth.imgForeground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth / this.statusbarHealth.max * this.statusbarHealth.current, this.statusbarHealth.barHeight); // Statusbar Health Foreground
         this.addImageToMap(this.statusbarHealth.imgIcon, this.statusbarHealth.iconX, this.statusbarHealth.iconY, this.statusbarHealth.iconWidth, this.statusbarHealth.iconHeight); // Icon Health
@@ -334,9 +334,18 @@ class World {
     }
 
 
+    updateBossEnergy() {
+        this.level.enemies.forEach(element => {
+            if(element instanceof BossChicken) {
+                this.statusbarBoss.current = element.energy;
+            }
+        });
+    }
+
+
     addFpsToMap(text, x, y, size = 24, color = '#000000') {
-        this.ctx.font = size + 'px sans-serif';
-        this.ctx.color = color;
+        this.ctx.font = size + "px sans-serif";
+        this.ctx.fillStyle = color;
         this.ctx.fillText(text, x - this.ctx.measureText(text).width, y);
     }
 
@@ -344,8 +353,8 @@ class World {
     addTextToMap(text, x, y, size = 16, fontbold = false, color = '#000000', middle = false) {
         let halfWidth = 0;
         let bold = fontbold ? 'bold ' : '';
-        this.ctx.font = bold + size + 'px sans-serif';
-        this.ctx.color = color;
+        this.ctx.font = bold + size + "px sans-serif";
+        this.ctx.fillStyle = color;
         if(middle) {
             halfWidth = this.ctx.measureText(text).width / 2;
         }
@@ -357,6 +366,7 @@ class World {
         if(optionFPS) {
             this.addFpsToMap(this.fpsText+'FPS', 710, 460, 12, '#00ff00');
         } 
+        this.addTextToMap(Math.floor(this.character.x), 10, 450, 16);
         this.addTextToMap(this.character.coins, 75, 86, 24, true, null, true);
         this.addTextToMap(this.character.bottles, 150, 86, 24, true, null, true);
         this.addTextToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);

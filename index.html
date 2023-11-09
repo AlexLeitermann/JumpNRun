@@ -21,6 +21,7 @@
     <script src="./models/background_object.class.js"></script>
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
+    <script src="./levels/level2.js"></script>
     <script src="./models/statusbar.class.js"></script>
     <script src="./models/statusbarboss.class.js"></script>
     <script src="./js/game.js"></script>
@@ -30,28 +31,41 @@
     <section id="loadpage" class="fullpage">
         <h1>Jump 'n' Run - Game:</h1>
         <div class="gamelist">
-            <div class="card" onclick="openGame(1)"><span>El Pollo Loco - Start</span><div class="imgpreview"><img src="./img/set1/9_intro_outro_screens/start/startscreen_2.png"></div></div>
-            <div class="card" onclick="openGame(2)"><span>El Pollo Loco - Level 2</span><div class="imgpreview"><img src="./img/set1/9_intro_outro_screens/start/startscreen_1.png"></div></div>
-            <!-- <div class="card" onclick="openGame(3)"><span>Spaceman Tom</span><div class="imgpreview"><img src="./img/set2/4. Marcadores/op L1.png"></div></div> -->
+            <div class="card" onclick="openGame(1)"><span>El Pollo Loco - Level A</span><div class="imgpreview"><img src="./img/set1/9_intro_outro_screens/start/startscreen_2.png"></div></div>
+            <div class="card" onclick="openGame(2)"><span>El Pollo Loco - Level B</span><div class="imgpreview"><img src="./img/set1/9_intro_outro_screens/start/startscreen_1.png"></div></div>
         </div>
+        <button class="btnaboutgame">About the Game</button>
     </section>
     <section id="gamepage" class="fullpage">
         <div id="fullscreen" class="fullscreen">
-            
-            <canvas id="canvas" width="720" height="480">
+            <div class="canvasbox">
+                <canvas id="canvas" width="720" height="480">
+                </canvas>
                 <div class="rahmen">
-                    <div class="back" onclick="openGame(0)"><img src="./img/btn-pause.png"></div>
+                    <div class="btnpause" id="btnpause" onclick="openGame(-2)" ontouchend="openGame(-2)"><img src="./img/btn-gamepause.png"></div>
+                    <div class="btnplay d-none" id="btnplay" onclick="openGame(-3)" ontouchend="openGame(-3)"><img src="./img/btn-gameplay.png"></div>
+                    <div class="gameend d-none" id="gameover" onclick="openGame(0)" ontouchend="openGame(0)"><img src="./img/set1/9_intro_outro_screens/game_over/game over.png"></div>
+                    <div class="gameend d-none" id="gamelose" onclick="openGame(0)" ontouchend="openGame(0)"><img src="./img/set1/9_intro_outro_screens/game_over/you lost.png"></div>
                 </div>
-            </canvas>
+            </div>
             <button id="keyright" class="key right" onmousedown="touchOn(39)" onmouseup="touchOff(39)" ontouchstart="touchOn(39)" ontouchend="touchOff(39)"></button>
             <button id="keyleft" class="key left" onmousedown="touchOn(37)" onmouseup="touchOff(37)" ontouchstart="touchOn(37)" ontouchend="touchOff(37)"></button>
             <button id="keyjump" class="key jump" onmousedown="touchOn(38)" onmouseup="touchOff(38)" ontouchstart="touchOn(38)" ontouchend="touchOff(38)"></button>
             <button id="keythrow" class="key throw" onmousedown="touchOn(68)" onmouseup="touchOff(68)" ontouchstart="touchOn(68)" ontouchend="touchOff(68)"></button>
             <button id="keychange" class="key change" onmousedown="touchOn(13)" onmouseup="touchOff(13)" ontouchstart="touchOn(13)" ontouchend="touchOff(13)"></button>
+            <button id="keydown" class="key down" onmousedown="touchOn(40)" onmouseup="touchOff(40)" ontouchstart="touchOn(40)" ontouchend="touchOff(40)"></button>
         </div>
-        <div id="startscreen"></div>
-        <div id="gameoverscreen"></div>
-        <div id="youlostscreen"></div>
     </section>
+    <!-- <section id="about" class="fullpage">
+        <h1>El Pollo Loco</h1>
+        <div class="aboutthegame">
+            <h2>About the Game</h2>
+            <span></span>
+        </div>
+        <div class="aboutcontrols">
+            <h2>About Controls</h2>
+            <span></span>
+        </div>
+    </section> -->
 </body>
 </html>

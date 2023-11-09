@@ -23,6 +23,7 @@ let keyboard = new Keyboard();
 let firstFrame = false;
 let optionBouncing = false;
 let optionFPS = true;
+let activeGame = 0;
 
 
 function init() {
@@ -32,18 +33,81 @@ function init() {
 
 
 function openGame(game) {
-    document.getElementById('loadpage').classList.toggle('hide');
     if (game >= 1) {
-        resetKeyboard();
-        firstFrame = true;
-        setTimeout(() => {
-            GameIsRunning = true;
-        }, 1300);
-    } else {
-        GameIsRunning = false;
+        gameStart(game);
+    } else if(game == -2){
+        gamePause();
+    } else if(game == -3){
+        gamePlay();
+    } else if(game == -4){
+        gameOver();
+    } else if(game == -5){
+        gameLose();
+    } else if(game == 0) {
+        gameStartscreen();
     }
 }
 
+
+function gameStart(game) {
+    document.getElementById('gameover').classList.add('d-none');
+    document.getElementById('gamelose').classList.add('d-none');
+    document.getElementById('btnpause').classList.remove('d-none');
+    document.getElementById('btnplay').classList.add('d-none');
+    activeGame = game;
+    gameloader(game);
+    resetKeyboard();
+    firstFrame = true;
+    document.getElementById('loadpage').classList.add('hide');
+    setTimeout(() => {
+        GameIsRunning = true;
+    }, 1300);
+}
+
+
+function gameloader(game) {
+    if(game >= 1 && game <= 2) {
+        world.loadGame(game);
+    }
+}
+
+
+function gameStartscreen() {
+    document.getElementById('loadpage').classList.remove('hide');
+    GameIsRunning = false;
+}
+
+
+function gamePause() {
+    GameIsRunning = false;
+    document.getElementById('btnpause').classList.add('d-none');
+    setTimeout(() => {
+        document.getElementById('btnplay').classList.remove('d-none');
+    }, 200);
+}
+
+
+function gamePlay() {
+    GameIsRunning = true;
+    document.getElementById('btnplay').classList.add('d-none');
+    setTimeout(() => {
+        document.getElementById('btnpause').classList.remove('d-none');
+    }, 200);
+}
+
+function gameOver() {
+    GameIsRunning = false;
+    document.getElementById('gameover').classList.remove('d-none');
+    document.getElementById('btnpause').classList.add('d-none');
+    document.getElementById('btnplay').classList.add('d-none');
+}
+
+function gameLose() {
+    GameIsRunning = false;
+    document.getElementById('gamelose').classList.remove('d-none');
+    document.getElementById('btnpause').classList.add('d-none');
+    document.getElementById('btnplay').classList.add('d-none');
+}
 
 function touchAndKey(keyCode, value) {
     const keyName = keyMap[keyCode];
@@ -80,16 +144,4 @@ function resetKeyboard() {
             keyboard[keyName] = false;
         }
     }
-    // keyboard.Enter = false;
-    // keyboard.Up = false;
-    // keyboard.Down = false;
-    // keyboard.Left = false;
-    // keyboard.Right = false;
-    // keyboard.Space = false;
-    // keyboard.Num0 = false;
-    // keyboard.D = false;
-
-    // keyboard.Key0 = false;
-    // keyboard.Key1 = false;
-    // keyboard.Key2 = false;
 }
