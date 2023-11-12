@@ -1,8 +1,15 @@
 window.addEventListener('keydown', keyIsDown);
 window.addEventListener('keyup', keyIsUp);
-document.addEventListener('touchstart', function (e) {
+window.addEventListener('touchstart', function (e) {
     e.preventDefault();
+    e.stopPropagation();
 });
+window.oncontextmenu = function(e) { 
+    e.preventDefault();
+    resetKeyboard();
+    return false; 
+}
+
 const keyMap = {
     37: 'Left',
     39: 'Right',
@@ -23,7 +30,6 @@ let keyboard = new Keyboard();
 let firstFrame = false;
 let optionBouncing = false;
 let optionFPS = true;
-let activeGame = 0;
 
 
 function init() {
@@ -54,7 +60,6 @@ function gameStart(game) {
     document.getElementById('gamelose').classList.add('d-none');
     document.getElementById('btnpause').classList.remove('d-none');
     document.getElementById('btnplay').classList.add('d-none');
-    activeGame = game;
     gameloader(game);
     resetKeyboard();
     firstFrame = true;
@@ -73,8 +78,8 @@ function gameloader(game) {
 
 
 function gameStartscreen() {
-    document.getElementById('loadpage').classList.remove('hide');
     GameIsRunning = false;
+    document.getElementById('loadpage').classList.remove('hide');
 }
 
 
@@ -109,6 +114,7 @@ function gameLose() {
     document.getElementById('btnplay').classList.add('d-none');
 }
 
+// ################################################################################
 function touchAndKey(keyCode, value) {
     const keyName = keyMap[keyCode];
     if (keyName) {
@@ -140,7 +146,7 @@ function touchOff(keyCode) {
 function resetKeyboard() {
     for(let i = 0; i <=255; i++) {
         const keyName = keyMap[i];
-        if(keyName != '') {
+        if(keyName) {
             keyboard[keyName] = false;
         }
     }

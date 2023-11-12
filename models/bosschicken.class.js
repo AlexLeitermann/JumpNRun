@@ -125,7 +125,7 @@ class BossChicken extends MovableObject {
 
     moveDirection() {
         if(this.energy > 0 && world.character.x > ((this.x + (this.width / 2)) - 800) && world.character.x < ((this.x + (this.width / 2)) + 800)) {
-            if(world.character.x < this.x) {
+            if(world.character.x <= (this.x + (this.width / 2))) {
                 this.flipH = false;
                 (this.x + (this.width / 2)) < ( -200 ) ? this.x += (720 * 7.0) : this.x -= this.speed;
             } else {

@@ -26,7 +26,6 @@ class World {
         worldLoaded = true;
         this.setWorld();
         this.setIndexes();
-        this.updateBossEnergy();
         this.checkColliding();
         this.checkKeybordForTesting();
         this.draw();
@@ -48,6 +47,7 @@ class World {
         this.level.enemies.forEach(element => {
         if(element instanceof BossChicken)
             element.cworld = this;
+            this.statusbarBoss.current = element.energy;
             element.move();
         });
     }
@@ -55,7 +55,7 @@ class World {
 
     checkColliding() {
         tempInterval = setInterval( () => {
-            if(GameIsRunning == true ) {
+            if(GameIsRunning || firstFrame ) {
                 this.collidingStatus = false;
                 this.checkCollidingEnemies();
                 this.checkCollectItems();
@@ -181,19 +181,35 @@ class World {
 
     collidingEnemItemsIsBoss(enemy) { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if(enemy instanceof BossChicken){
+            this.statusbarBoss.current = enemy.energy;
             if(enemy.energy > 0 && !enemy.isHurt) {
-                enemy.isHurt = true;
-                enemy.snd_boss_hurt.play();
-                setTimeout(() => {
-                    enemy.isHurt = false;
-                }, 1500);
+                this.enemyBossIsHurt(enemy);
             } else if(enemy.energy <= 0){
-                enemy.isHurt = false;
-                enemy.snd_boss_death.play();
+                this.enemyBossIsDead(enemy);
             }
         } else {
             enemy.revive();
         }
+    }
+
+
+    enemyBossIsHurt(enemy) {
+        enemy.isHurt = true;
+        enemy.snd_boss_hurt.play();
+        this.enemyBossHurtEnding(enemy);
+    }
+
+
+    enemyBossIsDead(enemy) {
+        enemy.isHurt = false;
+        enemy.snd_boss_death.play();
+}
+
+
+    enemyBossHurtEnding(enemy) {
+        setTimeout(() => {
+            enemy.isHurt = false;
+        }, 1500);
     }
 
 
@@ -220,8 +236,8 @@ class World {
     gameStop(win = false) {
         this.audio.snd_walk.pause();
         this.audio.snd_walk.currentTime = 0;
+        this.clearGame();
         if(win) {
-            this.clearGame();
             openGame(-4);
         } else {
             openGame(-5);
@@ -231,6 +247,7 @@ class World {
 
     clearGame() {
         setTimeout(() => {
+            worldLoaded = false;
             this.character = null;
             this.level = null;
         }, 200);
@@ -238,14 +255,24 @@ class World {
 
 
     loadGame(startLevel = 1) {
+        this.loadNewLevel(startLevel);
+        this.setWorld();
+        this.setIndexes();
+        this.firstFrame = true;
+    }
+
+
+    loadNewLevel(startLevel) {
+        if(this.level != null) {
+            worldLoaded = false;
+            this.character = null;
+            this.level = null;
+        }
         if(startLevel == 1) {
             this.level = loadLevel1();
         } else if(startLevel == 2) {
             this.level = loadLevel2();
         }
-        this.setWorld();
-        this.setIndexes();
-        this.firstFrame = true;
     }
     
 
@@ -366,7 +393,7 @@ class World {
         if(optionFPS) {
             this.addFpsToMap(this.fpsText+'FPS', 710, 460, 12, '#00ff00');
         } 
-        this.addTextToMap(Math.floor(this.character.x), 10, 450, 16);
+        this.addTextToMap(Math.floor(this.character.x), 10, 450, 16); // Für Abgabe entfernen!!!
         this.addTextToMap(this.character.coins, 75, 86, 24, true, null, true);
         this.addTextToMap(this.character.bottles, 150, 86, 24, true, null, true);
         this.addTextToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);

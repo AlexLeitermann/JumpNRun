@@ -62,7 +62,7 @@ class SmallChicken extends MovableObject {
 
     jump() {
         tempInterval = setInterval( () => {
-            if(this.energy > 0 && GameIsRunning) {
+            if(this.energy > 0 && this.y == 420 && GameIsRunning) {
                 this.speedY = 12;
                 this.y -= 0.5;
             }
