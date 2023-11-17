@@ -1,3 +1,7 @@
+/**
+ * Represents a keyboard object with boolean properties for various keys.
+ * @class
+ */
 class Keyboard {
     Left = false;
     Right = false;
@@ -10,8 +14,4 @@ class Keyboard {
     Key2 = false;
     Num0 = false;
     Enter = false;
-
-    constructor() {
-
-    }
 }

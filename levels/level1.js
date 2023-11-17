@@ -1,5 +1,7 @@
-// let level1 = loadLevel1();
-
+/**
+ * Loads and returns the configuration for Level 1 of the game.
+ * @returns {Level} The configured Level object for Level 1.
+ */
 function loadLevel1() {
     return new Level(
         [

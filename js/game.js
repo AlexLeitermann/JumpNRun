@@ -1,15 +1,39 @@
+/**
+ * Event listener for the 'keydown' event.
+ * @param {Event} event - The keyboard 'keydown' event.
+ */
 window.addEventListener('keydown', keyIsDown);
-window.addEventListener('keyup', keyIsUp);
+
+/**
+ * Event listener for the 'keyup' event.
+ * @param {Event} event - The keyboard 'keyup' event.
+ */
+dddwindow.addEventListener('keyup', keyIsUp);
+
+/**
+ * Event listener for the 'touchstart' event that prevents the default behavior and stops propagation.
+ * @param {Event} e - The touchstart event.
+ */
 window.addEventListener('touchstart', function (e) {
     e.preventDefault();
     e.stopPropagation();
 });
+
+/**
+ * Event listener for the right-click context menu that prevents the default behavior, resets the keyboard, and returns false.
+ * @param {Event} e - The contextmenu event.
+ * @returns {boolean} Returns false to prevent the default context menu behavior.
+ */
 window.oncontextmenu = function(e) { 
     e.preventDefault();
     resetKeyboard();
     return false; 
 }
 
+/**
+ * Mapping of key codes to corresponding key names.
+ * @type {Object.<number, string>}
+ */
 const keyMap = {
     37: 'Left',
     39: 'Right',
@@ -32,12 +56,19 @@ let optionBouncing = false;
 let optionFPS = true;
 
 
+/**
+ * Initializes the game by getting the canvas element and creating a new world.
+ */
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 }
 
 
+/**
+ * Opens the specified game based on the given game code.
+ * @param {number} game - The game code to determine which game to open.
+ */
 function openGame(game) {
     if (game >= 1) {
         gameStart(game);
@@ -55,6 +86,10 @@ function openGame(game) {
 }
 
 
+/**
+ * Starts the specified game, hides certain UI elements, loads the game, and sets up initial conditions.
+ * @param {number} game - The game code to determine which game to start.
+ */
 function gameStart(game) {
     document.getElementById('gameover').classList.add('d-none');
     document.getElementById('gamelose').classList.add('d-none');
@@ -70,6 +105,10 @@ function gameStart(game) {
 }
 
 
+/**
+ * Loads the specified game based on the given game code.
+ * @param {number} game - The game code to determine which game to load.
+ */
 function gameloader(game) {
     if(game >= 1 && game <= 2) {
         world.loadGame(game);
@@ -77,12 +116,18 @@ function gameloader(game) {
 }
 
 
+/**
+ * Displays the game start screen, setting the GameIsRunning flag to false.
+ */
 function gameStartscreen() {
     GameIsRunning = false;
     document.getElementById('loadpage').classList.remove('hide');
 }
 
 
+/**
+ * Pauses the game, hides the pause button, and shows the play button.
+ */
 function gamePause() {
     GameIsRunning = false;
     document.getElementById('btnpause').classList.add('d-none');
@@ -92,6 +137,9 @@ function gamePause() {
 }
 
 
+/**
+ * Resumes the game, hides the play button, and shows the pause button.
+ */
 function gamePlay() {
     GameIsRunning = true;
     document.getElementById('btnplay').classList.add('d-none');
@@ -100,6 +148,10 @@ function gamePlay() {
     }, 200);
 }
 
+
+/**
+ * Ends the game, displays the game over message, and hides buttons.
+ */
 function gameOver() {
     GameIsRunning = false;
     document.getElementById('gameover').classList.remove('d-none');
@@ -107,6 +159,10 @@ function gameOver() {
     document.getElementById('btnplay').classList.add('d-none');
 }
 
+
+/**
+ * Ends the game, displays the game lose message, and hides buttons.
+ */
 function gameLose() {
     GameIsRunning = false;
     document.getElementById('gamelose').classList.remove('d-none');
@@ -114,7 +170,12 @@ function gameLose() {
     document.getElementById('btnplay').classList.add('d-none');
 }
 
-// ################################################################################
+
+/**
+ * Checks the key and passes the value.
+ * @param {*} keyCode - The key code associated with the touched key.
+ * @param {*} value - The value to pass.
+ */
 function touchAndKey(keyCode, value) {
     const keyName = keyMap[keyCode];
     if (keyName) {
@@ -123,26 +184,45 @@ function touchAndKey(keyCode, value) {
 }
 
 
+/**
+ * Updates the keyboard state for a key being pressed down.
+ * @param {Event} event - The 'keydown' event.
+ */
 function keyIsDown(event) {
     touchAndKey(event.keyCode, true);
 }
 
 
+/**
+ * Updates the keyboard state for a key being released.
+ * @param {Event} event - The 'keyup' event.
+ */
 function keyIsUp(event) {
     touchAndKey(event.keyCode, false);
 }
 
 
+/**
+ * Updates the keyboard state for a touch event on a key.
+ * @param {number} keyCode - The key code associated with the touched key.
+ */
 function touchOn(keyCode) {
     touchAndKey(keyCode, true);
 }
 
 
-function touchOff(keyCode) {
+function /**
+* Updates the keyboard state for a touch event off a key.
+* @param {number} keyCode - The key code associated with the released key.
+*/
+touchOff(keyCode) {
     touchAndKey(keyCode, false);
 }
 
 
+/**
+ * Resets the state of all keys in the keyboard to false.
+ */
 function resetKeyboard() {
     for(let i = 0; i <=255; i++) {
         const keyName = keyMap[i];

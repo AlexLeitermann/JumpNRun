@@ -1,4 +1,31 @@
+/**
+ * Represents a character that extends a movable object.
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
+    /**
+     * Default values for the character's properties.
+     * @type {Object}
+     */
+    defaultValues = {
+        x: 0,
+        y: 420,
+        width: 92,
+        height: 180,
+        yBaseline: 180,
+        speed: 1.6,
+        energy: 100,
+        attack: 10,
+        isFalling: false,
+        hitbox_x: 16,
+        hitbox_y: 70,
+        hitbox_height: 100
+    }
+
+    /**
+     * Arrays of paths to some animation images.
+     * @type {string[]}
+     */
     IMAGES_WALKING = [
         '/img/set1/2_character_pepe/2_walk/W-21.png',
         '/img/set1/2_character_pepe/2_walk/W-22.png',
@@ -78,6 +105,9 @@ class Character extends MovableObject {
     findReserve = false;
 
 
+    /**
+     * Constructor for the Character class.
+     */
     constructor() {
         super();
         this.loadAnimations();
@@ -87,6 +117,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Loads animation images into their respective image caches.
+     */
     loadAnimations() {
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
@@ -105,23 +138,18 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Initializes default values and calculates hitbox width.
+     */
     loadValues() {
-        this.x = 0;
-        this.y = 420;
-        this.width = 92;
-        this.height = 180;
-        this.yBaseline = this.height;
-        this.speed = 1.6;
-        this.energy = 100;
-        this.attack = 10;
-        this.isFalling = false;
-        this.hitbox_x = 16;
-        this.hitbox_y = 70;
+        Object.assign(this, this.defaultValues);
         this.hitbox_width = this.width - (this.hitbox_x * 2);
-        this.hitbox_height = 100;
     }
 
 
+    /**
+     * Initiates character movement, animation, and gravity application.
+     */
     run() {
         this.animateWalking();
         this.animateIdleHurtDead();
@@ -130,23 +158,49 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character's walking.
+     */
     animateWalking(){
         tempInterval = setInterval( () => {
             if( (keyboard.Left || keyboard.Right) && this.isJump == false && this.isFalling == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
                 let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
                 this.img = this.imageCache_Walk[path];
                 this.currentImage_Walk == (this.IMAGES_WALKING.length - 1) ? this.currentImage_Walk = 0 : this.currentImage_Walk++;
-                world.audio.snd_walk.play();
+                this.walkingSoundPlay();
             } else {
-                if(GameIsRunning) {
-                    world.audio.snd_walk.pause();
-                }
+                this.walkingSoundPause();
             }
         }, 1000/12);
         regInterval(tempInterval);
     }
 
 
+    /**
+     * Plays walking sound if character is moving.
+     */
+    walkingSoundPlay() {
+        if(world.audio.snd_walk.paused || world.audio.snd_walk.ended) {
+            world.audio.snd_walk.play();
+        }
+    }
+
+
+    /**
+     * Pauses walking sounds when the character is standing.
+     */
+    walkingSoundPause() {
+        if(GameIsRunning) {
+            if(!world.audio.snd_walk.paused) {
+                world.audio.snd_walk.pause();
+            }
+        }
+    }
+
+
+    /**
+     * Animates the character based on its status.
+     */
     animateIdleHurtDead() {
         tempInterval = setInterval( () => {
             if((keyboard.Left || keyboard.Right) == false && this.isJump == false && this.isFalling == false && this.jumpCount < 0 && this.energy > 0 && GameIsRunning) {
@@ -161,6 +215,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character in hurt status.
+     */
     animateHurt() {
         let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
         this.img = this.imageCache_Hurt[path];
@@ -168,6 +225,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character in idle status.
+     */
     animateIdle() {
         this.currentImage_Hurt = 0;
         let path = mainPath + this.IMAGES_IDLE[this.currentImage_Idle];
@@ -176,6 +236,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character in jump status.
+     */
     animateJumping(){
         tempInterval = setInterval( () => {
             this.animateJump();
@@ -187,6 +250,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character before jumping.
+     */
     checkJumpCount() {
         if(this.jumpCount == 0) {
             this.jumpCount = -1;
@@ -202,6 +268,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character at the start of the jump.
+     */
     animateJumpStart() {
         if(this.jumpCount > 0 ) {
             let path = mainPath + this.IMAGES_JUMP_START[this.currentImage_Jump_Start];
@@ -213,6 +282,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character when jumping.
+     */
     animateJump() {
         if(this.isJump == true) {
             let path = mainPath + this.IMAGES_JUMP[this.currentImage_Jump];
@@ -224,6 +296,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animates the character when falling.
+     */
     animateFall() {
         if(this.isFalling == true && this.isJump == false) {
             let path = mainPath + this.IMAGES_FALL[this.currentImage_Fall];
@@ -235,13 +310,16 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Checks keyboard input for character movement and actions.
+     */
     checkKeyboard() {
         tempInterval = setInterval( () => {
-            if(GameIsRunning) {
-                this.checkMoveRight();
-                this.checkMoveLeft();
-                this.checkMoveJump();
-                this.checkMoveThrow();
+            if(GameIsRunning || firstFrame) {
+                this.checkForMoveRight();
+                this.checkForMoveLeft();
+                this.checkForJump();
+                this.checkBottleToThrow();
                 this.checkCoinToBottle();
             }
         }, 1000/120);
@@ -249,7 +327,10 @@ class Character extends MovableObject {
     }
 
 
-    checkMoveRight() {
+    /**
+     * Checks movement to the right.
+     */
+    checkForMoveRight() {
         if(keyboard.Right && this.x < world.level_end_x && this.jumpCount == -1 && this.energy > 0) {
             this.flipH = false;
             this.x > ((720*6) ) ? this.x = (0 ) : this.x += this.speed;
@@ -257,7 +338,10 @@ class Character extends MovableObject {
     }
 
     
-    checkMoveLeft() {
+    /**
+     * Checks movement to the left.
+     */
+    checkForMoveLeft() {
         if(keyboard.Left && this.x > 0 && this.jumpCount == -1 && this.energy > 0) {
             this.flipH = true;
             this.x < (0 ) ? this.x = Math.floor((720*6) ) : this.x -= this.speed;
@@ -265,25 +349,28 @@ class Character extends MovableObject {
     }
 
 
-    checkMoveJump() {
+    /**
+     * Checks the movement for the jump.
+     */
+    checkForJump() {
         if((keyboard.Up || keyboard.Space) && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
             this.jumpCount = 4;
-            world.audio.snd_jump.play();
+            if(world.audio.snd_jump.paused) {
+                world.audio.snd_jump.play();
+            }
         }
     }
 
 
+    /**
+     * Checks the exchange of coins in bottles.
+     */
     checkCoinToBottle() {
         if(keyboard.Enter && this.coins >= 10) {
             this.cworld.level.items.forEach( (element, index) => {
                 if (element instanceof Bottle && element.reserve && this.findReserve == false) {
                     this.findReserve = true;
-                    this.backpack.push(index);
-                    this.bottles += 1;
-                    this.coins -= 10;
-                    element.reserve = false;
-                    element.initStatus = false;
-                    element.snd_bottle.play();
+                    this.exchangeIntoBottle(element, index);
                     setTimeout(() => {
                         this.findReserve = false;
                     }, 200);
@@ -293,21 +380,43 @@ class Character extends MovableObject {
     }
 
 
-    checkMoveThrow() {
+    /**
+     * Exchanges coins into bottles if conditions are met.
+     * @param {Bottle} element - The bottle element to exchange with.
+     * @param {number} index - The index of the bottle element.
+     */
+    exchangeIntoBottle(element, index) {
+        this.backpack.push(index);
+        this.bottles += 1;
+        this.coins -= 10;
+        element.reserve = false;
+        element.initStatus = false;
+        element.snd_bottle.play();
+    }
+
+
+    /**
+     * Checks the throwing of bottles.
+     */
+    checkBottleToThrow() {
         if((keyboard.D || keyboard.Num0) && !this.isHurt && !this.isThrowing && this.energy > 0 && this.bottles > 0) {
             this.bottles--;
             this.isThrowing = true;
             let backpackitem = this.cworld.level.items[this.backpack[0]];
-            this.loadMoveThrow(backpackitem);
+            this.setValuesForThrowBottle(backpackitem);
             this.backpack.splice(0, 1);
             setTimeout(() => {
                 this.isThrowing = false;
-            }, 2000);
-        }
-    }
+            }, 2000);    
+        }    
+    }    
 
 
-    loadMoveThrow(backpackitem) {
+    /**
+     * Sets the properties for the thrown bottle.
+     * @param {Bottle} backpackitem - The bottle element that is thrown.
+     */
+    setValuesForThrowBottle(backpackitem) {
         backpackitem.energy = 10;
         backpackitem.x = this.flipH ? (this.x + this.hitbox_x  ) : (this.x + (this.width / 2));
         backpackitem.y = this.y - 100;
@@ -318,11 +427,19 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Throws a bottle with random power.
+     * @returns {number} - The random throw power.
+     */
     ThrowPower() {
         return Math.floor(Math.random() * 10);
     }
 
 
+    /**
+     * Increases character's energy by the specified amount.
+     * @param {number} en - The amount of energy to add.
+     */
     getEnergy(en) {
         this.energy += en;
         if (this.energy > 100) {

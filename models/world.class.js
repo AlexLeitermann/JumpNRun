@@ -1,3 +1,6 @@
+/**
+ * Class representing the game world.
+ */
 class World {
     level = loadLevel1();
     level_end_x = 720;
@@ -12,13 +15,18 @@ class World {
     statusbarHealth = new StatusBar('/img/set1/7_statusbars/3_icons/icon_health.png', 10, 0);
     statusbarCoin = new StatusBar('/img/set1/7_statusbars/3_icons/icon_coin.png', 10, 50);
     statusbarBottle = new StatusBar('/img/set1/7_statusbars/3_icons/icon_salsa_bottle.png', 90, 50);
-    statusbarBoss = new StatusBarBoss('img/set1/7_statusbars/3_icons/icon_health_endboss.png', 660, 10);
+    statusbarBoss = new StatusBarBoss('/img/set1/7_statusbars/3_icons/icon_health_endboss.png', 660, 10);
     audio = new AudioManager();
     playgame = false;
     game = -1;
 
     
     
+    /**
+     * Creates an instance of World.
+     * @param {HTMLCanvasElement} canvas - The canvas element for rendering.
+     * @param {Keyboard} keyboard - The keyboard input handler.
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -27,11 +35,13 @@ class World {
         this.setWorld();
         this.setIndexes();
         this.checkColliding();
-        this.checkKeybordForTesting();
         this.draw();
     }
 
 
+    /**
+     * Sets indexes for items in the level.
+     */
     setIndexes() {
         this.level.items.forEach((element, index) => {
             element.index = index;
@@ -39,6 +49,9 @@ class World {
     }
     
     
+    /**
+     * Sets up the initial state of the world.
+     */
     setWorld() {
         this.level_end_x = this.level.level_end_x;
         this.character = this.level.character;
@@ -53,13 +66,16 @@ class World {
     }
 
 
+    /**
+     * Checks for collisions and updates game state.
+     */
     checkColliding() {
         tempInterval = setInterval( () => {
             if(GameIsRunning || firstFrame ) {
                 this.collidingStatus = false;
                 this.checkCollidingEnemies();
                 this.checkCollectItems();
-                this.checkCollidingEnemItems();
+                this.checkAllItemsToAllEnemies();
                 this.checkCharacterOnExit();
                 this.checkCharacterDeath();
             }
@@ -68,20 +84,9 @@ class World {
     }
 
 
-    checkKeybordForTesting() { // diese Funktion muss noch weg
-        // set first chicken on x=720 - only for testing
-        tempInterval = setInterval(() => {
-            if(keyboard.Key0 == true) 
-                this.level.enemies[0].x = 720;
-            if(keyboard.Key1 == true) 
-                this.level.enemies[0].energy = 0;
-            if(keyboard.Key2 == true) 
-                this.level.enemies[0].energy += 1;
-        }, 100);
-        regInterval(tempInterval);
-    }
-
-
+    /**
+     * Checks collisions with enemies and updates game state accordingly.
+     */
     checkCollidingEnemies() {
         this.level.enemies.forEach( (enemy) => {
             if(enemy.isCollidingHitbox(this.character)) {
@@ -100,15 +105,24 @@ class World {
     }
 
 
+    /**
+     * Sets the character state to hurt and plays hurt sound.
+     */
     setCharacterIsHurt() {
         this.character.isHurt = true;
-        this.audio.snd_hurt.play();
+        if(this.audio.snd_hurt.paused) {
+            this.audio.snd_hurt.play();
+        }
         setTimeout(() => {
             this.character.isHurt = false;
         }, 330);
     }
 
 
+    /**
+     * Checks and updates the state when the character collides with a chicken or boss.
+     * @param {Chicken | SmallChicken | BossChicken} enemy - The enemy with which the character collides.
+     */
     checkCollidingChickenOrBoss(enemy) {
         if(enemy instanceof Chicken || enemy instanceof SmallChicken) {
             (enemy.energy >= this.character.attack) ? enemy.energy -= this.character.attack : enemy.energy = 0;
@@ -124,6 +138,9 @@ class World {
     }
 
 
+    /**
+     * Checks and updates the state when the character collects items.
+     */
     checkCollectItems() {
         this.level.items.forEach( (item, index) => {
             if(item.isCollidingHitbox(this.character)) {
@@ -134,6 +151,10 @@ class World {
     }
 
 
+    /**
+     * Updates game state when the character collects a coin.
+     * @param {Coin} item - The coin item collected by the character.
+     */
     isCollectCoin(item) {
         if(item instanceof Coin && item.energy > 0) {
             item.energy = 0;
@@ -143,7 +164,12 @@ class World {
     }
 
 
-    isCollectBottle(item, index) { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    /**
+     * Updates game state when the character collects a bottle.
+     * @param {Bottle} item - The bottle item collected by the character.
+     * @param {number} index - The index of the bottle item.
+     */
+    isCollectBottle(item, index) {
         if(item instanceof Bottle && item.energy == -1 && !item.fly) {
             item.energy = 0;
             let finding = false;
@@ -153,33 +179,60 @@ class World {
                 };
             });
             if(!finding) {
-                this.character.backpack.push(index);
-                this.character.bottles += 1;
-                item.snd_bottle.play();
-                item.initStatus = false;
+                this.pushBottleToBackpack(item, index);
             }
         }
     }
 
 
-    checkCollidingEnemItems() {
+    /**
+     * Adds a bottle to the character's backpack.
+     * @param {Bottle} item - The bottle item to be added to the backpack.
+     * @param {number} index - The index of the bottle item.
+     */
+    pushBottleToBackpack(item, index) {
+        this.character.backpack.push(index);
+        this.character.bottles += 1;
+        item.snd_bottle.play();
+        item.initStatus = false;
+    }
+
+
+    /**
+     * Checks collisions between items and enemies.
+     */
+    checkAllItemsToAllEnemies() {
         this.level.items.forEach(item => {
             this.level.enemies.forEach( (enemy) => {
-                if(enemy.isCollidingHitbox(item)) {
-                    this.collidingStatus = true;
-                    if(enemy.energy > 0 && item.fly) {
-                        enemy.energy >= item.attack ? enemy.energy -= item.attack : enemy.energy = 0;
-                        this.collidingEnemItemsIsBoss(enemy);
-                        item.noJump(-100, true);
-                        item.snd_bottlebroken.play();
-                    }
-                }
+                this.checkCollidingItemEnemy(item, enemy);
             });
         });
     }
 
 
-    collidingEnemItemsIsBoss(enemy) { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    /**
+     * Checks collisions between an item and an enemy and updates game state accordingly.
+     * @param {Item} item - The item in collision with the enemy.
+     * @param {Enemy} enemy - The enemy in collision with the item.
+     */
+    checkCollidingItemEnemy(item, enemy) {
+        if(enemy.isCollidingHitbox(item)) {
+            this.collidingStatus = true;
+            if(enemy.energy > 0 && item.fly) {
+                enemy.energy >= item.attack ? enemy.energy -= item.attack : enemy.energy = 0;
+                this.collidingItemEnemyIsBoss(enemy);
+                item.noJump(-100, true);
+                item.snd_bottlebroken.play();
+            }
+        }
+    }
+
+
+    /**
+     * Updates game state when an item collides with a boss enemy.
+     * @param {BossChicken} enemy - The boss enemy in collision with the item.
+     */
+    collidingItemEnemyIsBoss(enemy) {
         if(enemy instanceof BossChicken){
             this.statusbarBoss.current = enemy.energy;
             if(enemy.energy > 0 && !enemy.isHurt) {
@@ -193,6 +246,10 @@ class World {
     }
 
 
+    /**
+     * Updates game state when a boss enemy is hurt.
+     * @param {BossChicken} enemy - The boss enemy that is hurt.
+     */
     enemyBossIsHurt(enemy) {
         enemy.isHurt = true;
         enemy.snd_boss_hurt.play();
@@ -200,12 +257,20 @@ class World {
     }
 
 
+    /**
+     * Updates game state when a boss enemy is dead.
+     * @param {BossChicken} enemy - The boss enemy that is dead.
+     */
     enemyBossIsDead(enemy) {
         enemy.isHurt = false;
         enemy.snd_boss_death.play();
-}
+    }
 
 
+    /**
+     * Sets a timeout to end the hurt state of a boss enemy.
+     * @param {BossChicken} enemy - The boss enemy whose hurt state is ending.
+     */
     enemyBossHurtEnding(enemy) {
         setTimeout(() => {
             enemy.isHurt = false;
@@ -213,6 +278,9 @@ class World {
     }
 
 
+    /**
+     * Checks for the character's death and updates game state accordingly.
+     */
     checkCharacterDeath() {
         if(this.character.energy <= 0 && !this.character.isDead) {
             this.character.energy = 0;
@@ -225,6 +293,9 @@ class World {
     }
     
     
+    /**
+     * Checks if the character has reached the exit point and updates game state accordingly.
+     */
     checkCharacterOnExit() {
         if(this.character.x > 720 * 5.9) {
             world.game = -1;
@@ -233,6 +304,10 @@ class World {
     }
 
 
+    /**
+     * Stops the game and either opens the win or lose screen.
+     * @param {boolean} win - Indicates whether the game was won or lost.
+     */
     gameStop(win = false) {
         this.audio.snd_walk.pause();
         this.audio.snd_walk.currentTime = 0;
@@ -245,6 +320,9 @@ class World {
     }
 
 
+    /**
+     * Clears the game state.
+     */
     clearGame() {
         setTimeout(() => {
             worldLoaded = false;
@@ -254,6 +332,10 @@ class World {
     }
 
 
+    /**
+     * Loads a new game level.
+     * @param {number} startLevel - The level to start loading.
+     */
     loadGame(startLevel = 1) {
         this.loadNewLevel(startLevel);
         this.setWorld();
@@ -262,6 +344,10 @@ class World {
     }
 
 
+    /**
+     * Loads a new game level based on the specified level.
+     * @param {number} startLevel - The level to load.
+     */
     loadNewLevel(startLevel) {
         if(this.level != null) {
             worldLoaded = false;
@@ -279,6 +365,9 @@ class World {
 // ################################################################################
 // ################################################################################
 // ################################################################################
+    /**
+     * Draws the game world and updates the animation frame.
+     */
     draw() {
         this.getFPS();
         if (GameIsRunning || firstFrame) {
@@ -296,6 +385,9 @@ class World {
     }
 
 
+    /**
+     * Calculates and updates the frames per second (FPS) for the game.
+     */
     getFPS() {
         if(this.fpsStart == 0) {
             this.fpsStart = performance.now();
@@ -311,6 +403,9 @@ class World {
     }
 
 
+    /**
+     * Draws the movable elements of the game world.
+     */
     drawMovableWorld() {
         this.ctx.translate(this.camera_x + 100, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
@@ -322,6 +417,10 @@ class World {
     }
 
 
+    /**
+     * Adds objects to the game map.
+     * @param {Array} obj - The array of objects to be added to the map.
+     */
     addObjectsToMap(obj){
         obj.forEach( (o) => {
             this.addToMap(o, o.flipH);
@@ -329,6 +428,11 @@ class World {
     }
 
 
+    /**
+     * Adds an object to the game map.
+     * @param {MovableObject} mo - The movable object to be added to the map.
+     * @param {boolean} flip - Indicates whether to flip the object horizontally.
+     */
     addToMap(mo, flip = false) {
         if(flip) {
             this.ctx.save();
@@ -341,35 +445,42 @@ class World {
     }
 
 
+    /**
+     * Adds an image to the game map.
+     * @param {HTMLImageElement} moimg - The image to be added to the map.
+     * @param {number} x - The x-coordinate of the image.
+     * @param {number} y - The y-coordinate of the image.
+     * @param {number} width - The width of the image.
+     * @param {number} height - The height of the image.
+     */
     addImageToMap(moimg, x, y, width, height) {
         this.ctx.drawImage(moimg, x, y, width, height);
     }
 
 
+    /**
+     * Adds the status bars to the game map.
+     */
     addStatusToMap() {
-        // this.updateBossEnergy();
         this.addImageToMap(this.statusbarHealth.imgBackground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth, this.statusbarHealth.barHeight); // Statusbar Health Background
         this.addImageToMap(this.statusbarHealth.imgForeground, this.statusbarHealth.barX, this.statusbarHealth.barY, this.statusbarHealth.barWidth / this.statusbarHealth.max * this.statusbarHealth.current, this.statusbarHealth.barHeight); // Statusbar Health Foreground
         this.addImageToMap(this.statusbarHealth.imgIcon, this.statusbarHealth.iconX, this.statusbarHealth.iconY, this.statusbarHealth.iconWidth, this.statusbarHealth.iconHeight); // Icon Health
-        
         this.addImageToMap(this.statusbarCoin.imgIcon, this.statusbarCoin.iconX, this.statusbarCoin.iconY, this.statusbarCoin.iconWidth, this.statusbarCoin.iconHeight); // Icon Coin
         this.addImageToMap(this.statusbarBottle.imgIcon, this.statusbarBottle.iconX, this.statusbarBottle.iconY, this.statusbarBottle.iconWidth, this.statusbarBottle.iconHeight); // Icon Bottle
-
         this.addImageToMap(this.statusbarBoss.imgBackground, this.statusbarBoss.barX - this.statusbarBoss.barWidth, this.statusbarBoss.barY, this.statusbarBoss.barWidth, this.statusbarBoss.barHeight); // Statusbar Boss Background
         this.addImageToMap(this.statusbarBoss.imgForeground, this.statusbarBoss.barX - (this.statusbarBoss.barWidth / this.statusbarBoss.max * this.statusbarBoss.current), this.statusbarBoss.barY, this.statusbarBoss.barWidth / this.statusbarBoss.max * this.statusbarBoss.current, this.statusbarBoss.barHeight); // Statusbar Boss Foreground
         this.addImageToMap(this.statusbarBoss.imgIcon, this.statusbarBoss.iconX, this.statusbarBoss.iconY, this.statusbarBoss.iconWidth, this.statusbarBoss.iconHeight); // Icon Boss
     }
 
 
-    updateBossEnergy() {
-        this.level.enemies.forEach(element => {
-            if(element instanceof BossChicken) {
-                this.statusbarBoss.current = element.energy;
-            }
-        });
-    }
-
-
+    /**
+     * Adds the frames per second (FPS) information to the game map.
+     * @param {string} text - The text to display for the FPS.
+     * @param {number} x - The x-coordinate of the text.
+     * @param {number} y - The y-coordinate of the text.
+     * @param {number} size - The font size of the text.
+     * @param {string} color - The color of the text.
+     */
     addFpsToMap(text, x, y, size = 24, color = '#000000') {
         this.ctx.font = size + "px sans-serif";
         this.ctx.fillStyle = color;
@@ -377,6 +488,16 @@ class World {
     }
 
 
+    /**
+     * Adds text information to the game map.
+     * @param {string} text - The text to display.
+     * @param {number} x - The x-coordinate of the text.
+     * @param {number} y - The y-coordinate of the text.
+     * @param {number} size - The font size of the text.
+     * @param {boolean} fontbold - Indicates whether the font should be bold.
+     * @param {string} color - The color of the text.
+     * @param {boolean} middle - Indicates whether to center the text horizontally.
+     */
     addTextToMap(text, x, y, size = 16, fontbold = false, color = '#000000', middle = false) {
         let halfWidth = 0;
         let bold = fontbold ? 'bold ' : '';
@@ -389,6 +510,9 @@ class World {
     }
 
 
+    /**
+     * Draws additional text information on the game map.
+     */
     drawTextInfo() {
         if(optionFPS) {
             this.addFpsToMap(this.fpsText+'FPS', 710, 460, 12, '#00ff00');
@@ -399,34 +523,4 @@ class World {
         this.addTextToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);
         this.addTextToMap('Fall down: Arrow down   Change 10 Coins into 1 Bottle: Enter', 360, 468, 16, null, '#000000', true);
     }
-
-// Für Abgabe entfernen!!! ---------------------------------------------------------------------
-    addBoxToMap(flip, x, y, w, h, yb, color = "#ff0000") { // Für Abgabe entfernen!!!
-        this.ctx.strokeStyle = color;
-        this.ctx.beginPath();
-        this.ctx.rect(flip ? (x + w) * -1 : x, y - yb, w, h);
-        this.ctx.stroke();
-        this.ctx.strokeStyle = "#000000";
-    } 
-
-
-    addHitBoxToMap(mo, color = "#ff0000") { // Für Abgabe entfernen!!!
-        this.ctx.strokeStyle = color;
-        this.ctx.beginPath();
-        this.ctx.rect(mo.x + mo.hitbox_x, mo.y - mo.yBaseline + mo.hitbox_y, mo.hitbox_width, mo.hitbox_height);
-        this.ctx.stroke();
-        this.ctx.strokeStyle = "#000000";
-    } 
-
-
-    drawSites() { // Für Abgabe entfernen!!!
-        this.addFpsToMap('0', 10, 452);
-        this.addFpsToMap('1', 10 + 720, 452);
-        this.addFpsToMap('2', 10 + 720 * 2, 452);
-        this.addFpsToMap('3', 10 + 720 * 3, 452);
-        this.addFpsToMap('4', 10 + 720 * 4, 452);
-        this.addFpsToMap('5', 10 + 720 * 5, 452);
-        this.addFpsToMap('6', 10 + 720 * 6, 452);
-    } 
-// ----- Für Abgabe bis hierher entfernen -----------------------------------------------------
 }

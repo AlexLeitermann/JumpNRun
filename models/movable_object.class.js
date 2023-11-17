@@ -1,3 +1,6 @@
+/**
+ * Class representing a movable object with various properties and behaviors.
+ */
 class MovableObject {
     x;
     y;
@@ -18,7 +21,6 @@ class MovableObject {
     flipH = false;
     isFalling = false;
     fly = false;
-    isMarking = false; // Für Abgabe entfernen!!!
     isJump = false;
     isHurt = false;
     platforms_toJump = [];
@@ -41,11 +43,19 @@ class MovableObject {
     
 
 
+    /**
+     * Loads an image for the object.
+     * @param {string} path - The path to the image file.
+     */
     loadImage(path) {
         this.img.src = mainPath + path;
     }
 
 
+    /**
+     * Loads an array of images into the image cache.
+     * @param {string[]} arr - An array of image paths.
+     */
     loadImages(arr) {
         this.imageCache = [];
         arr.forEach((path) => {
@@ -57,6 +67,9 @@ class MovableObject {
     }
 
 
+    /**
+     * Applies gravitational movement to the object.
+     */
     applyGravitation() {
         tempInterval = setInterval(() => {
             if(GameIsRunning) {
@@ -75,6 +88,9 @@ class MovableObject {
     }
 
 
+    /**
+     * Moves the object based on gravitational forces.
+     */
     gravitationMove() {
         if (!(this instanceof Bottle && !this.fly) && this.energy >= 0) {
             if(this.y < 420) {
@@ -85,6 +101,10 @@ class MovableObject {
     }
     
     
+    /**
+     * Handles jumping onto platforms.
+     * @param {number} y - The Y-coordinate of the platform.
+     */
     jumpOnPlatforms(y) {
         if(this.y > y && this.y < (y+30) && !keyboard.Down) {
             this.noJump(y);
@@ -92,6 +112,10 @@ class MovableObject {
     }
 
 
+    /**
+     * Checks if the object has landed on the ground.
+     * @param {number} y - The Y-coordinate of the ground.
+     */
     landedOnGround(y) {
         if(this.y >= y) {
             this.noJump(y, false);
@@ -99,6 +123,11 @@ class MovableObject {
     }
 
 
+    /**
+     * Resets the jumping state of the object.
+     * @param {number} y - The Y-coordinate to reset to.
+     * @param {boolean} splash - Flag indicating if a splash effect should occur.
+     */
     noJump(y = -100, splash = false) {
         this.speedY = 0;
         if(this instanceof Bottle) {
@@ -114,6 +143,10 @@ class MovableObject {
     }
 
 
+    /**
+     * Handles the no-jump state for a Bottle object.
+     * @param {boolean} splash - Flag indicating if a splash effect should occur.
+     */
     noJumpBottle(splash) {
         this.speed = 0;
         this.fly = false;
@@ -124,6 +157,11 @@ class MovableObject {
     }
 
 
+    /**
+     * Checks if the object is within the range of platforms for jumping.
+     * @param {number} middle - The middle X-coordinate of the object.
+     * @returns {Array} - An array with a boolean indicating if the object is within range and the Y-coordinate of the platform.
+     */
     isRangeOfPlatforms(middle) {
         let answer = false;
         let y = 0;
@@ -139,6 +177,11 @@ class MovableObject {
     }
 
 
+    /**
+     * Checks if the hitbox of the object is colliding with another object's hitbox.
+     * @param {Object} obj - The other object.
+     * @returns {boolean} - True if collision occurs, false otherwise.
+     */
     isCollidingHitbox(obj) {
         return (this.x + this.hitbox_x + this.hitbox_width) >= (obj.x + obj.hitbox_x) &&
         (this.x + this.hitbox_x) <= (obj.x + obj.hitbox_x + obj.hitbox_width) &&

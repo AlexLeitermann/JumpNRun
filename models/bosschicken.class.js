@@ -1,5 +1,25 @@
+/**
+ * BossChicken class represents a movable object that acts as a boss character.
+ * @extends MovableObject
+ */
 class BossChicken extends MovableObject {
-    IMAGES_WALKING = [
+    /**
+     * Default values for BossChicken properties.
+     * @type {Object}
+     */
+    defaultValues = {
+        x: 3960,
+        y: 450,
+        width: 261,
+        height: 304,
+        yBaseline: 304,
+        hitbox_x: 50,
+        hitbox_y: 60,
+        speed: 0.2,
+        energy: 50,
+        attack: 15
+    }
+IMAGES_WALKING = [
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png ',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
@@ -61,6 +81,9 @@ class BossChicken extends MovableObject {
 
 
 
+    /**
+     * Constructs a new instance of the BossChicken class.
+     */
     constructor() {
         super();
         this.loadAllImages();
@@ -70,6 +93,9 @@ class BossChicken extends MovableObject {
     }
 
 
+    /**
+     * Loads all images for different animation states and populates the image cache.
+     */
     loadAllImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.imageCache_Walk = this.imageCache;
@@ -84,6 +110,9 @@ class BossChicken extends MovableObject {
     }
 
 
+    /**
+     * Loads audio sounds for boss chicken actions.
+     */
     loadSounds() {
         if (!this.snd_boss_death) {
             this.snd_boss_death = new Audio(mainPath + '/audio/win.mp3');
@@ -97,22 +126,19 @@ class BossChicken extends MovableObject {
     }
 
 
+    /**
+     * Initializes values for the boss chicken, including hitbox dimensions.
+     */
     loadValues() {
-        this.x = 720 * 5.5;
-        this.y = 450;
-        this.width = 261;
-        this.height = 304;
-        this.yBaseline = this.height;
-        this.hitbox_x = 50;
-        this.hitbox_y = 60;
+        Object.assign(this, this.defaultValues);
         this.hitbox_width = this.width - (this.hitbox_x * 2);
-        this.hitbox_height = this.height - this.hitbox_y -20;
-        this.speed = 0.2;
-        this.energy = 50;
-        this.attack = 15;
+        this.hitbox_height = this.height - this.hitbox_y - 20;
     }
 
 
+    /**
+     * Initiates continuous movement of the boss chicken based on game conditions.
+     */
     move() {
         tempInterval = setInterval( () => {
             if (GameIsRunning) {
@@ -123,6 +149,9 @@ class BossChicken extends MovableObject {
     }
 
 
+    /**
+     * Moves the boss chicken in the direction of the player if certain conditions are met.
+     */
     moveDirection() {
         if(this.energy > 0 && world.character.x > ((this.x + (this.width / 2)) - 800) && world.character.x < ((this.x + (this.width / 2)) + 800)) {
             if(world.character.x <= (this.x + (this.width / 2))) {
@@ -137,14 +166,22 @@ class BossChicken extends MovableObject {
     }
 
 
+    /**
+     * Handles the boss chicken's first contact with the player.
+     */
     moveContact() {
         if(!this.hasFirstContact) {
             this.hasFirstContact = true;
-            this.snd_boss_alarm.play();
+            if(this.snd_boss_alarm.paused) {
+                this.snd_boss_alarm.play();
+            }
         }
     }
 
 
+    /**
+     * Initiates the animation loop based on the boss chicken's state (walking, dead, hurt).
+     */
     animation() {
         tempInterval = setInterval( () => {
             if(this.energy <= 0 && GameIsRunning) {
@@ -159,19 +196,24 @@ class BossChicken extends MovableObject {
     }
 
 
+    /**
+     * Handles the animation when the boss chicken is dead.
+     */
     animationDead() {
         let path = mainPath + this.IMAGES_DEAD[this.currentImage_Dead];
         this.img = this.imageCache_Dead[path];
         if(this.currentImage_Dead == (this.IMAGES_DEAD.length - 1)) {
             setTimeout(() => {
                 this.x = (720 * 7.1);
-                // Entweder hier GameOver (win) oder nach Zieldurchlauf => character.x > 720 * 5.9
             }, 2000);
         }
         this.currentImage_Dead == (this.IMAGES_DEAD.length - 1) ? this.currentImage_Dead = (this.IMAGES_DEAD.length - 1) : this.currentImage_Dead++;
     }
 
 
+    /**
+     * Handles the walking animation of the boss chicken.
+     */
     animationWalking() {
         let path = mainPath + this.IMAGES_WALKING[this.currentImage_Walk];
         this.img = this.imageCache_Walk[path];
@@ -179,6 +221,9 @@ class BossChicken extends MovableObject {
     }
     
 
+    /**
+     * Handles the animation when the boss chicken is hurt.
+     */
     animationHurt() {
         let path = mainPath + this.IMAGES_HURT[this.currentImage_Hurt];
         this.img = this.imageCache_Hurt[path];
@@ -186,6 +231,9 @@ class BossChicken extends MovableObject {
     }
     
 
+    /**
+     * Revives the boss chicken by resetting its position, speed, and energy.
+     */
     revive() {
         this.x = 720 * 5.4;
         this.speed = this.initSpeed();
