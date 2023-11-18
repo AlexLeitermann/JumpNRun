@@ -172,8 +172,8 @@ IMAGES_WALKING = [
     moveContact() {
         if(!this.hasFirstContact) {
             this.hasFirstContact = true;
-            if(this.snd_boss_alarm.paused) {
-                this.snd_boss_alarm.play();
+            if(optionSound && this.snd_boss_alarm.paused) {
+                    this.snd_boss_alarm.play();
             }
         }
     }

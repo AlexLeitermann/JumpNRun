@@ -110,7 +110,7 @@ class World {
      */
     setCharacterIsHurt() {
         this.character.isHurt = true;
-        if(this.audio.snd_hurt.paused) {
+        if(optionSound && this.audio.snd_hurt.paused) {
             this.audio.snd_hurt.play();
         }
         setTimeout(() => {
@@ -130,10 +130,12 @@ class World {
                 enemy.speedY = this.character.speedY;
             }
             if(optionBouncing){
-                this.character.speedY = 6;
+                this.character.speedY = 7;
             }
             enemy.revive();
-            enemy.snd_chicken_dead.play();
+            if(optionSound) {
+                enemy.snd_chicken_dead.play();
+            }
         }
     }
 
@@ -159,7 +161,9 @@ class World {
         if(item instanceof Coin && item.energy > 0) {
             item.energy = 0;
             this.character.coins += 1;
-            item.snd_coin.play();
+            if(optionSound) {
+                item.snd_coin.play();
+            }
         }
     }
 
@@ -193,8 +197,10 @@ class World {
     pushBottleToBackpack(item, index) {
         this.character.backpack.push(index);
         this.character.bottles += 1;
-        item.snd_bottle.play();
         item.initStatus = false;
+        if(optionSound) {
+            item.snd_bottle.play();
+        }
     }
 
 
@@ -222,7 +228,9 @@ class World {
                 enemy.energy >= item.attack ? enemy.energy -= item.attack : enemy.energy = 0;
                 this.collidingItemEnemyIsBoss(enemy);
                 item.noJump(-100, true);
-                item.snd_bottlebroken.play();
+                if(optionSound) {
+                    item.snd_bottlebroken.play();
+                }
             }
         }
     }
@@ -252,7 +260,9 @@ class World {
      */
     enemyBossIsHurt(enemy) {
         enemy.isHurt = true;
-        enemy.snd_boss_hurt.play();
+        if(optionSound) {
+            enemy.snd_boss_hurt.play();
+        }
         this.enemyBossHurtEnding(enemy);
     }
 
@@ -263,7 +273,9 @@ class World {
      */
     enemyBossIsDead(enemy) {
         enemy.isHurt = false;
-        enemy.snd_boss_death.play();
+        if(optionSound) {
+            enemy.snd_boss_death.play();
+        }
     }
 
 
@@ -285,7 +297,9 @@ class World {
         if(this.character.energy <= 0 && !this.character.isDead) {
             this.character.energy = 0;
             this.character.isDead = true;
-            this.audio.snd_dead.play();
+            if(optionSound) {
+                this.audio.snd_dead.play();
+            }
             setTimeout(() => {
                 this.gameStop(false);
             }, 2000);
@@ -517,7 +531,6 @@ class World {
         if(optionFPS) {
             this.addFpsToMap(this.fpsText+'FPS', 710, 460, 12, '#00ff00');
         } 
-        this.addTextToMap(Math.floor(this.character.x), 10, 450, 16); // Für Abgabe entfernen!!!
         this.addTextToMap(this.character.coins, 75, 86, 24, true, null, true);
         this.addTextToMap(this.character.bottles, 150, 86, 24, true, null, true);
         this.addTextToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);

@@ -8,7 +8,7 @@ window.addEventListener('keydown', keyIsDown);
  * Event listener for the 'keyup' event.
  * @param {Event} event - The keyboard 'keyup' event.
  */
-dddwindow.addEventListener('keyup', keyIsUp);
+window.addEventListener('keyup', keyIsUp);
 
 /**
  * Event listener for the 'touchstart' event that prevents the default behavior and stops propagation.
@@ -53,7 +53,8 @@ let world;
 let keyboard = new Keyboard();
 let firstFrame = false;
 let optionBouncing = false;
-let optionFPS = true;
+let optionFPS = false;
+let optionSound = true;
 
 
 /**
@@ -86,6 +87,68 @@ function openGame(game) {
 }
 
 
+function aboutTheGame() {
+    document.getElementById('about').classList.toggle('d-none');
+    document.getElementById('about').scrollTop = 0;
+}
+
+
+/**
+ * Calls the appropriate function for the option
+ * @param {number} n - A number that defines the option 
+ */
+function setOption(n) {
+    if(n == 0) {
+        toggleFPS();
+    } else if(n == 1) {
+        toggleBounce();
+    } else if(n == 2) {
+        toggleSounds();
+    }
+}
+
+
+/**
+ * Toggles the option for displaying FPS
+ */
+function toggleFPS() {
+    optionFPS = !optionFPS;
+    if(optionFPS) {
+        document.getElementById('fps').src = './img/toggle-on.png';
+    } else {
+        document.getElementById('fps').src = './img/toggle-off.png';
+    }
+}
+
+
+/**
+ * Toggles the bounce effect option
+ */
+function toggleBounce() {
+    optionBouncing = !optionBouncing;
+    if(optionBouncing) {
+        document.getElementById('bounce').src = './img/toggle-on.png';
+    } else {
+        document.getElementById('bounce').src = './img/toggle-off.png';
+    }
+}
+
+
+/**
+ * Toggles the sound option
+ */
+function toggleSounds() {
+    optionSound = !optionSound;
+    if(optionSound) {
+        document.getElementById('sound').src = './img/toggle-on.png';
+        document.getElementById('btnsoundimg').src = './img/btn-sndon.png';
+    } else {
+        document.getElementById('sound').src = './img/toggle-off.png';
+        document.getElementById('btnsoundimg').src = './img/btn-sndoff.png';
+    }
+}
+
+
 /**
  * Starts the specified game, hides certain UI elements, loads the game, and sets up initial conditions.
  * @param {number} game - The game code to determine which game to start.
@@ -95,10 +158,12 @@ function gameStart(game) {
     document.getElementById('gamelose').classList.add('d-none');
     document.getElementById('btnpause').classList.remove('d-none');
     document.getElementById('btnplay').classList.add('d-none');
+    document.getElementById('btnsound').classList.remove('d-none');
     gameloader(game);
     resetKeyboard();
-    firstFrame = true;
     document.getElementById('loadpage').classList.add('hide');
+    firstFrame = true;
+    world.audio.snd_init.play();
     setTimeout(() => {
         GameIsRunning = true;
     }, 1300);
@@ -131,9 +196,9 @@ function gameStartscreen() {
 function gamePause() {
     GameIsRunning = false;
     document.getElementById('btnpause').classList.add('d-none');
-    setTimeout(() => {
+    // setTimeout(() => {
         document.getElementById('btnplay').classList.remove('d-none');
-    }, 200);
+    // }, 200);
 }
 
 
@@ -143,9 +208,9 @@ function gamePause() {
 function gamePlay() {
     GameIsRunning = true;
     document.getElementById('btnplay').classList.add('d-none');
-    setTimeout(() => {
+    // setTimeout(() => {
         document.getElementById('btnpause').classList.remove('d-none');
-    }, 200);
+    // }, 200);
 }
 
 
@@ -157,6 +222,7 @@ function gameOver() {
     document.getElementById('gameover').classList.remove('d-none');
     document.getElementById('btnpause').classList.add('d-none');
     document.getElementById('btnplay').classList.add('d-none');
+    document.getElementById('btnsound').classList.add('d-none');
 }
 
 
@@ -168,6 +234,7 @@ function gameLose() {
     document.getElementById('gamelose').classList.remove('d-none');
     document.getElementById('btnpause').classList.add('d-none');
     document.getElementById('btnplay').classList.add('d-none');
+    document.getElementById('btnsound').classList.add('d-none');
 }
 
 

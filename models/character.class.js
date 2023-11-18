@@ -180,8 +180,10 @@ class Character extends MovableObject {
      * Plays walking sound if character is moving.
      */
     walkingSoundPlay() {
-        if(world.audio.snd_walk.paused || world.audio.snd_walk.ended) {
-            world.audio.snd_walk.play();
+        if(optionSound) {
+            if(world.audio.snd_walk.paused || world.audio.snd_walk.ended) {
+                world.audio.snd_walk.play();
+            }
         }
     }
 
@@ -355,7 +357,7 @@ class Character extends MovableObject {
     checkForJump() {
         if((keyboard.Up || keyboard.Space) && !this.isJump && this.speedY == 0 && this.jumpCount < 0 && !this.isHurt && this.energy > 0) {
             this.jumpCount = 4;
-            if(world.audio.snd_jump.paused) {
+            if(optionSound && world.audio.snd_jump.paused) {
                 world.audio.snd_jump.play();
             }
         }
@@ -391,7 +393,9 @@ class Character extends MovableObject {
         this.coins -= 10;
         element.reserve = false;
         element.initStatus = false;
-        element.snd_bottle.play();
+        if(optionSound) {
+            element.snd_bottle.play();
+        }
     }
 
 

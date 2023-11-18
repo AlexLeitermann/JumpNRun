@@ -7,7 +7,6 @@ class AudioManager {
     snd_dead;
     snd_jump;
     snd_hurt;
-
     snd_init;
 
     /**
@@ -29,7 +28,6 @@ class AudioManager {
     initFistSound() {
         this.snd_init = new Audio(mainPath + '/audio/bottle_open.mp3');
         this.snd_init.volume = 0;
-        this.snd_init.play();
     }
 
 

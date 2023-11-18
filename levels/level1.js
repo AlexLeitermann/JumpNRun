@@ -63,7 +63,6 @@ function loadLevel1() {
             new BackgroundObject('/img/set1/5_background/layers/1_first_layer/1.png', 720*4, 0, 720),
             new BackgroundObject('/img/set1/5_background/layers/1_first_layer/2.png', 719*5, 0, 720),
             new BackgroundObject('/img/set1/5_background/layers/1_first_layer/1.png', 719*6, 0, 720),
-    
             
             new BackgroundObject('/img/set1/box_small_left.png', 350, 335, 100, 77, 0),
             new BackgroundObject('/img/set1/box_small_left.png', 350, 277, 100, 77, 0),
@@ -113,7 +112,7 @@ function loadLevel1() {
             new Bottle(1570, 420, 0),
             new Bottle(2030, 420, 1),
             new Bottle(2280, 358, -1),
-    
+            
             new Bottle(-500, 0, -1, true),
             new Bottle(-500, 0, -1, true),
             new Bottle(-500, 0, -1, true),
@@ -153,7 +152,6 @@ function loadLevel1() {
     
             new Coin(3150, 300),
             new Coin(3350, 300),
-    
         ]
     );
 }

@@ -34,7 +34,7 @@
             <div class="card" onclick="openGame(1)"><span>El Pollo Loco - Level A</span><div class="imgpreview"><img src="./img/set1/9_intro_outro_screens/start/startscreen_2.png"></div></div>
             <div class="card" onclick="openGame(2)"><span>El Pollo Loco - Level B</span><div class="imgpreview"><img src="./img/set1/9_intro_outro_screens/start/startscreen_1.png"></div></div>
         </div>
-        <button class="btnaboutgame">About the Game</button>
+        <button class="btnaboutgame" onclick="aboutTheGame()">About the Game</button>
     </section>
     <section id="gamepage" class="fullpage">
         <div id="fullscreen" class="fullscreen">
@@ -42,10 +42,11 @@
                 <canvas id="canvas" width="720" height="480">
                 </canvas>
                 <div class="rahmen">
-                    <div class="btnpause" id="btnpause" onclick="openGame(-2)" ontouchend="openGame(-2)"><img src="./img/btn-gamepause.png"></div>
-                    <div class="btnplay d-none" id="btnplay" onclick="openGame(-3)" ontouchend="openGame(-3)"><img src="./img/btn-gameplay.png"></div>
-                    <div class="gameend d-none" id="gameover" onclick="openGame(0)" ontouchend="openGame(0)"><img src="./img/set1/9_intro_outro_screens/game_over/game over.png"></div>
-                    <div class="gameend d-none" id="gamelose" onclick="openGame(0)" ontouchend="openGame(0)"><img src="./img/set1/9_intro_outro_screens/game_over/you lost.png"></div>
+                    <div class="gamebtn" id="btnpause" onclick="openGame(-2)"><img src="./img/btn-gamepause.png"></div>
+                    <div class="gamebtn d-none" id="btnplay" onclick="openGame(-3)"><img src="./img/btn-gameplay.png"></div>
+                    <div class="gamebtn" id="btnsound" onclick="setOption(2)"><img id="btnsoundimg" src="./img/btn-sndon.png"></div>
+                    <div class="gameend d-none" id="gameover" onclick="openGame(0)"><img src="./img/set1/9_intro_outro_screens/game_over/game over.png"></div>
+                    <div class="gameend d-none" id="gamelose" onclick="openGame(0)"><img src="./img/set1/9_intro_outro_screens/game_over/you lost.png"></div>
                 </div>
             </div>
             <button id="keyright" class="key right" onmousedown="touchOn(39)" onmouseup="touchOff(39)" ontouchstart="touchOn(39)" ontouchend="touchOff(39)"></button>
@@ -56,16 +57,61 @@
             <button id="keydown" class="key down" onmousedown="touchOn(40)" onmouseup="touchOff(40)" ontouchstart="touchOn(40)" ontouchend="touchOff(40)"></button>
         </div>
     </section>
-    <!-- <section id="about" class="fullpage">
+    <section id="about" class="fullpage d-none">
         <h1>El Pollo Loco</h1>
-        <div class="aboutthegame">
-            <h2>About the Game</h2>
-            <span></span>
+        <div class="aboutbox">
+            <div class="aboutthegame">
+                <h2>About the Game</h2>
+                <span class="infotext">Some time ago the chickens disappeared in the Mexican desert. Now they're back. 
+                    Compete with Pepe Peligroso against the crazy chickens to save the desert from 
+                    them. But be careful of the big chicken, it can crush you. Collect all the coins 
+                    and salsa bottles and disable the chickens by jumping on them. You get some life 
+                    energy back. You need the salsa bottles for the big chicken, because jumping on it 
+                    won't help you. If you run out of bottles, you can buy another bottle for 10 coins 
+                    each. Also use the boxes standing around and jump on them to reach more coins. After 
+                    all the hardships, run to the end of the desert and the reputation of the fearless 
+                    desert warrior is assured.</span>
+            </div>
+            <div class="aboutcontrols">
+                <h2>About Controls</h2>
+                <div class="listbox">
+                    <div class="listrow">
+                        <div class="list rowleft">Move left</div><div class="list rowright"><img src="./img/key-left.png"></div>
+                    </div>
+                    <div class="listrow">
+                        <div class="list rowleft">Move right</div><div class="list rowright"><img src="./img/key-right.png"></div>
+                    </div>
+                    <div class="listrow">
+                        <div class="list rowleft">Jump</div><div class="list rowright"><img src="./img/key-up.png"><span>OR</span><img src="./img/key-space.png"></div>
+                    </div>
+                    <div class="listrow">
+                        <div class="list rowleft">Fall</div><div class="list rowright"><img src="./img/key-down.png" alt=""></div>
+                    </div>
+                    <div class="listrow">
+                        <div class="list rowleft">Throw Bottle</div><div class="list rowright"><img src="./img/key-d.png"><span>OR</span><img src="./img/key-num0.png"></div>
+                    </div>
+                    <div class="listrow">
+                        <div class="list rowleft">Change Coins</div><div class="list rowright"><img src="./img/key-enter.png"></div>
+                    </div>
+                </div>
+                <span></span>
+            </div>
+            <div class="aboutsettings">
+                <h2>About Settings</h2>
+                <div class="settingbox">
+                    <div class="listrow">
+                        <div class="list rowleft"><span class="infotext">View Frames per Second (FPS)</span></div><div class="list rowright"><div class="imgbutton" onclick="setOption(0)"><img id="fps" src="./img/toggle-off.png"></div></div>
+                    </div>
+                    <div class="listrow">
+                        <div class="list rowleft"><span class="infotext">Bounce off the Chicken</span></div><div class="list rowright"><div class="imgbutton" onclick="setOption(1)"><img id="bounce" src="./img/toggle-off.png"></div></div>
+                    </div>
+                    <div class="listrow">
+                        <div class="list rowleft"><span class="infotext">Sounds</span></div><div class="list rowright"><div class="imgbutton" onclick="setOption(2)"><img id="sound" src="./img/toggle-on.png"></div></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btnaboutgame" onclick="aboutTheGame()">Close</button>
         </div>
-        <div class="aboutcontrols">
-            <h2>About Controls</h2>
-            <span></span>
-        </div>
-    </section> -->
+    </section>
 </body>
 </html>
