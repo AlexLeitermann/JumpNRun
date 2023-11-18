@@ -228,7 +228,7 @@ class World {
                 enemy.energy >= item.attack ? enemy.energy -= item.attack : enemy.energy = 0;
                 this.collidingItemEnemyIsBoss(enemy);
                 item.noJump(-100, true);
-                if(optionSound) {
+                if(optionSound && item.snd_bottlebroken.paused) {
                     item.snd_bottlebroken.play();
                 }
             }
@@ -531,8 +531,8 @@ class World {
         if(optionFPS) {
             this.addFpsToMap(this.fpsText+'FPS', 710, 460, 12, '#00ff00');
         } 
-        this.addTextToMap(this.character.coins, 75, 86, 24, true, null, true);
-        this.addTextToMap(this.character.bottles, 150, 86, 24, true, null, true);
+        this.addTextToMap(this.character.coins, 75, 86, 24, true, '#000000', true);
+        this.addTextToMap(this.character.bottles, 150, 86, 24, true, '#000000', true);
         this.addTextToMap('Move: Arrow left/right   Jump: Arrow up/Space   Attack: Num 0/D', 360, 450, 16, null, '#000000', true);
         this.addTextToMap('Fall down: Arrow down   Change 10 Coins into 1 Bottle: Enter', 360, 468, 16, null, '#000000', true);
     }

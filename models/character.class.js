@@ -375,7 +375,7 @@ class Character extends MovableObject {
                     this.exchangeIntoBottle(element, index);
                     setTimeout(() => {
                         this.findReserve = false;
-                    }, 200);
+                    }, 1000);
                 }
             });
         }
