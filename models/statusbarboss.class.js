@@ -13,7 +13,6 @@ class StatusBarBoss {
     barHeight;
     max;
     current;
-
     imgIcon = new Image();
     imgBackground = new Image();
     imgForeground = new Image();

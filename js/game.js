@@ -43,9 +43,6 @@ const keyMap = {
     68: 'D',
     40: 'Down',
     13: 'Enter',
-    48: 'Key0',
-    49: 'Key1',
-    50: 'Key2',
 };
 
 let canvas;
@@ -87,6 +84,9 @@ function openGame(game) {
 }
 
 
+/**
+ * Open or close the 'About the Game'-Screen
+ */
 function aboutTheGame() {
     document.getElementById('about').classList.toggle('d-none');
     document.getElementById('about').scrollTop = 0;
@@ -196,9 +196,7 @@ function gameStartscreen() {
 function gamePause() {
     GameIsRunning = false;
     document.getElementById('btnpause').classList.add('d-none');
-    // setTimeout(() => {
-        document.getElementById('btnplay').classList.remove('d-none');
-    // }, 200);
+    document.getElementById('btnplay').classList.remove('d-none');
 }
 
 
@@ -208,9 +206,7 @@ function gamePause() {
 function gamePlay() {
     GameIsRunning = true;
     document.getElementById('btnplay').classList.add('d-none');
-    // setTimeout(() => {
-        document.getElementById('btnpause').classList.remove('d-none');
-    // }, 200);
+    document.getElementById('btnpause').classList.remove('d-none');
 }
 
 
@@ -220,9 +216,7 @@ function gamePlay() {
 function gameOver() {
     GameIsRunning = false;
     document.getElementById('gameover').classList.remove('d-none');
-    document.getElementById('btnpause').classList.add('d-none');
-    document.getElementById('btnplay').classList.add('d-none');
-    document.getElementById('btnsound').classList.add('d-none');
+    hideButtons();
 }
 
 
@@ -232,6 +226,14 @@ function gameOver() {
 function gameLose() {
     GameIsRunning = false;
     document.getElementById('gamelose').classList.remove('d-none');
+    hideButtons();
+}
+
+
+/**
+ * Hides buttons when the game is over.
+ */
+function hideButtons() {
     document.getElementById('btnpause').classList.add('d-none');
     document.getElementById('btnplay').classList.add('d-none');
     document.getElementById('btnsound').classList.add('d-none');

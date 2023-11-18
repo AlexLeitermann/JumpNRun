@@ -19,7 +19,8 @@ class BossChicken extends MovableObject {
         energy: 50,
         attack: 15
     }
-IMAGES_WALKING = [
+
+    IMAGES_WALKING = [
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png ',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
         '/img/set1/4_enemie_boss_chicken/1_walk/G1.png',
@@ -78,7 +79,6 @@ IMAGES_WALKING = [
     imageCache_Attack;
     imageCache_Hurt;
     hasFirstContact = false;
-
 
 
     /**
@@ -240,4 +240,3 @@ IMAGES_WALKING = [
         this.energy = 50;
     }
 }
-    

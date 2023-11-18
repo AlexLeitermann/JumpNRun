@@ -38,5 +38,3 @@ function stopAllInterval() {
         clearInterval(interval);
     });
 }
-
-
