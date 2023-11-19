@@ -15,6 +15,8 @@
 }
 
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -170,10 +172,12 @@ a {
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    max-width: 800px;
-    width: 800px;
-    max-height: 500px;
-    height: 500px;
+    max-width: 720px;
+    width: 720px;
+    max-height: 480px;
+    height: 480px;
+    height: 100vh;
+    height: 100dvh;
 }
 
 .canvasbox {
@@ -187,8 +191,10 @@ a {
 canvas {
     z-index: 0;
     position: relative;
-    width: 720px;
-    height: 480px;
+    /* width: 720px;
+    height: 480px; */
+    width: 100%;
+    height: 100%;
     background-color: #fff;
     border-radius: 1rem;
     box-shadow: 0 4px 8px 2px #00000075;
@@ -418,6 +424,8 @@ canvas {
     canvas {
         width: auto;
         height: calc(100% - 8px);
+        height: calc(100vh - 8px);
+        height: calc(100dvh - 8px);
         aspect-ratio: 3/2 auto;
     }
 
@@ -469,6 +477,20 @@ canvas {
     #fullscreen {
         width: 90%;
         height: auto;
+    }
+}
+
+@media screen and (orintation: landscape) and (aspect-ration <= 3/2) {
+    .canvasbox {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media screen and (orintation: landscape) and (aspect-ration > 3/2) {
+    .canvasbox {
+        width: auto;
+        height: 100%;
     }
 }
 

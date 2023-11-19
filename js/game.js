@@ -49,6 +49,7 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let firstFrame = false;
+let isfullscreen = false;
 let optionBouncing = false;
 let optionFPS = false;
 let optionSound = true;
@@ -154,19 +155,30 @@ function toggleSounds() {
  * @param {number} game - The game code to determine which game to start.
  */
 function gameStart(game) {
-    document.getElementById('gameover').classList.add('d-none');
-    document.getElementById('gamelose').classList.add('d-none');
-    document.getElementById('btnpause').classList.remove('d-none');
-    document.getElementById('btnplay').classList.add('d-none');
-    document.getElementById('btnsound').classList.remove('d-none');
+    setIngameButtons();
     gameloader(game);
     resetKeyboard();
     document.getElementById('loadpage').classList.add('hide');
     firstFrame = true;
-    world.audio.snd_init.play();
+    if(optionSound) {
+        world.audio.snd_init.play();
+    }
     setTimeout(() => {
         GameIsRunning = true;
     }, 1300);
+}
+
+
+/**
+ * Configuration of Play/Pause, Sound and Fullscreen-Button to Start the Game.
+ */
+function setIngameButtons() {
+    document.getElementById('gameover').classList.add('d-none');
+    document.getElementById('gamelose').classList.add('d-none');
+    document.getElementById('btnplay').classList.add('d-none');
+    document.getElementById('btnpause').classList.remove('d-none');
+    document.getElementById('btnsound').classList.remove('d-none');
+    document.getElementById('btnfullscreen').classList.remove('d-none');
 }
 
 
@@ -231,12 +243,55 @@ function gameLose() {
 
 
 /**
+ * Toggle Fullscreen-Mode (is not possible in iOS)
+ */
+function fullscreen() {
+    isfullscreen = !isfullscreen;
+    let elem = document.getElementById('fullscreen');
+    if(isfullscreen) {
+        fullscreenOn(elem);
+    } else {
+        fullscreenOff(elem);
+    }
+}
+
+
+/**
+ * Activate Fullscreen
+ */
+function fullscreenOn(elem) {
+    if(elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if(elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+    } else if(elem.msRequestFullscreen()) {
+        elem.msRequestFullscreen();
+    }
+}
+
+
+/**
+ * Deactivate Fullscreen
+ */
+function fullscreenOff(elem) {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if(document.webkitExitFullScreen) {
+        document.webkitExitFullScreen();
+    } else if(document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}
+
+
+/**
  * Hides buttons when the game is over.
  */
 function hideButtons() {
     document.getElementById('btnpause').classList.add('d-none');
     document.getElementById('btnplay').classList.add('d-none');
     document.getElementById('btnsound').classList.add('d-none');
+    document.getElementById('btnfullscreen').classList.add('d-none');
 }
 
 
