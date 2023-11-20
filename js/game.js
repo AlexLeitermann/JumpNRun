@@ -276,6 +276,7 @@ function fullscreenOn(elem) {
  * Deactivate Fullscreen
  */
 function fullscreenOff() {
+    isfullscreen = false;
     if (document.exitFullscreen) {
         document.exitFullscreen();
     } else if(document.webkitExitFullScreen) {
