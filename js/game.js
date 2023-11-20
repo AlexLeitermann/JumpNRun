@@ -277,12 +277,14 @@ function fullscreenOn(elem) {
  */
 function fullscreenOff() {
     isfullscreen = false;
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    } else if(document.webkitExitFullScreen) {
-        document.webkitExitFullScreen();
-    } else if(document.msExitFullscreen) {
-        document.msExitFullscreen();
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if(document.webkitExitFullScreen) {
+            document.webkitExitFullScreen();
+        } else if(document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
     }
 }
 
