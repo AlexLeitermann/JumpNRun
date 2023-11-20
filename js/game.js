@@ -80,6 +80,7 @@ function openGame(game) {
     } else if(game == -5){
         gameLose();
     } else if(game == 0) {
+        fullscreenOff();
         gameStartscreen();
     }
 }
@@ -250,8 +251,9 @@ function fullscreen() {
     let elem = document.getElementById('fullscreen');
     if(isfullscreen) {
         fullscreenOn(elem);
+        // document.getElementById('canvasbox').style = 'background-image: url("./img/desert.png"); ';
     } else {
-        fullscreenOff(elem);
+        fullscreenOff();
     }
 }
 
@@ -273,7 +275,7 @@ function fullscreenOn(elem) {
 /**
  * Deactivate Fullscreen
  */
-function fullscreenOff(elem) {
+function fullscreenOff() {
     if (document.exitFullscreen) {
         document.exitFullscreen();
     } else if(document.webkitExitFullScreen) {
